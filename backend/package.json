@@ -1,0 +1,13 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Contain all the backend API for WorkMate",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "author": "Chapadia Dhru - 20013370, Darji Parthkumar - 20011927, Lankapati Maunish - 20012796, Shah Megh - 20011908, Anith Joy - 20016161",
+    "license": "ISC",
+    "dependencies": {
+    }
+}
