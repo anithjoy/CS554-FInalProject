@@ -4,33 +4,33 @@ const projects = mongoCollections.project;
 const {ObjectId} = require('mongodb');
 
 const getProjectById = async (id) =>{
-    helper.project.checkId(id);
+    helper.common.checkId(id);
     console.log('Showing data of '+id);
     const projectCollection = await projects();
     const project = await projectCollection.findOne({_id : new ObjectId(id)});
     project._id = project._id.toString();
     return project;
 }
-const getAllProjects = async (creator) => {
-    creator = helper.project.checkEmail(creator);
+const getAllProjects = async (watchers) => {
+    watchers = helper.project.checkEmail(watchers);
     const projectCollection = await projects();
-    let projectList = await projectCollection.find({creator:creator});
+    let projectList = await projectCollection.find({watchers:watchers}).toArray();
     if(!projectList) throw {status:500 , error : 'Could not get any project'};
     if(projectList.length==0){
         throw {status:404 , error : 'No projects for this email'};
     }
     for(let i of projectList){
-        i.projectId = i.projectId.toString();
+        i._id = i._id.toString();
     }
     return projectList;
 }
 const createProject = async (name,companyId,creator,manager) =>{
     const projectCollection = await projects();
     helper.project.checkName(name);
-    helper.project.checkId(companyId);
+    helper.common.checkId(companyId);
     helper.project.checkEmail(creator);  
     helper.project.checkEmail(manager);
-    watchers = [];
+    watchers = [creator];
     sprint = [];
     let newProject = {
         name,
@@ -48,10 +48,11 @@ const createProject = async (name,companyId,creator,manager) =>{
     const project = await getProjectById(newId);
     return project;
 }
-const updateProject = async (id,name,companyId,creator,manager) =>{
+const updateProject = async (id,name,companyId,creator,manager,watchers,sprint) =>{
+    helper.common.checkId(id);
     const projectCollection = await projects();
     helper.project.checkName(name);
-    helper.project.checkId(companyId);
+    helper.common.checkId(companyId);
     helper.project.checkEmail(creator);  
     helper.project.checkEmail(manager);
     let newProject = {
@@ -59,6 +60,8 @@ const updateProject = async (id,name,companyId,creator,manager) =>{
         companyId,
         creator,
         manager,
+        watchers,
+        sprint
     };
     const updateInfo = await projectCollection.updateOne({_id : new ObjectId(id)}, {$set : newProject});
     if (updateInfo.modifiedCount === 0) {
