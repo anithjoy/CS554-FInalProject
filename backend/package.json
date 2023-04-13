@@ -9,5 +9,8 @@
     "author": "Chapadia Dhru - 20013370, Darji Parthkumar - 20011927, Lankapati Maunish - 20012796, Shah Megh - 20011908, Anith Joy - 20016161",
     "license": "ISC",
     "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "mongodb": "^5.2.0"
     }
 }
