@@ -23,7 +23,7 @@ const getTicketByProjectId = async(projectId) =>{
     projectId = helper.common.isValidId(projectId);
 
     const ticketCollection = await ticketCol();
-    const ticket = await ticketCollection.findOne({projectId : projectId});
+    const ticket = await ticketCollection.find({projectId : projectId});
 
     if (ticket === null) 
     {
