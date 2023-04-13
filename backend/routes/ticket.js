@@ -58,8 +58,10 @@ router
  })
  .patch(async (req, res) => {
     let data = req.body;
+    let ticketId;
     try{
-      data = helper.ticket.isValidTicketUpdateData(data)
+      data = helper.ticket.isValidTicketUpdateData(data);
+      ticketId = helper.common.isValidId(req.params.ticketId);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
         res.status(500).json("Internal server error");
@@ -69,7 +71,7 @@ router
     }
 
     try{
-      const updateTicket = await ticketData.updateTicket(data);
+      const updateTicket = await ticketData.updateTicket(ticketId, data);
       res.json(updateTicket);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
