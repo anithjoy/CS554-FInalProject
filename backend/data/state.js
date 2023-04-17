@@ -1,71 +1,45 @@
 const mongoCollections = require("../config/mongoCollections");
-const states = mongoCollections.state;
-const allHelper = require("../helper");
-const helper = allHelper.state;
-const commonHelp = allHelper.common;
+const stateCol = mongoCollections.state;
+const helper = require("../helper");
 const { ObjectId } = require("mongodb");
 
-// input - name,companyid,transition,description
 const createState = async (name, companyId, transition, description) => {
-  // validation
 
-  // name validation
-  name = helper.checkName(name);
+  name = helper.state.isValidStateName(name);
+  companyId = helper.common.isValidId(companyId);
+  description = helper.state.isValidDescription(description);
+  transition = helper.state.isValidTransition(transition);
 
-  //   company
-  companyId = helper.checkId(companyId);
-  await commonHelp.checkCompanyById(companyId);
-
-  // transition
-  transition = helper.checkTransition(transition);
   await Promise.all(
     transition.map(async (id) => {
-      await checkState(id);
+      await getStateById(id);
     })
   );
 
-  // description
-  description = helper.checkDescription(description);
-
-  //   stateID,companyID,Name,transition,description
   const newState = {
-    _id: new ObjectId(),
     name: name,
     companyId: companyId,
     transition: transition,
     description: description,
   };
-  const stateCollection = await states();
+  const stateCollection = await stateCol();
   const insertInfo = await stateCollection.insertOne(newState);
 
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-    throw { status: 500, error: "Could not add project" };
+    throw { status: 500, error: "Could not add state" };
   }
+
   const newId = insertInfo.insertedId.toString();
   const stateDocument = await getStateById(newId);
 
-  if (!stateDocument) {
-    throw { status: 404, error: "couldn't find state" };
-  }
   return stateDocument;
 };
 
-const checkState = async (id) => {
-  // id
-  id = helper.checkId(id);
-  const stateCollection = await states();
-  const state = await stateCollection.findOne({ _id: new ObjectId(id) });
-  if (!state) {
-    throw { status: 404, error: "couldn't find state" };
-  }
-};
+const getStateById = async (stateId) => {
+  stateId = helper.common.isValidId(stateId);
 
-const getStateById = async (id) => {
-  // id
-  id = helper.checkId(id);
-
-  const stateCollection = await states();
-  const state = await stateCollection.findOne({ _id: new ObjectId(id) });
+  const stateCollection = await stateCol();
+  const state = await stateCollection.findOne({ _id: new ObjectId(stateId) });
   if (!state) {
     throw { status: 404, error: "couldn't find state" };
   }
@@ -73,10 +47,10 @@ const getStateById = async (id) => {
 };
 
 const getAllState = async (companyId) => {
-  // id
-  companyId = helper.checkId(companyId);
 
-  const stateCollection = await states();
+  companyId = helper.common.isValidId(companyId);
+
+  const stateCollection = await stateCol();
   const resState = await stateCollection
     .find({ companyId: companyId })
     .toArray();
@@ -89,43 +63,21 @@ const getAllState = async (companyId) => {
 
 const updateState = async (
   stateId,
-  name,
-  companyId,
-  transition,
-  description
+  data
 ) => {
-  stateId = helper.checkId(stateId);
-  name = helper.checkName(name);
+  stateId = helper.common.isValidId(stateId);
+  data = helper.state.isValidData(data);
 
-  //   company
-  companyId = helper.checkId(companyId);
-  await commonHelp.checkCompanyById(companyId);
-
-  // transition
-  transition = helper.checkTransition(transition);
-  await Promise.all(
-    transition.map(async (id) => {
-      await checkState(id);
-    })
-  );
-
-  description = helper.checkDescription(description);
-
-  const stateCollection = await states();
-  const updatedInfo = await stateCollection.updateOne(
+  const stateCollection = await stateCol();
+  const updatedInfo = await stateCollection.updateMany(
     { _id: new ObjectId(stateId) },
     {
-      $set: {
-        name: name,
-        companyId: companyId,
-        transition: transition,
-        description: description,
-      },
+      $set: data
     }
   );
 
-  if (updatedInfo.matchedCount < 1) {
-    throw { status: 404, error: "State not found with the given stateId" };
+  if (updatedInfo.modifiedCount === 0) {
+    throw {status: 400, error : 'could not update because values are same as previous one'};
   }
 
   if (!updatedInfo.matchedCount && !updatedInfo.modifiedCount) {
@@ -140,6 +92,5 @@ module.exports = {
   createState,
   getStateById,
   getAllState,
-  updateState,
-  checkState,
+  updateState
 };

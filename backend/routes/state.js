@@ -1,66 +1,68 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const stateData = require("../data/state");
-const allHelper = require("../helper");
-const helper = allHelper.state;
-const commonHelp = allHelper.common;
-
-// /state
-// Post - create a state ->
-// Get - get all the state of the ticket for that company (company information can be retrieve using login info or can be pass as query params ->Done
-// /state/:stateId
-// Get - to get information about a particular state
-// Patch - update info of the state
+const helper = require('../helper');
+const {state : stateData} = require("../data");
 
 //Anith
 router
   .route("/")
-  //  Do i have to do pagiantion for get all states ?
   .get(async (req, res) => {
-    try {
+    try{
       let companyId = req.query.companyId;
-      companyId = helper.checkId(companyId);
-      await commonHelp.checkCompanyById(companyId);
-
-      const states = await stateData.getAllState(companyId);
-      return res.status(200).json({ allState: states });
+      companyId = helper.common.isValidId(companyId);
     } catch (error) {
-      return res.status(error.status).json({ error: error.error });
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
+
+    try {
+      const states = await stateData.getAllState(companyId);
+      return res.status(200).json(states);
+    } catch (error) {
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
     }
   })
   .post(async (req, res) => {
-    try {
-      // inputs => name,comapnyID,transition,description
-      let name = req.body.name;
-      let companyId = req.query.companyId;
-      let transition = req.body.transition;
-      let description = req.body.description;
-
-      // validation
-      name = helper.checkName(name);
-
-      companyId = helper.checkId(companyId);
-      await commonHelp.checkCompanyById(companyId);
-
-      transition = helper.checkTransition(transition);
+    const data = req.body;
+    try{
+      data.name = helper.state.isValidStateName(data.name);
+      data.companyId = helper.common.isValidId(data.companyId);
+      data.transition = helper.state.isValidTransition(data.transition);
+      data.description = helper.state.isValidDescription(data.description);
       await Promise.all(
         transition.map(async (id) => {
-          await stateData.checkState(id);
+          await stateData.getStateById(id);
         })
       );
-
-      description = helper.checkDescription(description);
-
+    } catch (error) {
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
+    try {
       const newState = await stateData.createState(
-        name,
-        companyId,
-        transition,
-        description
+        data.name,
+        data.companyId,
+        data.transition,
+        data.description
       );
 
-      return res.status(200).json({ state: newState });
+      return res.status(201).json(newState);
     } catch (error) {
-      return res.status(error.status).json({ error: error.error });
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
     }
   });
 
@@ -70,57 +72,37 @@ router
   .get(async (req, res) => {
     try {
       let stateId = req.params.stateId;
-      let companyId = req.query.companyId;
-      stateId = helper.checkId(stateId);
+      stateId = helper.common.isValidId(stateId);
 
       const state = await stateData.getStateById(stateId);
-      if (state.companyId != companyId) {
-        return res.status(401).json({ error: "Unauthorized access" });
-      }
-      return res.status(200).json({ state: state });
+      return res.status(200).json(state);
     } catch (error) {
-      return res.status(error.status).json({ error: error.error });
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
     }
   })
   .patch(async (req, res) => {
     try {
       let stateId = req.params.stateId;
-      stateId = helper.checkId(stateId);
+      let data = body.data;
 
-      const prevState = await stateData.getStateById(stateId);
-
-      let companyId = req.query.companyId;
-      await commonHelp.checkCompanyById(companyId);
-      companyId = helper.checkId(companyId);
-      if (prevState.companyId != companyId) {
-        return res.status(401).json({ error: "Unauthorized access" });
-      }
-
-      let name = req.body.name || prevState.name;
-      let transition = req.body.transition || prevState.transition;
-      let description = req.body.description || prevState.description;
-
-      name = helper.checkName(name);
-
-      transition = helper.checkTransition(transition);
-      await Promise.all(
-        transition.map(async (id) => {
-          await stateData.checkState(id);
-        })
-      );
-
-      description = helper.checkDescription(description);
+      stateId = helper.common.isValidId(stateId);
+      data = helper.state.isValidData(data);
 
       const updatedState = await stateData.updateState(
         stateId,
-        name,
-        companyId,
-        transition,
-        description
+        data
       );
-      return res.status(200).json({ state: updatedState });
+      return res.status(200).json(updatedState);
     } catch (error) {
-      return res.status(error.status).json({ error: error.error });
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
     }
   });
 

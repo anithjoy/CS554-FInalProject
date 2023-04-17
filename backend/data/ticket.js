@@ -1,35 +1,17 @@
-const mongoCollections = require("../config/mongoCollections");
-const tickets = mongoCollections.ticket;
-const comments = mongoCollections.comment;
-const allHelper = require("../helper");
-const helper = allHelper.state;
-const commonHelp = allHelper.common;
-const { ObjectId } = require("mongodb");
+const helper = require('../helper');
+const mongoCollections = require('../config/mongoCollections');
+const ticketCol = mongoCollections.ticket;
+const commentCol = mongoCollections.comment;
+const {ObjectId} = require('mongodb');
 
-// /ticket/:ticketId/comment/commentId
-// Delete - delete a comment
+const deleteTicketComment = async (ticketId, commentId) => {
 
-const deleteTicket = async (ticketId, commentId) => {
-  //  ticketId validation
-  ticketId = helper.checkId(ticketId);
-  const ticket = await commonHelp.getTicketById(ticketId);
+  ticketId = helper.common.isValidId(ticketId);
+  commentId = helper.common.isValidId(commentId);
 
-  if (!ticket) {
-    throw { status: 404, error: "couldn't find ticket" };
-  }
+  const ticketCollection = await ticketCol();
+  const commentCollection = await commentCol();
 
-  //   commentId validation
-  commentId = helper.checkId(commentId);
-  if (!ticket.comments.includes(commentId)) {
-    throw { status: 404, error: "couldn't find commentId in ticket" };
-  }
-  const comment = await commonHelp.getCommentById(commentId);
-
-  if (!comment) {
-    throw { status: 404, error: "couldn't find comment" };
-  }
-  const ticketCollection = await tickets();
-  const commentCollection = await comments();
   const updatedInfo_ticket = await ticketCollection.updateOne(
     { _id: new ObjectId(ticketId) },
     { $pull: { comments: commentId } }
@@ -49,25 +31,6 @@ const deleteTicket = async (ticketId, commentId) => {
   ) {
     throw { status: 404, error: "comment not found" };
   }
-
-  const newTicket = await commonHelp.getTicketById(ticketId);
-  return newTicket;
 };
 
-module.exports = { deleteTicket };
-
-// 6437365cbc9b4c34ba6640ee
-// 64373609bc9b4c34ba6640ed
-// async function main() {
-//   try {
-//     const res = await deleteTicket(
-//       "643736b5bc9b4c34ba6640f3",
-//       "64373bd3bc9b4c34ba6640f7"
-//     );
-//     console.log(res);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-
-// main();
+module.exports = { deleteTicketComment };
