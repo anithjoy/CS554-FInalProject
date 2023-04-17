@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const data = require('../data');
-const projectData = data.project;
-const helper = require('../helper')
+
+const helper = require('../helper');
+const {ticket : ticketData, project : projectData} = require("../data");
+
 //Dhru
 router
  .route('/')
@@ -123,7 +124,27 @@ router
 router
  .route('/:projectId/ticket')
  .get(async (req, res) => {
+    let projectId;
+    try{
+        projectId = helper.common.isValidId(req.params.projectId);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
 
+    try{
+      const tickets = await ticketData.getTicketByProjectId(projectId);
+      res.json(tickets);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
  })
 
 module.exports = router;
