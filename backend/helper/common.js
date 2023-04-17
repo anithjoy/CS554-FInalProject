@@ -1,6 +1,5 @@
 const {ObjectId} = require('mongodb');
 
-
 const isValidString = (string, parameter) =>{
     if (!string) throw {status: '400', error : `You must provide an ${parameter} to search for`};
     if (typeof string !== 'string') throw {status: '400', error : `${parameter} must be a string`};
