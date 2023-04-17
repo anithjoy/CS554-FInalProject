@@ -7,7 +7,7 @@ const getProjectById = async (projectId) =>{
     projectId = helper.common.isValidId(projectId);
     
     const projectCollection = await projectCol();
-    const project = await projectCollection.findOne({_id : ObjectId(projectId)});
+    const project = await projectCollection.findOne({_id : new ObjectId(projectId)});
 
     if (project === null) 
     {
@@ -76,7 +76,7 @@ const updateProject = async (projectId, data) =>{
 
     const projectCollection = await projectCol();
     const updatedInfo = await projectCollection.updateMany(
-      {_id: ObjectId(projectId)},
+      {_id: new ObjectId(projectId)},
       {$set: data}
     );
       

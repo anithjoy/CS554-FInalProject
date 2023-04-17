@@ -37,7 +37,7 @@ const getTicketById = async(ticketId) =>{
     ticketId = helper.common.isValidId(ticketId);
 
     const ticketCollection = await ticketCol();
-    const ticket = await ticketCollection.findOne({_id: New ObjectId(ticketId)});
+    const ticket = await ticketCollection.findOne({_id: new ObjectId(ticketId)});
 
     if (ticket === null) 
     {
@@ -95,7 +95,7 @@ const updateTicket = async (
     await getTicketById(ticketId);
 
     const updatedInfo = await ticketCollection.updateMany(
-      {_id: New ObjectId(ticketId)},
+      {_id: new ObjectId(ticketId)},
       {$set: data}
     );
       
