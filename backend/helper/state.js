@@ -1,4 +1,4 @@
-const { common } = require(".");
+const common = require("./common");
 
 const isValidStateName = (name) => {
   
