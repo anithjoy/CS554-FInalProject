@@ -69,6 +69,16 @@ const isValidDate = (time) => {
   return time;
 };
 
+const isValidWatchers = (watchers) => {
+  if(!Array.isArray(watchers))
+          throw {status: '400', error : `Invalid data type for watchers`};
+  for(let i=0;i<watchers.length;i++)
+  {            
+      watchers[i] = common.isValidEmail(watchers);
+  }
+  return watchers;    
+}
+
 module.exports = {
     isValidString,
     isValidId,
@@ -76,5 +86,6 @@ module.exports = {
     isValidUserName,
     isValidPastDate,
     isValidFutureDate,
-    isValidDate
+    isValidDate,
+    isValidWatchers
 };

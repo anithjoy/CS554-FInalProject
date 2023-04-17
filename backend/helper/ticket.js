@@ -19,16 +19,6 @@ const isValidTicketType = (type) => {
     throw {status: '400', error : "Invalid ticket type"};
 }
 
-const isValidWatchers = (watchers) => {
-    if(!Array.isArray(watchers))
-            throw {status: '400', error : `Invalid data type for watchers`};
-    for(let i=0;i<watchers.length;i++)
-    {            
-        watchers[i] = common.isValidEmail(watchers);
-    }
-    return watchers;    
-}
-
 const isValidDependedOnTickets = (dependedOnTickets) => {
     if(!Array.isArray(dependedOnTickets))
             throw {status: '400', error : `Invalid data type for dependedOnTickets field`};
@@ -88,7 +78,7 @@ const isValidTicketData = (data) =>{
                 data.assign = common.isValidEmail(data.assign);
                 break;
             case "watchers":
-                data.watchers = isValidWatchers(data.watchers);
+                data.watchers = common.isValidWatchers(data.watchers);
                 break;
             case "expectedDate":
                 data.expectedDate = common.isValidFutureDate(data.expectedDate);
