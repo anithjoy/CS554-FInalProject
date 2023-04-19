@@ -66,7 +66,7 @@ const createProject = async (name,companyId,creator,manager,watchers) =>{
     const newId = insertInfo.insertedId.toString();
     const project = await getProjectById(newId);
 
-    service.email.sendProjectCreateEmail(ticket);
+    service.email.sendProjectCreateEmail(project);
 
     return project;
 }
@@ -89,7 +89,7 @@ const updateProject = async (projectId, data) =>{
 
     const project = await getProjectById(id);
 
-    service.email.sendProjectUpdateEmail(ticket);
+    service.email.sendProjectUpdateEmail(project);
 
     return project;
 }
