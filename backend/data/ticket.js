@@ -1,4 +1,5 @@
 const helper = require('../helper');
+const service =  require("../service");
 const mongoCollections = require('../config/mongoCollections');
 const ticketCol = mongoCollections.ticket;
 const commentCol = mongoCollections.comment;
@@ -78,7 +79,9 @@ const createTicket = async(data) => {
   
     const newId = insertInfo.insertedId.toString();
     const ticket = await getTicketById(newId);
-  
+
+    service.email.sendTicketCreateEmail(ticket);
+
     return ticket;
 }
 
@@ -104,6 +107,9 @@ const updateTicket = async (
     }
   
     const ticket = await getTicketById(ticketId);
+
+    service.email.sendTicketUpdateEmail(ticket);
+
     return ticket;
 };
 

@@ -1,5 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const helper = require('../helper');
+const service =  require("../service");
 const projectCol = mongoCollections.project;
 const {ObjectId} = require('mongodb');
 
@@ -65,6 +66,8 @@ const createProject = async (name,companyId,creator,manager,watchers) =>{
     const newId = insertInfo.insertedId.toString();
     const project = await getProjectById(newId);
 
+    service.email.sendProjectCreateEmail(project);
+
     return project;
 }
 
@@ -85,6 +88,9 @@ const updateProject = async (projectId, data) =>{
     }
 
     const project = await getProjectById(id);
+
+    service.email.sendProjectUpdateEmail(project);
+
     return project;
 }
 module.exports = {
