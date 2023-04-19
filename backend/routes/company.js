@@ -14,12 +14,10 @@ router
         const bodyData = req.body;
         for(let i in bodyData)
           bodyData[i]=xss(bodyData[i])
-        // bodyData.email=commonHelper.isValidEmail(bodyData.email);
-        // bodyData.age = patientHelper.isValidAge(bodyData.age);
-        // bodyData.name=commonHelper.isValidName(bodyData.name);
-        
-        // bodyData.zip=commonHelper.isValidZip(bodyData.zip);
-        // bodyData.password=commonHelper.isValidPassword(bodyData.password);
+        bodyData.email=helper.common.isValidEmail(bodyData.email);
+        bodyData.name=helper.common.isValidString(bodyData.name, 'company name');
+        bodyData.EIN=helper.company.isValidEIN(bodyData.EIN);
+        bodyData.password=helper.common.isValidPassword(bodyData.password);
         
         let newCompany = await companyData.createCompany(bodyData.email,bodyData.EIN,bodyData.name,bodyData.password);
         if(newCompany){
