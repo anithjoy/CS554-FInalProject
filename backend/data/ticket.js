@@ -54,7 +54,7 @@ const getTicketByProjectId = async(projectId) =>{
     projectId = helper.common.isValidId(projectId);
 
     const ticketCollection = await ticketCol();
-    const ticket = await ticketCollection.find({projectId : projectId});
+    const ticket = await ticketCollection.find({projectId : projectId}).toArray();
 
     if (ticket === null) 
     {
@@ -64,6 +64,22 @@ const getTicketByProjectId = async(projectId) =>{
     ticket._id = ticket._id.toString();
 
     return ticket;
+}
+
+const getTicketByUser = async(email) =>{
+  email = helper.common.isValidEmail(email);
+
+  const ticketCollection = await ticketCol();
+  const ticket = await ticketCollection.find({assign : email}).toArray();
+
+  if (ticket === null) 
+  {
+      throw {status: 404, error : 'No ticket with that project id'};
+  }
+
+  ticket._id = ticket._id.toString();
+
+  return ticket;
 }
 
 const createTicket = async(data) => {
