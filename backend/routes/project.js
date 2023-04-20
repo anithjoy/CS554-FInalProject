@@ -39,12 +39,14 @@ router
       data.creator = helper.common.isValidEmail(data.creator); 
       data.manager = helper.common.isValidEmail(data.manager);
       if(data.watchers)
-        data.watchers = helper.common.isValidWatchers(watchers);
+        data.watchers = helper.common.isValidWatchers(data.watchers);
       else
         data.watchers = [];
     }catch(e){
-      if(typeof e !== 'object' || !('status' in e))
+      if(typeof e !== 'object' || !('status' in e)){
+        console.log(e);
         res.status(500).json("Internal server error");
+      }
       else
         res.status(parseInt(e.status)).json(e.error);
       return;
@@ -121,19 +123,119 @@ router
 router
  .route('/:projectId/sprint')
  .get(async (req, res) => {
+    
+    let projectId;
 
+    try {
+      projectId = helper.common.isValidId(req.params.projectId);
+    } catch (e) {
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
+
+    try{
+        let sprints = await projectData.getAllSprintbyProjectId(projectId);
+        res.json(sprints);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
  })
  .post(async (req, res) => {
+    const data = req.body;
+    let projectId = req.params.projectId;
+    try{
+      data.name = helper.project.isValidSprintName(data.name);
+      projectId = helper.common.isValidId(projectId);
+      data.startDate = helper.common.isValidDate(data.startDate); 
+      data.description = helper.common.isValidString(data.description);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
 
+    try{
+      const newSprint = await projectData.createSprint(projectId, data.name, data.startDate, data.description);
+      res.status(201).json(newSprint);
+    }catch(e){
+      console.log(e);
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
  })
 
 //Maunish
 router
- .route('/:projectId/sprint/sprintId')
+ .route('/:projectId/sprint/:sprintId')
  .get(async (req, res) => {
 
+    let projectId = req.params.projectId;
+    let sprintId = req.params.sprintId;
+
+    try{
+      projectId = helper.common.isValidId(projectId);
+      sprintId = helper.common.isValidId(sprintId);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
+
+    try{
+      const sprint = await projectData.getSprintbyId(projectId, sprintId);
+      res.json(sprint);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+        res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
  })
  .patch(async (req, res) => {
+  let data = req.body;
+  let projectId = req.params.projectId
+  let sprintId = req.params.sprintId
+  try{
+    data = helper.project.isValidSprintUpdateData(data);
+    projectId = helper.common.isValidId(projectId);
+    sprintId = helper.common.isValidId(sprintId);
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+
+  try{
+    const updatedSprint = await projectData.updateSprint(
+      projectId,
+      sprintId,
+      data
+    )
+    res.json(updatedSprint);
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
 
  })
 

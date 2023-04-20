@@ -93,9 +93,105 @@ const updateProject = async (projectId, data) =>{
 
     return project;
 }
+
+const createSprint = async (projectId, name, startDate, description) => {
+
+    projectId = helper.common.isValidId(projectId);
+    name = helper.project.isValidSprintName(name);
+    startDate = helper.common.isValidDate(startDate);
+    description = helper.common.isValidString(description);
+
+    await getProjectById(projectId);
+
+    let newSprint = {
+        _id: new ObjectId(),
+        name: name,
+        startDate: startDate,
+        description: description
+    }
+
+    const projectCollection = await projectCol();
+    const insertedInfo = await projectCollection.updateOne(
+        {_id: new ObjectId(projectId)},
+        {$push: {sprint: newSprint}}
+    )
+
+    if(insertedInfo.modifiedCount === 0)
+        throw {status: 400, error : 'Could not add project'};
+    
+    const project = await getProjectById(projectId);
+
+    return project;
+}
+
+const getAllSprintbyProjectId = async (projectId) => {
+
+    projectId = helper.common.isValidId(projectId);
+
+    const projectCollection = await projectCol();
+    const projects = await projectCollection.findOne({ _id: new ObjectId(projectId)})
+    if (projects === null || projects.length==0)
+        throw {status: 404, error : 'No project found with that ID'};
+    else if(projects.sprint === null || projects.sprint.length === 0)
+        throw {status: 404, error : 'No sprints found for this project'};
+
+    const sprints = projects.sprint;
+    return sprints;
+}
+
+const getSprintbyId = async (projectId, sprintId) => {
+
+    projectId = helper.common.isValidId(projectId);
+    sprintId = helper.common.isValidId(sprintId);
+
+    await getProjectById(projectId);
+
+    const projectCollection = await projectCol();
+    const sprint = await projectCollection.aggregate([
+        { $match: { '_id' : new ObjectId(projectId) } },
+        { $unwind: '$sprint' },
+        { $match: { 'sprint._id': new ObjectId(sprintId) } },
+        { $replaceRoot: { newRoot: '$sprint' } }
+    ]).toArray();
+    if (!sprint || sprint.length === 0) {
+        throw { status: 404, error: 'Project or sprint not found' };
+    }
+    return sprint[0];
+}
+
+const updateSprint = async(projectId, sprintId, data) => {
+
+    projectId = helper.common.isValidId(projectId);
+    sprintId = helper.common.isValidId(sprintId);
+
+    await getProjectById(projectId);
+
+    const sprint = await getSprintbyId(projectId, sprintId);
+
+    const projectCollection = await projectCol();
+    const updatedInfo = await projectCollection.findOneAndUpdate(
+        {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
+        {$set: {
+            'sprint.$.name': data.name || sprint.name,
+            'sprint.$.startDate': data.startDate || sprint.startDate,
+            'sprint.$.description': data.description || sprint.description
+        }}
+    )
+    if (updatedInfo.modifiedCount === 0) {
+        throw {status: 400, error : 'could not update because values are same as previous one'};
+    }
+  
+    const newsprint = await getSprintbyId(projectId, sprintId);
+    return newsprint;
+}
+
 module.exports = {
     getProjectById,
     getAllProjectsByEmail,
     createProject,
-    updateProject
+    updateProject,
+    createSprint,
+    getAllSprintbyProjectId,
+    getSprintbyId,
+    updateSprint
 };

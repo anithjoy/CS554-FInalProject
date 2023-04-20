@@ -31,7 +31,39 @@ const isValidUpdateData = (data) =>{
     return data;
 }
 
+const isValidSprintName = (name) => {
+
+    name = common.isValidString(name, "Sprint Name");
+
+    if(name.length<4)
+        throw {status:400, error : 'less than 4 character name'};
+
+    return name;
+};
+
+const isValidSprintUpdateData = (data) => {
+    for(key in data)
+    {
+        switch(key){
+            case "name":
+                data.name = isValidSprintName(data.name);
+                break;
+            case "startDate":
+                data.startDate = common.isValidDate(data.startDate);
+                break;
+            case "description":
+                data.description = common.isValidString(data.description);
+                break;
+            default:
+                throw {status: '400', error : `Invalid key - ${key}`};
+            
+        }
+    }
+    return data;
+}
 module.exports = {
     isValidProjectName,
-    isValidUpdateData
+    isValidUpdateData,
+    isValidSprintName,
+    isValidSprintUpdateData
 };
