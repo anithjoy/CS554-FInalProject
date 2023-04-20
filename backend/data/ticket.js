@@ -132,6 +132,7 @@ const updateTicket = async (
 module.exports = {
 getTicketById,
 getTicketByProjectId,
+getTicketByUser,
 createTicket,
 updateTicket,
 deleteTicketComment

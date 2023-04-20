@@ -7,6 +7,30 @@ const {ticket : ticketData} = require("../data");
 //PD
 router
 .route('/')
+.get(async (req, res) => {
+
+  try{
+    req.query.email = helper.common.isValidEmail(req.query.email);
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+
+  try{
+      const tickets = await ticketData.getTicketByUser(req.query.email);
+      res.json(tickets);
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+
+ })
 .post(async (req, res) => {
     let data = req.body;
     try{
