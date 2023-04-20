@@ -12,27 +12,40 @@ const getUserById = async (id) =>{
     user._id = user._id.toString();
     return user;
 }
-const updateUser = async (id,email,name,role,companyId,accessProjects) =>{
-    id = helper.common.isValidId(id);
+const updateUser = async (userId,body) =>{
+    for(let field in body){
+        switch(field)
+        {
+          case "name":
+            body.name = helper.common.isValidString(body.name,'name');
+            break;
+          case "role":
+            body.role = helper.user.isValidRole(body.role);
+            break;
+          case "password":
+            body.password = helper.common.isValidPassword(body.password);
+            body.hashedPassword = await bcryptjs.hash(body.password, saltRounds);
+            delete body.password;
+            break;
+          case "accessProjects":
+            body.accessProjects = helper.user.isValidAccessProjects(body.accessProjects);
+            break;
+          default:
+            throw { status: 400, error: `Invalid key - ${field}` };
+        }
+      }
+    let userInDb = await getUserById(userId);
+    if(!userInDb) throw {status:400,error:'No user with that ID'}  
+    if(body.accessProjects){
+        body.accessProjects = [...userInDb.accessProjects,...body.accessProjects];
+    }
     const userCollection = await users();
-    email = helper.common.isValidEmail(email);
-    name = helper.common.isValidString(name,'name');
-    role = helper.user.isValidRole(role);
-    companyId = helper.common.isValidId(companyId);
-    let newUser = {
-        email,
-        name,
-        role,
-        companyId,
-        accessProjects,
-    };
-    const updateInfo = await userCollection.updateOne({_id : new ObjectId(id)}, {$set : newUser});
+    const updateInfo = await userCollection.updateMany({_id : new ObjectId(userId)}, {$set : body});
     if (updateInfo.modifiedCount === 0) {
-      throw {status:500 , error : 'could not update user successfully'};
+      throw {status:500 , error : 'Could not update user successfully'};
     }
 
-    const user = await getUserById(id);
-    return user;
+    return await getUserById(userId);
 }
 
 const createUser = async(companyId,email,name,role,password) => {
