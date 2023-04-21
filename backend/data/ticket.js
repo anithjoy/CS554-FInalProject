@@ -69,7 +69,7 @@ const getTicketByProjectId = async(projectId) =>{
 const createTicket = async(data) => {
 
     data = helper.ticket.isValidTicketCreationData(data);
-
+    data.comments=[];
     const ticketCollection = await ticketCol();
   
     const insertInfo = await ticketCollection.insertOne(data);
@@ -112,11 +112,48 @@ const updateTicket = async (
 
     return ticket;
 };
+const createComment = async( ticketId, body) =>{
+  ticketId = helper.common.isValidId(ticketId);
+  body.text = helper.common.isValidString(body.text,'comment');
+  let newComment = {
+    commentId:new ObjectId(),
+    text:body.text
+  }
+  if(body.document) {
+    body.document = helper.ticket.isValidDocument(body.document);
+    newComment.document = boyd.document;
+  }
+  const ticketCollection = await ticketCol();
+  const insertInfo = await ticketCollection.updateOne(
+    {_id:new ObjectId(ticketId)}, {$push:{comments:newComment}}
+  );
+  if (!insertInfo.acknowledged || !insertInfo.modifiedCount)
+      throw {status: 400, error : 'Could not add comment'};
 
+  const ticket = await getTicketById(ticketId);
+
+  return ticket;
+}
+
+const getCommentsByTicketId = async(ticketId) =>{
+  ticketId = helper.common.isValidId(ticketId);
+
+  const ticketCollection = await ticketCol();
+  const ticket = await ticketCollection.findOne({_id: new ObjectId(ticketId)});
+
+  if (ticket === null) 
+  {
+      throw {status: 404, error : 'No ticket with that id'};
+  }
+
+  return ticket.comments;
+}
 module.exports = {
 getTicketById,
 getTicketByProjectId,
 createTicket,
 updateTicket,
-deleteTicketComment
+deleteTicketComment,
+createComment,
+getCommentsByTicketId
 };
