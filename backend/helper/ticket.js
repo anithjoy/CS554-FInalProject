@@ -44,14 +44,15 @@ const isValidTicketCreationData = (data) =>{
         if(data[constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]])
             throw {status: '400', error : `Invalid ${constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]} field`};
     data = isValidTicketData(data);
+    return data;
 }
 
 const isValidTicketData = (data) =>{
-    for(key in data)
+    for(let key in data)
     {
         switch(key){
             case "companyId":
-                data.email = common.isValidId(data.companyId);
+                data.companyId = common.isValidId(data.companyId);
                 break;
             case "projectId":
                 data.projectId = common.isValidId(data.projectId);
@@ -102,7 +103,13 @@ const isValidTicketData = (data) =>{
     }
     return data;
 }
+
+const isValidDocument = (document) =>{
+    document = common.isValidString(document,'document');
+    return document;
+}
 module.exports = {
     isValidTicketUpdateData,
-    isValidTicketCreationData
+    isValidTicketCreationData,
+    isValidDocument
 };

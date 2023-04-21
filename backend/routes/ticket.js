@@ -111,10 +111,36 @@ router
 router
   .route("/:ticketId/comment")
   .get(async (req, res) => {
-
+    try{
+      req.params.ticketId = helper.common.isValidId(req.params.ticketId);
+      const comments = await ticketData.getCommentsByTicketId(req.params.ticketId);
+      if(!comments) throw {status:500,error:'Could not get comments'};
+      res.json(comments);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+      else
+        res.status(parseInt(e.status)).json(e.error);
+      return;
+    }
+    
+    
   })
   .post(async (req, res) => {
+    try{
+      req.params.ticketId = helper.common.isValidId(req.params.ticketId);
+      req.body.text = helper.common.isValidString(req.body.text,'comment');
+      if(req.body.document) req.body.document = helper.ticket.isValidDocument(req.body.document);
 
+      const updatedTicket = await ticketData.createComment(req.params.ticketId ,req.body);
+      res.json(updatedTicket);
+    }catch(e){
+      if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+    }
   });
 
 //Anyone can pickup this
