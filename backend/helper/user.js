@@ -6,6 +6,11 @@ const isValidRole = (role) => {
     }
     throw {status:400,error:'Invalid role'}
 }
+const isValidAccessProjects = (accessProjects) =>{
+    if(!Array.isArray(accessProjects)) throw {status:400,error:'Invalid access projects'};
+    return accessProjects;
+}
 module.exports = {
-isValidRole
+isValidRole,
+isValidAccessProjects
 };
