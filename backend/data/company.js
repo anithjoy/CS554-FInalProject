@@ -2,7 +2,7 @@ const mongoCollections = require('../config/mongoCollections');
 const companies = mongoCollections.company;
 const bcryptjs = require('bcryptjs');
 const {ObjectId} = require('mongodb');
-const helper = require('../helper')
+const helper = require('../helper');
 const saltRounds = 10;
 
 const getCompanyById = async (id) => {
@@ -58,8 +58,6 @@ const createCompany = async (email,EIN,name,password) => {
     const newCompanyId = insertInfo.insertedId.toString();
     return await getCompanyById(newCompanyId);
 }
-
-
 
 module.exports = {
     createCompany,
