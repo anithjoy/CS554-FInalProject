@@ -78,6 +78,11 @@ const isValidWatchers = (watchers) => {
   }
   return watchers;    
 }
+const isValidPassword = (password) => {
+  if(!password.match(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,12}$/))
+      throw {status: '400', error : 'Invalid Password'}
+  return password
+}
 
 module.exports = {
     isValidString,
@@ -87,5 +92,6 @@ module.exports = {
     isValidPastDate,
     isValidFutureDate,
     isValidDate,
-    isValidWatchers
+    isValidWatchers,
+    isValidPassword
 };
