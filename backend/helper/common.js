@@ -74,7 +74,7 @@ const isValidWatchers = (watchers) => {
           throw {status: '400', error : `Invalid data type for watchers`};
   for(let i=0;i<watchers.length;i++)
   {            
-      watchers[i] = common.isValidEmail(watchers);
+      watchers[i] = isValidEmail(watchers);
   }
   return watchers;    
 }
