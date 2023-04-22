@@ -15,7 +15,7 @@ const deleteTicketComment = async (ticketId, commentId) => {
 
   const updatedInfo_ticket = await ticketCollection.updateOne(
     { _id: new ObjectId(ticketId) },
-    { $pull: { comments: commentId } }
+    { $pull: { comments: new ObjectId(commentId) } }
   );
 
   if (!updatedInfo_ticket.matchedCount && !updatedInfo_ticket.modifiedCount) {
@@ -28,10 +28,11 @@ const deleteTicketComment = async (ticketId, commentId) => {
 
   if (
     !updatedInfo_comment.acknowledged ||
-    updatedInfo_comment.deletedCount != 1
+    !updatedInfo_comment.deletedCount 
   ) {
     throw { status: 404, error: "comment not found" };
   }
+  
 };
 
 const getTicketById = async(ticketId) =>{
@@ -84,6 +85,7 @@ const createTicket = async(data) => {
 
     data = helper.ticket.isValidTicketCreationData(data);
     data.comments=[];
+    data.watchers = [...new Set([data.creator])];
     const ticketCollection = await ticketCol();
   
     const insertInfo = await ticketCollection.insertOne(data);
@@ -106,11 +108,14 @@ const updateTicket = async (
   
     ticketId = helper.common.isValidId(ticketId);
     data = helper.ticket.isValidTicketUpdateData(data);
-  
+    
     const ticketCollection = await ticketCol();
     
-    await getTicketById(ticketId);
-
+    let ticketInDb = await getTicketById(ticketId);
+    if(data.assign){
+      if(data.watchers) data.watchers = [...new Set([...data.watchers, data.assign])];
+      else data.watchers = [...new Set([...ticketInDb.watchers, data.assign])];
+    }
     const updatedInfo = await ticketCollection.updateMany(
       {_id: new ObjectId(ticketId)},
       {$set: data}
@@ -130,16 +135,19 @@ const createComment = async( ticketId, body) =>{
   ticketId = helper.common.isValidId(ticketId);
   body.text = helper.common.isValidString(body.text,'comment');
   let newComment = {
-    commentId:new ObjectId(),
     text:body.text
   }
   if(body.document) {
     body.document = helper.ticket.isValidDocument(body.document);
-    newComment.document = boyd.document;
+    newComment.document = body.document;
   }
+  const commentCollection = await commentCol();
+  const commentInsertInfo = await commentCollection.insertOne(newComment);
+  if (!commentInsertInfo.acknowledged || !commentInsertInfo.insertedId)
+        throw {status: 400, error : 'Could not add comment'};
   const ticketCollection = await ticketCol();
   const insertInfo = await ticketCollection.updateOne(
-    {_id:new ObjectId(ticketId)}, {$push:{comments:newComment}}
+    {_id:new ObjectId(ticketId)}, {$push:{comments:commentInsertInfo.insertedId}}
   );
   if (!insertInfo.acknowledged || !insertInfo.modifiedCount)
       throw {status: 400, error : 'Could not add comment'};

@@ -75,8 +75,11 @@ const updateProject = async (projectId, data) =>{
 
     data = helper.project.isValidUpdateData(data);
 
-    await getProjectById(projectId);
-
+    let projectInDb = await getProjectById(projectId);
+    if(data.manager){
+        if(data.watchers) data.watchers = [...new Set([...data.watchers, data.manager])];
+        else data.watchers = [...new Set([...projectInDb.watchers, data.manager])];
+      }
     const projectCollection = await projectCol();
     const updatedInfo = await projectCollection.updateMany(
       {_id: new ObjectId(projectId)},
