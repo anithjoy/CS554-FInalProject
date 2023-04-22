@@ -25,7 +25,7 @@ const getAllProjectsByEmail = async (email) => {
     email = helper.common.isValidEmail(email);
 
     const projectCollection = await projectCol();
-    let projects = await projectCollection.find({watchers:{$elemMatch:email}}).toArray();
+    let projects = await projectCollection.find({watchers:{$elemMatch:{$eq:email}}}).toArray();
 
     if (projects === null || projects.length==0) 
     {
@@ -87,7 +87,7 @@ const updateProject = async (projectId, data) =>{
       throw {status: 400, error : 'could not update because values are same as previous one'};
     }
 
-    const project = await getProjectById(id);
+    const project = await getProjectById(projectId);
 
     service.email.sendProjectUpdateEmail(project);
 
@@ -133,7 +133,7 @@ const getAllSprintbyProjectId = async (projectId) => {
     if (projects === null || projects.length==0)
         throw {status: 404, error : 'No project found with that ID'};
     else if(projects.sprint === null || projects.sprint.length === 0)
-        throw {status: 404, error : 'No sprints found for this project'};
+        return [];
 
     const sprints = projects.sprint;
     return sprints;
@@ -163,17 +163,21 @@ const updateSprint = async(projectId, sprintId, data) => {
 
     projectId = helper.common.isValidId(projectId);
     sprintId = helper.common.isValidId(sprintId);
-
+    data = helper.project.isValidSprintUpdateData(data);
+    
     await getProjectById(projectId);
 
     const sprint = await getSprintbyId(projectId, sprintId);
-
+    let endDate=data.endDate||sprint.endDate;
+    let startDate = data.startDate || sprint.startDate;
+    if((endDate && startDate) && endDate<startDate) throw{status:400,error:'Invalid date'};
     const projectCollection = await projectCol();
     const updatedInfo = await projectCollection.findOneAndUpdate(
         {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
         {$set: {
             'sprint.$.name': data.name || sprint.name,
             'sprint.$.startDate': data.startDate || sprint.startDate,
+            'sprint.$.endDate': data.endDate || sprint.endDate,
             'sprint.$.description': data.description || sprint.description
         }}
     )

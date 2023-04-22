@@ -11,14 +11,14 @@ const isValidProjectName = (name) => {
 };
 
 const isValidUpdateData = (data) =>{
-    for(key in data)
+    for(let key in data)
     {
         switch(key){
             case "name":
                 data.name = isValidProjectName(data.name);
                 break;
             case "manager":
-                data.assign = common.isValidEmail(data.assign);
+                data.manager = common.isValidEmail(data.manager);
                 break;
             case "watchers":
                 data.watchers = common.isValidWatchers(data.watchers);
@@ -42,7 +42,7 @@ const isValidSprintName = (name) => {
 };
 
 const isValidSprintUpdateData = (data) => {
-    for(key in data)
+    for(let key in data)
     {
         switch(key){
             case "name":
@@ -50,6 +50,9 @@ const isValidSprintUpdateData = (data) => {
                 break;
             case "startDate":
                 data.startDate = common.isValidDate(data.startDate);
+                break;
+            case "endDate":
+                data.endDate = common.isValidPastDate(data.endDate);
                 break;
             case "description":
                 data.description = common.isValidString(data.description);

@@ -61,8 +61,6 @@ const getTicketByProjectId = async(projectId) =>{
         throw {status: 404, error : 'No ticket with that project id'};
     }
 
-    ticket._id = ticket._id.toString();
-
     return ticket;
 }
 

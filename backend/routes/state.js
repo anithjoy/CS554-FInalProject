@@ -7,8 +7,8 @@ const {state : stateData} = require("../data");
 router
   .route("/")
   .get(async (req, res) => {
+    let companyId = req.query.companyId;
     try{
-      let companyId = req.query.companyId;
       companyId = helper.common.isValidId(companyId);
     } catch (error) {
       if(typeof e !== 'object' || !('status' in e))
@@ -37,7 +37,7 @@ router
       data.transition = helper.state.isValidTransition(data.transition);
       data.description = helper.state.isValidDescription(data.description);
       await Promise.all(
-        transition.map(async (id) => {
+        data.transition.map(async (id) => {
           await stateData.getStateById(id);
         })
       );
@@ -87,7 +87,7 @@ router
   .patch(async (req, res) => {
     try {
       let stateId = req.params.stateId;
-      let data = body.data;
+      let data = req.body;
 
       stateId = helper.common.isValidId(stateId);
       data = helper.state.isValidData(data);
@@ -97,7 +97,7 @@ router
         data
       );
       return res.status(200).json(updatedState);
-    } catch (error) {
+    } catch (e) {
       if(typeof e !== 'object' || !('status' in e))
         res.status(500).json("Internal server error");
       else
