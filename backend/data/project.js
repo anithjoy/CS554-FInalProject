@@ -175,15 +175,27 @@ const updateSprint = async(projectId, sprintId, data) => {
     let startDate = data.startDate || sprint.startDate;
     if((endDate && startDate) && endDate<startDate) throw{status:400,error:'Invalid date'};
     const projectCollection = await projectCol();
-    const updatedInfo = await projectCollection.findOneAndUpdate(
-        {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
-        {$set: {
-            'sprint.$.name': data.name || sprint.name,
-            'sprint.$.startDate': data.startDate || sprint.startDate,
-            'sprint.$.endDate': data.endDate || sprint.endDate,
-            'sprint.$.description': data.description || sprint.description
-        }}
-    )
+    if(endDate){
+        const updatedInfo = await projectCollection.findOneAndUpdate(
+            {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
+            {$set: {
+                'sprint.$.name': data.name || sprint.name,
+                'sprint.$.startDate': data.startDate || sprint.startDate,
+                'sprint.$.endDate': data.endDate || sprint.endDate,
+                'sprint.$.description': data.description || sprint.description
+            }}
+        )
+    }
+    else{
+         const updatedInfo = await projectCollection.findOneAndUpdate(
+            {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
+            {$set: {
+                'sprint.$.name': data.name || sprint.name,
+                'sprint.$.startDate': data.startDate || sprint.startDate,
+                'sprint.$.description': data.description || sprint.description
+            }}
+        )
+    }
     if (updatedInfo.modifiedCount === 0) {
         throw {status: 400, error : 'could not update because values are same as previous one'};
     }
