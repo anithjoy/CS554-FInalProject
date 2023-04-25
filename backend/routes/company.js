@@ -19,7 +19,7 @@ router
         
         let newCompany = await companyData.createCompany(bodyData.email,bodyData.EIN,bodyData.name);
         if(newCompany){
-          res.json(newCompany);
+          res.status(201).json(newCompany);
         } else throw {status:401,error:'Could not create company'};
       }catch(e){
         if(typeof e !== 'object' || !('status' in e))
@@ -61,7 +61,7 @@ router
         
     let users = await data.user.createUser(req.params.companyId,bodyData.email,bodyData.name,bodyData.role);
     if(users){
-      res.json(users);
+      res.status(201).json(users);
     } else throw {status:401,error:'Could not create user'};
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))

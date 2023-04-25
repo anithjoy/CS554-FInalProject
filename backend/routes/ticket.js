@@ -154,9 +154,9 @@ router
     ticketId = helper.common.isValidId(ticketId);
     commentId = helper.common.isValidId(commentId);
 
-    await ticketData.deleteTicket(ticketId, commentId);
+    await ticketData.deleteTicketComment(ticketId, commentId);
     return res.status(200).json("Removed");
-  } catch (error) {
+  } catch (e) {
     if(typeof e !== 'object' || !('status' in e))
       res.status(500).json("Internal server error");
     else

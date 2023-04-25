@@ -48,7 +48,7 @@ const isValidPastDate = (time) => {
   time = new Date(time);
   let today = new Date();
   if (time === "Invalid Date" || time > today)
-    throw { status: "400", error: "Invalid date" };
+    throw { status: "400", error: "Invalid past date" };
   return time;
 };
 
@@ -64,7 +64,7 @@ const isValidFutureDate = (time) => {
 const isValidDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
-  if (time === "Invalid Date")
+  if (time == "Invalid Date")
     throw { status: "400", error: "Invalid date" };
   return time;
 };
