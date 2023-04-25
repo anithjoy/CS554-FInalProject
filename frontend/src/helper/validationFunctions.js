@@ -30,6 +30,11 @@ export const isValidPassword = (passowrd) => {
     return passowrd
 }
 
+export const isValidCompanyName = (inputName) => {
+  inputName = isValidString(inputName,"Name");
+  return inputName;
+}
+
 export const isValidName = (inputName) => {
   inputName = isValidString(inputName,"Name");
   let name=inputName.split(' '); 
@@ -154,3 +159,10 @@ export const isValidDependedOnTickets = (dependedOnTickets) => {
           throw new Error( `Invalid data type for dependedOnTickets field`);
   return dependedOnTickets;    
 }
+
+export const isValidEIN = (EIN) => {
+  EIN = isValidString(EIN, "EIN");
+  if(!EIN.match(/^[0-9]{9}$/))
+      throw new Error( 'Invalid EIN')
+  return EIN;
+  }

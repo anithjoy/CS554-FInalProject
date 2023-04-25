@@ -2,7 +2,7 @@ const PRIORITY = ['HIGH', 'MEDIUM', 'LOW'];
 
 const TICKET_TYPE = ['STORY', 'TASK', 'BUG'];
 
-const ROLE = ['ADMIN', 'MANAGER', 'DEVELOPER', 'QA', 'SUPPORT'];
+const ROLE = ['SUPER-ADMIN', 'ADMIN', 'MANAGER', 'DEVELOPER', 'QA', 'SUPPORT'];
 
 const REQUIRE_FIELD_FOR_TICKET_CREATION = ["companyId", "projectId", "type", "priority", "name", "stateId", "creator", "description"];
 

@@ -1,5 +1,5 @@
-import {axiosNoAuth} from './axios'
+import {axiosAuth} from './axios'
 
 export const post = (data) => {
-    return axiosNoAuth.post(`/login`, data)
+    return axiosAuth.post(`/login`, data)
 }

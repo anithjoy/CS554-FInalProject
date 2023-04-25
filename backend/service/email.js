@@ -9,6 +9,11 @@ const sendEmail = async(to, subject, html) => {
       }); 
 }
 
+const sendPasswordResetLinkEmail = async(data) =>{
+  const html = `<h1> Password Reset </h1> <p>Link = <a href = "http://localhost:3003/reset-password?token=${data.token}">Reset Your Password</a></p>`;
+  await sendEmail(data.email, "Password Reset", html);
+}
+
 const sendProjectCreateEmail = async(data) =>{
   const html = `<h1> Project Creation </h1>`;
   await sendEmail(data.watchers, "Project Creation", html);
@@ -40,6 +45,7 @@ const sendTicketUpdateEmail = async(data) =>{
 }
 
 module.exports = {
+  sendPasswordResetLinkEmail,
   sendProjectCreateEmail,
   sendProjectUpdateEmail,
   sendSprintCreateEmail,
