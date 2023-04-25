@@ -3,6 +3,43 @@ const router = express.Router();
 const data = require('../data');
 const helper = require('../helper')
 
+router
+ .route('/')
+ .get(async (req, res) => {
+  try{  
+    let users = await data.user.getUsersByCompanyId(req.user.companyId);
+    if(users){
+      res.json(users);
+    } else throw {status:401,error:'Could not create user'};
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+    res.status(500).json("Internal server error");
+  else
+    res.status(parseInt(e.status)).json(e.error);
+  return;
+  }  
+ })
+ .post(async (req, res) => {
+  try{
+    const bodyData = req.body;
+    for(let i in bodyData)
+      bodyData[i]=xss(bodyData[i])
+    bodyData.email=helper.common.isValidEmail(bodyData.email);
+    bodyData.name=helper.common.isValidString(bodyData.name, 'user name');
+    bodyData.role=helper.user.isValidRole(bodyData.role);
+        
+    let users = await data.user.createUser(req.user.companyId,bodyData.email,bodyData.name,bodyData.role);
+    if(users){
+      res.json(users);
+    } else throw {status:401,error:'Could not create user'};
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+    res.status(500).json("Internal server error");
+  else
+    res.status(parseInt(e.status)).json(e.error);
+  return;
+  }  
+ })
 //Anyone can pickup this
 router
   .route('/:userId')

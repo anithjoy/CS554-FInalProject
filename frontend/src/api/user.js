@@ -1,11 +1,11 @@
 import {axiosAuth} from './axios'
 
 export const createUser = (id, data) => {
-    return axiosAuth.post(`/company/${id}/user`, data);
+    return axiosAuth.post(`/user`, data);
 }
 
 export const getAllUser = (id) => {
-    return axiosAuth.get(`/company/${id}/user`);
+    return axiosAuth.get(`/user`);
 }
 
 export const getUserInfo = (id) => {
