@@ -52,7 +52,7 @@ const isValidSprintUpdateData = (data) => {
                 data.startDate = common.isValidDate(data.startDate);
                 break;
             case "endDate":
-                data.endDate = common.isValidPastDate(data.endDate);
+                data.endDate = common.isValidDate(data.endDate);
                 break;
             case "description":
                 data.description = common.isValidString(data.description);
