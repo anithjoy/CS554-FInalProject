@@ -85,7 +85,11 @@ const createTicket = async(data) => {
 
     data = helper.ticket.isValidTicketCreationData(data);
     data.comments=[];
-    data.watchers = [...new Set([data.creator])];
+    if(data.watchers && data.assign) data.watchers = [...new Set([...data.watchers, data.assign,data.creator])];
+    else if(data.assign) data.watchers = [...new Set([data.assign,data.creator])];
+    else if(data.watchers) data.watchers = [...new Set([...data.watchers,data.creator])];
+    else data.watchers = [...new Set([data.creator])];
+    
     const ticketCollection = await ticketCol();
   
     const insertInfo = await ticketCollection.insertOne(data);
