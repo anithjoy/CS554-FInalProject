@@ -17,18 +17,18 @@ app.use(async(req, res, next) => {
       req.user = decodedToken.email;
       return next();
     }
-    return res.json({ message: 'Un authorize' });
+    return res.status(401).json("Unauthorized");
   } catch (e) {
-    return res.json({ message: 'Un authorize' });
+    return res.status(401).json("Unauthorized");
   }
 });
 
 app.use("/login",async(req, res, next) => {
   try {
     firebaseAdmin.auth().deleteUser(req.body.email);
-    return res.json({ message: 'success' });
+    return res.json("Success");
   } catch (e) {
-    return res.json({ message: 'error' });
+    return res.status(500).json("Internal server error");
   }
 });
 
