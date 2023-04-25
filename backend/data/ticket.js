@@ -15,7 +15,7 @@ const deleteTicketComment = async (ticketId, commentId) => {
 
   const updatedInfo_ticket = await ticketCollection.updateOne(
     { _id: new ObjectId(ticketId) },
-    { $pull: { comments: new ObjectId(commentId) } }
+    { $pull: { comments: commentId } }
   );
 
   if (!updatedInfo_ticket.matchedCount && !updatedInfo_ticket.modifiedCount) {
