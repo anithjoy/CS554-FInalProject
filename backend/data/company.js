@@ -1,9 +1,8 @@
 const mongoCollections = require('../config/mongoCollections');
 const companies = mongoCollections.company;
-const bcryptjs = require('bcryptjs');
+const userData = require("./user");
 const {ObjectId} = require('mongodb');
 const helper = require('../helper');
-const saltRounds = 10;
 
 const getCompanyById = async (id) => {
     id = helper.common.isValidId(id);
@@ -33,21 +32,19 @@ const getCompanyById = async (id) => {
     return true;  
   }
 
-const createCompany = async (email,EIN,name,password) => {
+const createCompany = async (email,EIN,name) => {
     email = helper.common.isValidEmail(email);
     EIN = helper.company.isValidEIN(EIN);
     name = helper.common.isValidString(name,'company name');
-    password = helper.common.isValidPassword(password);
 
-    if(await isCompanyEmailInDb(email)) throw {status:400,error:'An account already exists with this email'};
+    if(await isCompanyEmailInDb(email)) throw {status:400,error:'An company account already exists with this email'};
+    if(await userData.isUserEmailInDb(email)) throw {status:400,error:'An user account already exists with this email'};
     if(await isEINInDb(EIN)) throw {status:400,error:'An account already exists with this EIN'};
     
-    let hashedPassword = await bcryptjs.hash(password,saltRounds);
     let newCompany = {
         email,
         EIN,
-        name,
-        hashedPassword
+        name
     }
 
     const companyCollection = await companies(); 
@@ -56,6 +53,7 @@ const createCompany = async (email,EIN,name,password) => {
     throw {status:"400",error:'Could not add Company'};
 
     const newCompanyId = insertInfo.insertedId.toString();
+    await userData.createUser(newCompanyId,email,"Company Account","SUPER-ADMIN");
     return await getCompanyById(newCompanyId);
 }
 

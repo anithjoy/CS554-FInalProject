@@ -4,8 +4,6 @@ const data = require("../data");
 const helper = require('../helper');
 const companyData = data.company;
 const xss = require('xss');
-const { email } = require('../service');
-
 
 //Maggie
 router
@@ -18,9 +16,8 @@ router
         bodyData.email=helper.common.isValidEmail(bodyData.email);
         bodyData.name=helper.common.isValidString(bodyData.name, 'company name');
         bodyData.EIN=helper.company.isValidEIN(bodyData.EIN);
-        bodyData.password=helper.common.isValidPassword(bodyData.password);
         
-        let newCompany = await companyData.createCompany(bodyData.email,bodyData.EIN,bodyData.name,bodyData.password);
+        let newCompany = await companyData.createCompany(bodyData.email,bodyData.EIN,bodyData.name);
         if(newCompany){
           res.json(newCompany);
         } else throw {status:401,error:'Could not create company'};
@@ -61,9 +58,8 @@ router
     bodyData.email=helper.common.isValidEmail(bodyData.email);
     bodyData.name=helper.common.isValidString(bodyData.name, 'user name');
     bodyData.role=helper.user.isValidRole(bodyData.role);
-    bodyData.password=helper.common.isValidPassword(bodyData.password);
         
-    let users = await data.user.createUser(req.params.companyId,bodyData.email,bodyData.name,bodyData.role,bodyData.password);
+    let users = await data.user.createUser(req.params.companyId,bodyData.email,bodyData.name,bodyData.role);
     if(users){
       res.json(users);
     } else throw {status:401,error:'Could not create user'};

@@ -2,8 +2,8 @@ const mongoCollections = require('../config/mongoCollections');
 const helper = require('../helper');
 const users = mongoCollections.user;
 const {ObjectId} = require('mongodb');
-const bcryptjs = require('bcryptjs');
-const saltRounds = 10;
+const firebaseAdmin = require('../config/firebase-config');
+const service =  require("../service");
 
 const getUserById = async (id) =>{
     helper.common.isValidId(id);
@@ -21,11 +21,6 @@ const updateUser = async (userId,body) =>{
             break;
           case "role":
             body.role = helper.user.isValidRole(body.role);
-            break;
-          case "password":
-            body.password = helper.common.isValidPassword(body.password);
-            body.hashedPassword = await bcryptjs.hash(body.password, saltRounds);
-            delete body.password;
             break;
           case "accessProjects":
             body.accessProjects = helper.user.isValidAccessProjects(body.accessProjects);
@@ -48,38 +43,39 @@ const updateUser = async (userId,body) =>{
     return await getUserById(userId);
 }
 
-const createUser = async(companyId,email,name,role,password) => {
+const createUser = async(companyId,email,name,role) => {
     companyId = helper.common.isValidId(companyId);
     email = helper.common.isValidEmail(email);
     name = helper.common.isValidString(name,'user name');
     role = helper.user.isValidRole(role);
-    password = helper.common.isValidPassword(password);
     
 // Add checking if a company exists with this companyId
 // 
 // 
 // 
 
-
-    if(await isUserEmailInDb(email)) throw {status:400,error:'A user account already exists with this email'};
-    
-    let hashedPassword = await bcryptjs.hash(password,saltRounds);
+  if(await isUserEmailInDb(email)) throw {status:400,error:'A user account already exists with this email'};
 
     let newUser = {
       companyId,
       email,
       name,
-      hashedPassword,
       role,
       accessProjects:[]
-  }
+    }
   const userCollection = await users(); 
   const insertInfo = await userCollection.insertOne(newUser);
   if (!insertInfo.acknowledged || !insertInfo.insertedId)
   throw {status:"400",error:'Could not add User'};
-
+  
   const newUserId = insertInfo.insertedId.toString();
-  return await getUserById(newUserId);
+  const user = await getUserById(newUserId);
+  if(newUser.role != "SUPER-ADMIN"){
+    const token = await firebaseAdmin.auth().createCustomToken(newUser.email);
+
+    service.email.sendPasswordResetLinkEmail({email:newUser.email, token});
+  }
+  return user;
 
 }
 const isUserEmailInDb = async(email) => {
@@ -106,5 +102,6 @@ module.exports = {
     getUserById,
     updateUser,
     createUser,
-    getUsersByCompanyId
+    getUsersByCompanyId,
+    isUserEmailInDb
 };

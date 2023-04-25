@@ -4,9 +4,34 @@ const cors = require('cors');
 const configRoutes = require('./routes');
 const {Server} = require("socket.io");
 const http = require("http");
+const firebaseAdmin = require('./config/firebase-config');
 
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
+
+app.use(async(req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
+    if (decodedToken) {
+      req.user = decodedToken.email;
+      return next();
+    }
+    return res.json({ message: 'Un authorize' });
+  } catch (e) {
+    return res.json({ message: 'Un authorize' });
+  }
+});
+
+app.use("/login",async(req, res, next) => {
+  try {
+    firebaseAdmin.auth().deleteUser(req.body.email);
+    return res.json({ message: 'success' });
+  } catch (e) {
+    return res.json({ message: 'error' });
+  }
+});
+
 
 configRoutes(app);
 
