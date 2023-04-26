@@ -7,8 +7,8 @@ const {state : stateData} = require("../data");
 router
   .route("/")
   .get(async (req, res) => {
+    let companyId = req.user.companyId;
     try{
-      let companyId = req.query.companyId;
       companyId = helper.common.isValidId(companyId);
     } catch (error) {
       if(typeof e !== 'object' || !('status' in e))
@@ -33,11 +33,11 @@ router
     const data = req.body;
     try{
       data.name = helper.state.isValidStateName(data.name);
-      data.companyId = helper.common.isValidId(data.companyId);
+      data.companyId = helper.common.isValidId(req.user.companyId);
       data.transition = helper.state.isValidTransition(data.transition);
       data.description = helper.state.isValidDescription(data.description);
       await Promise.all(
-        transition.map(async (id) => {
+        data.transition.map(async (id) => {
           await stateData.getStateById(id);
         })
       );

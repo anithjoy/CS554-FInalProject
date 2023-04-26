@@ -10,17 +10,7 @@ router
  .get(async (req, res) => {
 
   try{
-    req.query.email = helper.common.isValidEmail(req.query.email);
-  }catch(e){
-    if(typeof e !== 'object' || !('status' in e))
-      res.status(500).json("Internal server error");
-    else
-      res.status(parseInt(e.status)).json(e.error);
-    return;
-  }
-
-  try{
-      const projects = await projectData.getAllProjectsByEmail(req.query.email);
+      const projects = await projectData.getAllProjectsByEmail(req.user.email);
       res.json(projects);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
@@ -35,8 +25,8 @@ router
     const data = req.body;
     try{
       data.name = helper.project.isValidProjectName(data.name);
-      data.companyId = helper.common.isValidId(data.companyId);
-      data.creator = helper.common.isValidEmail(data.creator); 
+      data.companyId = helper.common.isValidId(req.user.companyId);
+      data.creator = helper.common.isValidEmail(req.user.email); 
       data.manager = helper.common.isValidEmail(data.manager);
       if(data.watchers)
         data.watchers = helper.common.isValidWatchers(data.watchers);

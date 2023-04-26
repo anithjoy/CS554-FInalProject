@@ -70,14 +70,7 @@ const getTicketByUser = async(email) =>{
   email = helper.common.isValidEmail(email);
 
   const ticketCollection = await ticketCol();
-  const ticket = await ticketCollection.find({assign : email}).toArray();
-
-  if (ticket === null) 
-  {
-      throw {status: 404, error : 'No ticket with that project id'};
-  }
-
-  ticket._id = ticket._id.toString();
+  const ticket = await ticketCollection.find({watchers:{$elemMatch:{$eq:email}}}).toArray();
 
   return ticket;
 }

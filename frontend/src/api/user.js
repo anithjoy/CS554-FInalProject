@@ -1,10 +1,10 @@
 import {axiosAuth} from './axios'
 
-export const createUser = (id, data) => {
+export const createUser = (data) => {
     return axiosAuth.post(`/user`, data);
 }
 
-export const getAllUser = (id) => {
+export const getAllUser = () => {
     return axiosAuth.get(`/user`);
 }
 

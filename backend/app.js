@@ -19,7 +19,8 @@ app.use(async(req, res, next) => {
         req.user = await data.user.getUserByEmail(decodedToken.email);
       else
         req.user = decodedToken.email;
-      return next();
+      next();
+      return;
     }
     return res.status(401).json("Unauthorized");
   } catch (e) {
