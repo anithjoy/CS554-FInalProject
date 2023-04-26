@@ -1,5 +1,13 @@
 import * as constant from "./constants";
 
+export const isValidRole = (role) => {
+  for(let validRole of constant.ROLE)
+  {
+      if(role.toUpperCase()==validRole) return role.toUpperCase();
+  }
+  throw {status:400,error:'Invalid role'}
+}
+
 export const isValidString = (string, parameter) =>{
     if (!string) throw new Error(`You must provide a ${parameter}`);
     if (typeof string !== 'string') throw new Error(`${parameter} must be a string`);

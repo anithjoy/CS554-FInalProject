@@ -12,6 +12,13 @@ const getUserById = async (id) =>{
     user._id = user._id.toString();
     return user;
 }
+
+const getUserByEmail = async (email) =>{
+  email = helper.common.isValidEmail(email);
+  const userCollection = await users();
+  const user = await userCollection.findOne({email : email});
+  return user;
+}
 const updateUser = async (userId,body) =>{
     for(let field in body){
         switch(field)
@@ -93,9 +100,10 @@ const getUsersByCompanyId = async(companyId) => {
     const userCollection = await users()
     const companyUsers = await userCollection.find({companyId: companyId}).toArray();
     if (companyUsers === null) throw {status:"404",error:'No users in that company'};
-    for(let tempUser of companyUsers)
+    let results = companyUsers.filter(user => user.role!='SUPER-ADMIN')
+    for(let tempUser of results)
     tempUser['_id']=tempUser['_id'].toString()
-    return companyUsers;
+    return results;
 }
 
 module.exports = {
@@ -103,5 +111,6 @@ module.exports = {
     updateUser,
     createUser,
     getUsersByCompanyId,
-    isUserEmailInDb
+    isUserEmailInDb,
+    getUserByEmail
 };
