@@ -54,6 +54,7 @@ const getAllState = async (companyId) => {
   const resState = await stateCollection
     .find({ companyId: companyId })
     .toArray();
+
   return resState;
 };
 

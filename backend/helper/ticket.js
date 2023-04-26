@@ -34,7 +34,7 @@ const isValidTicketUpdateData = (data) =>{
         if(data[constant.FORBIDDEN_FIELD_FOR_TICKET_UPDATE[i]])
             throw {status: '400', error : `Invalid ${constant.FORBIDDEN_FIELD_FOR_TICKET_UPDATE[i]} field`};
     data = isValidTicketData(data);
-    return data
+    return data;
 }
 
 const isValidTicketCreationData = (data) =>{

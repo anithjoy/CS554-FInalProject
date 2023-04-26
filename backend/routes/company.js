@@ -19,7 +19,7 @@ router
         
         let newCompany = await companyData.createCompany(bodyData.email,bodyData.EIN,bodyData.name);
         if(newCompany){
-          res.json(newCompany);
+          res.status(201).json(newCompany);
         } else throw {status:401,error:'Could not create company'};
       }catch(e){
         if(typeof e !== 'object' || !('status' in e))

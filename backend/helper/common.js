@@ -64,7 +64,7 @@ const isValidFutureDate = (time) => {
 const isValidDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
-  if (time === "Invalid Date")
+  if (time == "Invalid Date")
     throw { status: "400", error: "Invalid date" };
   return time;
 };

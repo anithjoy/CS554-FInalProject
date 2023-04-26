@@ -87,7 +87,7 @@ router
   .patch(async (req, res) => {
     try {
       let stateId = req.params.stateId;
-      let data = body.data;
+      let data = req.body;
 
       stateId = helper.common.isValidId(stateId);
       data = helper.state.isValidData(data);
@@ -97,7 +97,7 @@ router
         data
       );
       return res.status(200).json(updatedState);
-    } catch (error) {
+    } catch (e) {
       if(typeof e !== 'object' || !('status' in e))
         res.status(500).json("Internal server error");
       else

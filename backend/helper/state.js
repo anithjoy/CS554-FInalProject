@@ -36,14 +36,16 @@ const isValidDescription = (description) => {
 const isValidTransition = (transition) => {
 
   if (!Array.isArray(transition)) {
-    throw { status: 400, error: "Transition must be na array" };
+    throw { status: 400, error: "Transition must be an array" };
   }
-
-  return transition.map((element) => common.isValidId(element));
+  for(let t of transition){
+    if(!common.isValidId(t)) throw{status:400,error:'invalid transition id'}
+  }
+  return transition;
 };
 
 const isValidData = (data) => {
-  for(key in data)
+  for(let key in data)
     {
         switch(key){
             case "name":
