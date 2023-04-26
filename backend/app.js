@@ -15,7 +15,10 @@ app.use(async(req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
     if (decodedToken) {
-      req.user = data.user.getUserById(decodedToken.email);
+      if(req.url != '/company')
+        req.user = await data.user.getUserByEmail(decodedToken.email);
+      else
+        req.user = decodedToken.email;
       return next();
     }
     return res.status(401).json("Unauthorized");
