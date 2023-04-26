@@ -6,12 +6,21 @@ const firebaseAdmin = require('../config/firebase-config');
 const service =  require("../service");
 
 const getUserById = async (id) =>{
-    helper.common.isValidId(id);
+    id = helper.common.isValidId(id);
     const userCollection = await users();
     const user = await userCollection.findOne({_id : new ObjectId(id)});
     user._id = user._id.toString();
     return user;
 }
+
+const getUserByEmail = async (email) =>{
+  email = helper.common.isValidEmail(email);
+  const userCollection = await users();
+  const user = await userCollection.findOne({email : email});
+  user._id = user._id.toString();
+  return user;
+}
+
 const updateUser = async (userId,body) =>{
     for(let field in body){
         switch(field)
@@ -100,6 +109,7 @@ const getUsersByCompanyId = async(companyId) => {
 
 module.exports = {
     getUserById,
+    getUserByEmail,
     updateUser,
     createUser,
     getUsersByCompanyId,

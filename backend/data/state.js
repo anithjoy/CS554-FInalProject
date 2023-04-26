@@ -54,10 +54,6 @@ const getAllState = async (companyId) => {
   const resState = await stateCollection
     .find({ companyId: companyId })
     .toArray();
-
-  if (resState.length === 0) {
-    throw { status: 404, error: "No states found with the given companyId" };
-  }
   return resState;
 };
 

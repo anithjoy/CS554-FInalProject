@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const helper = require('../helper')
+const xss = require('xss');
 
 router
  .route('/')

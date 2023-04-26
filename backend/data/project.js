@@ -25,16 +25,7 @@ const getAllProjectsByEmail = async (email) => {
     email = helper.common.isValidEmail(email);
 
     const projectCollection = await projectCol();
-    let projects = await projectCollection.find({watchers:{$elemMatch:email}}).toArray();
-
-    if (projects === null || projects.length==0) 
-    {
-        throw {status: 404, error : 'No project with that user'};
-    }
-
-
-    for(let i of projects)
-        i._id = i._id.toString();
+    let projects = await projectCollection.find({watchers:{$elemMatch:{$eq:email}}}).toArray();
 
     return projects;
 }
@@ -132,8 +123,6 @@ const getAllSprintbyProjectId = async (projectId) => {
     const projects = await projectCollection.findOne({ _id: new ObjectId(projectId)})
     if (projects === null || projects.length==0)
         throw {status: 404, error : 'No project found with that ID'};
-    else if(projects.sprint === null || projects.sprint.length === 0)
-        throw {status: 404, error : 'No sprints found for this project'};
 
     const sprints = projects.sprint;
     return sprints;
