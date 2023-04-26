@@ -55,9 +55,6 @@ const getAllState = async (companyId) => {
     .find({ companyId: companyId })
     .toArray();
 
-  if (resState.length === 0) {
-   return [];
-  }
   return resState;
 };
 

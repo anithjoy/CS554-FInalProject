@@ -66,7 +66,7 @@ export const isValidPastDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time > today)
+  if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date >today.date))
     throw new Error("Invalid date");
   return time;
 };
@@ -75,7 +75,7 @@ export const isValidFutureDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time < today)
+  if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
     throw new Error("Invalid date");
   return time;
 };
@@ -173,4 +173,37 @@ export const isValidEIN = (EIN) => {
   if(!EIN.match(/^[0-9]{9}$/))
       throw new Error( 'Invalid EIN')
   return EIN;
+}
+
+export const isValidTicketData = (data) =>{
+  for(let key in data)
+  {
+      switch(key){
+          case "type":
+              data.type = isValidTicketType(data.type);
+              break;
+          case "priority":
+              data.priority = isValidTicketPriority(data.priority);
+              break;
+          case "name":
+              data.name = isValidString(data.name);
+              break;
+          case "expectedDate":
+              data.expectedDate = isValidFutureDate(data.expectedDate);
+              break;
+          case "reopenDate":
+              data.reopenDate = isValidPastDate(data.reopenDate);
+              break;
+          case "closeDate":
+              data.closeDate = isValidPastDate(data.closeDate);
+              break;
+          case "description":
+              data.description = isValidString(data.description);
+              break;
+          default:
+              break;
+          
+      }
   }
+  return data;
+}

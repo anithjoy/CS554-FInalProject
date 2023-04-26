@@ -38,10 +38,10 @@ const isValidTicketUpdateData = (data) =>{
 }
 
 const isValidTicketCreationData = (data) =>{
-    for(let i=0;i<constant.REQUIRE_FIELD_FOR_TICKET_CREATION;i++)
+    for(let i=0;i<constant.REQUIRE_FIELD_FOR_TICKET_CREATION.length;i++)
         if(!data[constant.REQUIRE_FIELD_FOR_TICKET_CREATION[i]])
             throw {status: '400', error : `Require ${constant.REQUIRE_FIELD_FOR_TICKET_CREATION[i]} field`};
-    for(let i=0;i<constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION;i++)
+    for(let i=0;i<constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION.length;i++)
         if(data[constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]])
             throw {status: '400', error : `Invalid ${constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]} field`};
     data = isValidTicketData(data);
