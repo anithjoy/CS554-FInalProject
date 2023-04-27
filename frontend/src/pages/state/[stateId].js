@@ -1,9 +1,17 @@
-import React from 'react'
+import EditStateForm from "@/components/EditStateForm";
+import { useRouter } from "next/router";
 
-const State = () => {
+const EditState = () => {
+  const router = useRouter();
   return (
-    <div>State</div>
-  )
-}
+    <div>
+      <h1>Edit State Form</h1>
 
-export default State
+      <EditStateForm
+        stateId = {router.query.stateId}
+      />
+    </div>
+  );
+};
+
+export default EditState;

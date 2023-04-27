@@ -1,37 +1,39 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const helper = require('../helper');
-const {state : stateData} = require("../data");
+const helper = require("../helper");
+const { state: stateData } = require("../data");
 
 //Anith
 router
   .route("/")
   .get(async (req, res) => {
+
     let companyId = req.user.companyId;
     try{
       companyId = helper.common.isValidId(companyId);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
 
     try {
       const states = await stateData.getAllState(companyId);
       return res.status(200).json(states);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   })
   .post(async (req, res) => {
     const data = req.body;
-    try{
+
+    let companyId = req.query.companyId;
+
+    try {
       data.name = helper.state.isValidStateName(data.name);
       data.companyId = helper.common.isValidId(req.user.companyId);
       data.transition = helper.state.isValidTransition(data.transition);
@@ -42,10 +44,9 @@ router
         })
       );
     } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
     try {
@@ -57,11 +58,10 @@ router
       );
 
       return res.status(201).json(newState);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   });
@@ -76,11 +76,10 @@ router
 
       const state = await stateData.getStateById(stateId);
       return res.status(200).json(state);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   })
@@ -92,16 +91,12 @@ router
       stateId = helper.common.isValidId(stateId);
       data = helper.state.isValidData(data);
 
-      const updatedState = await stateData.updateState(
-        stateId,
-        data
-      );
+      const updatedState = await stateData.updateState(stateId, data);
       return res.status(200).json(updatedState);
     } catch (e) {
       if(typeof e !== 'object' || !('status' in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   });

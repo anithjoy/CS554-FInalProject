@@ -4,7 +4,6 @@ const helper = require("../helper");
 const { ObjectId } = require("mongodb");
 
 const createState = async (name, companyId, transition, description) => {
-
   name = helper.state.isValidStateName(name);
   companyId = helper.common.isValidId(companyId);
   description = helper.state.isValidDescription(description);
@@ -47,7 +46,6 @@ const getStateById = async (stateId) => {
 };
 
 const getAllState = async (companyId) => {
-
   companyId = helper.common.isValidId(companyId);
 
   const stateCollection = await stateCol();
@@ -58,10 +56,7 @@ const getAllState = async (companyId) => {
   return resState;
 };
 
-const updateState = async (
-  stateId,
-  data
-) => {
+const updateState = async (stateId, data) => {
   stateId = helper.common.isValidId(stateId);
   data = helper.state.isValidData(data);
 
@@ -69,12 +64,15 @@ const updateState = async (
   const updatedInfo = await stateCollection.updateMany(
     { _id: new ObjectId(stateId) },
     {
-      $set: data
+      $set: data,
     }
   );
 
   if (updatedInfo.modifiedCount === 0) {
-    throw {status: 400, error : 'could not update because values are same as previous one'};
+    throw {
+      status: 400,
+      error: "could not update because values are same as previous one",
+    };
   }
 
   if (!updatedInfo.matchedCount && !updatedInfo.modifiedCount) {
@@ -89,5 +87,5 @@ module.exports = {
   createState,
   getStateById,
   getAllState,
-  updateState
+  updateState,
 };

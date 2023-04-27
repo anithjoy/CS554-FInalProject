@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from '../../components/authContext';
 import { api } from "../../api";
-import { helper } from "../../helper";
 import Link from "next/link";
 
 const Tickets = () => {
