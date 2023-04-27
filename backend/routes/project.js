@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-
+const redis = require('redis');
+const client = redis.createClient({});
+client.connect().then(() => {});
 const helper = require('../helper');
 const {ticket : ticketData, project : projectData} = require("../data");
 
@@ -11,6 +13,7 @@ router
 
   try{
       const projects = await projectData.getAllProjectsByEmail(req.user.email);
+      await client.hSet("project", req.user.email, JSON.stringify(projects));
       res.json(projects);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
@@ -43,7 +46,9 @@ router
     }
 
     try{
-      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager, data.watchers)
+      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager, data.watchers);
+      await client.set(newProject._id.toString(), JSON.stringify(newProject));
+      await client.del("project");
       res.status(201).json(newProject);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -72,6 +77,7 @@ router
 
     try{
         let project = await projectData.getProjectById(projectId);
+        await client.set(project._id.toString(), JSON.stringify(project));
         res.json(project);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -99,6 +105,8 @@ router
         projectId,
         data
       )
+      await client.set(updatedProject._id.toString(), JSON.stringify(updatedProject));
+      await client.del("project");
       res.json(updatedProject);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -128,6 +136,7 @@ router
 
     try{
         let sprints = await projectData.getAllSprintbyProjectId(projectId);
+        await client.hSet("sprint", projectId, JSON.stringify(sprints));
         res.json(sprints);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -155,6 +164,8 @@ router
 
     try{
       const newSprint = await projectData.createSprint(projectId, data.name, data.startDate, data.description);
+      await client.set(newSprint._id.toString(), JSON.stringify(newSprint));
+      await client.hDel("sprint", projectId);
       res.status(201).json(newSprint);
     }catch(e){
       console.log(e);
@@ -187,6 +198,7 @@ router
 
     try{
       const sprint = await projectData.getSprintbyId(projectId, sprintId);
+      await client.set(sprint._id.toString(), JSON.stringify(sprint));
       res.json(sprint);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -218,6 +230,8 @@ router
       sprintId,
       data
     )
+    await client.set(updatedSprint._id.toString(), JSON.stringify(updatedSprint));
+    await client.hDel("sprint",projectId);
     res.json(updatedSprint);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))

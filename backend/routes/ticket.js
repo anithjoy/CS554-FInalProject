@@ -1,6 +1,8 @@
-
 const express = require('express');
 const router = express.Router();
+const redis = require('redis');
+const client = redis.createClient({});
+client.connect().then(() => {});
 const helper = require('../helper');
 const {ticket : ticketData} = require("../data");
 
@@ -10,6 +12,7 @@ router
 .get(async (req, res) => {
   try{
       const tickets = await ticketData.getTicketByUser(req.user.email);
+      await client.hSet("ticket", req.user.email, JSON.stringify(tickets));
       res.json(tickets);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
@@ -36,6 +39,8 @@ router
 
     try{
       const createTicket = await ticketData.createTicket(data);
+      await client.set(createTicket._id.toString(), JSON.stringify(createTicket));
+      await client.del("ticket");
       res.json(createTicket);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -63,6 +68,7 @@ router
 
     try{
       const ticket = await ticketData.getTicketById(ticketId);
+      await client.set(ticket._id.toString(), JSON.stringify(ticket));
       res.json(ticket);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -88,6 +94,8 @@ router
 
     try{
       const updateTicket = await ticketData.updateTicket(ticketId, data);
+      await client.set(updateTicket._id.toString(), JSON.stringify(updateTicket));
+      await client.del("ticket");
       res.json(updateTicket);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))

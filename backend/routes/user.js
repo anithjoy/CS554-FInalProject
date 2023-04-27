@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const redis = require('redis');
+const client = redis.createClient({});
+client.connect().then(() => {});
 const data = require('../data');
 const helper = require('../helper')
 const xss = require('xss');
@@ -9,9 +12,8 @@ router
  .get(async (req, res) => {
   try{  
     let users = await data.user.getUsersByCompanyId(req.user.companyId);
-    if(users){
-      res.json(users);
-    } else throw {status:401,error:'Could not create user'};
+    await client.hSet("user", req.user.companyId, JSON.stringify(users));
+    res.json(users);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
     res.status(500).json("Internal server error");
@@ -31,8 +33,10 @@ router
         
     let users = await data.user.createUser(req.user.companyId,bodyData.email,bodyData.name,bodyData.role);
     if(users){
+      await client.set(users._id.toString(), JSON.stringify(users));
+      await client.hDel("user", req.user.companyId);
       res.json(users);
-    } else throw {status:401,error:'Could not create user'};
+    } else throw {status:400,error:'Could not create user'};
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
     res.status(500).json("Internal server error");
@@ -53,6 +57,7 @@ router
     }
     try{
         let user = await data.user.getUserById(req.params.userId);
+        await client.set(user._id.toString(), JSON.stringify(user));
         res.json(user);
     }catch(e){
         res.status(e.status).json(e.error);
@@ -82,8 +87,9 @@ router
               throw { status: 400, error: `Invalid key - ${field}` };
           }
         }
-
         const newUser = await data.user.updateUser(req.params.userId,body);
+        await client.set(newUser._id.toString(), JSON.stringify(newUser));
+        await client.hDel("user", req.user.companyId);
         res.json(newUser);
     }catch(e){
         res.status(e.status).json(e.error);
