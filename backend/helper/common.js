@@ -66,7 +66,7 @@ const isValidPastDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time > today)
+  if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date > today.date))
     throw { status: "400", error: "Invalid date" };
   return time;
 };
@@ -75,7 +75,7 @@ const isValidFutureDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time < today)
+  if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
     throw { status: "400", error: "Invalid date" };
   return time;
 };
@@ -83,15 +83,19 @@ const isValidFutureDate = (time) => {
 const isValidDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
-  if (time === "Invalid Date") throw { status: "400", error: "Invalid date" };
+
+  if (time == "Invalid Date")
+    throw { status: "400", error: "Invalid date" };
   return time;
 };
 
 const isValidWatchers = (watchers) => {
-  if (!Array.isArray(watchers))
-    throw { status: "400", error: `Invalid data type for watchers` };
-  for (let i = 0; i < watchers.length; i++) {
-    watchers[i] = isValidEmail(watchers);
+
+  if(!Array.isArray(watchers))
+          throw {status: '400', error : `Invalid data type for watchers`};
+  for(let i=0;i<watchers.length;i++)
+  {            
+      watchers[i] = isValidEmail(watchers[i]);
   }
   return watchers;
 };

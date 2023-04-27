@@ -2,11 +2,16 @@ const {transporter} = require("../config/nodeMailerTransporter");
 
 const sendEmail = async(to, subject, html) => {
     await transporter.sendMail({
-        from: '<doctolib.app@gmail.com>',
+        from: '<workmate.webapp@gmail.com>',
         to,
         subject,
         html
       }); 
+}
+
+const sendPasswordResetLinkEmail = async(data) =>{
+  const html = `<h1> Password Reset </h1> <p>Link = <a href = "http://localhost:3003/reset-password?token=${data.token}">Reset Your Password</a></p>`;
+  await sendEmail(data.email, "Password Reset", html);
 }
 
 const sendProjectCreateEmail = async(data) =>{
@@ -40,6 +45,7 @@ const sendTicketUpdateEmail = async(data) =>{
 }
 
 module.exports = {
+  sendPasswordResetLinkEmail,
   sendProjectCreateEmail,
   sendProjectUpdateEmail,
   sendSprintCreateEmail,

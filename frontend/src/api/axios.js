@@ -1,9 +1,5 @@
 import axios from "axios";
 
-export const axiosNoAuth = axios.create({
-  baseURL: "http://localhost:3000",
-});
-
 export const axiosAuth = axios.create({
   baseURL: "http://localhost:3000",
 });

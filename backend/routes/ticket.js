@@ -8,19 +8,8 @@ const {ticket : ticketData} = require("../data");
 router
 .route('/')
 .get(async (req, res) => {
-
   try{
-    req.query.email = helper.common.isValidEmail(req.query.email);
-  }catch(e){
-    if(typeof e !== 'object' || !('status' in e))
-      res.status(500).json("Internal server error");
-    else
-      res.status(parseInt(e.status)).json(e.error);
-    return;
-  }
-
-  try{
-      const tickets = await ticketData.getTicketByUser(req.query.email);
+      const tickets = await ticketData.getTicketByUser(req.user.email);
       res.json(tickets);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
@@ -33,6 +22,8 @@ router
  })
 .post(async (req, res) => {
     let data = req.body;
+    data.companyId = req.user.companyId;
+    data.creator = req.user.email;
     try{
       data = helper.ticket.isValidTicketCreationData(data)
     }catch(e){
@@ -154,9 +145,9 @@ router
     ticketId = helper.common.isValidId(ticketId);
     commentId = helper.common.isValidId(commentId);
 
-    await ticketData.deleteTicket(ticketId, commentId);
+    await ticketData.deleteTicketComment(ticketId, commentId);
     return res.status(200).json("Removed");
-  } catch (error) {
+  } catch (e) {
     if(typeof e !== 'object' || !('status' in e))
       res.status(500).json("Internal server error");
     else

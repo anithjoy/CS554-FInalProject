@@ -1,5 +1,13 @@
 import * as constant from "./constants";
 
+export const isValidRole = (role) => {
+  for(let validRole of constant.ROLE)
+  {
+      if(role.toUpperCase()==validRole) return role.toUpperCase();
+  }
+  throw {status:400,error:'Invalid role'}
+}
+
 export const isValidString = (string, parameter) =>{
     if (!string) throw new Error(`You must provide a ${parameter}`);
     if (typeof string !== 'string') throw new Error(`${parameter} must be a string`);
@@ -30,6 +38,11 @@ export const isValidPassword = (passowrd) => {
     return passowrd
 }
 
+export const isValidCompanyName = (inputName) => {
+  inputName = isValidString(inputName,"Name");
+  return inputName;
+}
+
 export const isValidName = (inputName) => {
   inputName = isValidString(inputName,"Name");
   let name=inputName.split(' '); 
@@ -53,7 +66,7 @@ export const isValidPastDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time > today)
+  if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date >today.date))
     throw new Error("Invalid date");
   return time;
 };
@@ -62,7 +75,7 @@ export const isValidFutureDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || time < today)
+  if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
     throw new Error("Invalid date");
   return time;
 };
@@ -153,4 +166,44 @@ export const isValidDependedOnTickets = (dependedOnTickets) => {
   if(!Array.isArray(dependedOnTickets))
           throw new Error( `Invalid data type for dependedOnTickets field`);
   return dependedOnTickets;    
+}
+
+export const isValidEIN = (EIN) => {
+  EIN = isValidString(EIN, "EIN");
+  if(!EIN.match(/^[0-9]{9}$/))
+      throw new Error( 'Invalid EIN')
+  return EIN;
+}
+
+export const isValidTicketData = (data) =>{
+  for(let key in data)
+  {
+      switch(key){
+          case "type":
+              data.type = isValidTicketType(data.type);
+              break;
+          case "priority":
+              data.priority = isValidTicketPriority(data.priority);
+              break;
+          case "name":
+              data.name = isValidString(data.name);
+              break;
+          case "expectedDate":
+              data.expectedDate = isValidFutureDate(data.expectedDate);
+              break;
+          case "reopenDate":
+              data.reopenDate = isValidPastDate(data.reopenDate);
+              break;
+          case "closeDate":
+              data.closeDate = isValidPastDate(data.closeDate);
+              break;
+          case "description":
+              data.description = isValidString(data.description);
+              break;
+          default:
+              break;
+          
+      }
+  }
+  return data;
 }
