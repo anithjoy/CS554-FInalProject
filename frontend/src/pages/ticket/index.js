@@ -41,16 +41,17 @@ const Tickets = () => {
     if(!ticketData)
       fetchData();
   },[]);
+  const redirect = (id) =>{
+    router.push(`/ticket/${id}`)
+  }
   const getTicketRow = (ticket) =>{
     return(
-      <Link href={`/ticket/${ticket._id}`}>
-        <tr>
+        <tr onClick={()=>redirect(ticket._id)}>
           <td>{ticket.name}</td>
           <td>{ticket.priority}</td>
           <td>{ticket.state.name}</td>
           <td>{ticket.assign}</td>
         </tr>
-      </Link>
     );
   }
 

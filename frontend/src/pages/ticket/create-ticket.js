@@ -151,7 +151,7 @@ const CreateTicket = () => {
             </select >
             <br/>
             <label  htmlFor='ticketExpectedDate'>Expected Date : </label>
-            <DatePicker selected={new Date(ticketData.expectedDate)} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
+            <DatePicker selected={ticketData.expectedDate ? new Date(ticketData.expectedDate) : new Date()} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
             <br/>
             { allTicket.length!=0 && <><label htmlFor='ticketDependedOnTickets'>Depended On Tickets : </label>
             <select value={ticketData.dependedOnTickets} className="TicketInput" id='ticketDependedOnTickets' name="ticketDependedOnTickets" onChange={handleInputChange} multiple>
