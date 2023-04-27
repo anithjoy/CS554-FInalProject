@@ -1,56 +1,62 @@
-import React, { useState } from "react";
-import { updateState } from "@/api/state";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import {
-  isValidStateName,
-  isValidDescription,
-  isValidTransition,
-} from "@/helper/validationFunctions";
+import { api } from "../api";
+import { helper } from "../helper";
 
 const EditStateForm = (props) => {
-  const state = props.state;
-  let companyId = props.companyId;
-  let allStates = props.allStates;
-
-  const [name, setName] = useState(state.name);
-  const [description, setDescription] = useState(state.description);
-  const [transition, setTransition] = useState(state.transition);
+  const [stateData, setStateData] = useState(null);
+  const [allState, setAllState] = useState(null);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState("");
+  const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
+  useEffect(() => {
+    const fetchData = async () =>{
+        try{
+            const {data: stateDataTemp} = await api.state.getStateById(props.stateId);
+
+            const {data: allStateDataTemp} = await api.state.getAllState();
+
+            setStateData(stateDataTemp);
+            setAllState(allStateDataTemp);
+        }
+        catch(e){
+          if(e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            router.push("/login");
+          }else{
+            setHasError(true);
+            setError(e.response.data);
+          }
+        }
+    }
+    fetchData();
+  },[]);
 
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (
-      name === state.name &&
-      description === state.description &&
-      JSON.stringify(transition) === JSON.stringify(state.transition)
-    ) {
-      setHasError(true);
-      setError("No changes made");
-      return;
-    }
+    let stateDataTemp = {...stateData};
     try {
-      let nameCheck = isValidStateName(name);
-      let descriptionCheck = isValidDescription(description);
-      let transitionCheck = isValidTransition(transition);
+      stateDataTemp.name = helper.validationFunctions.isValidStateName(stateDataTemp.name);
+      stateDataTemp.description = helper.validationFunctions.isValidDescription(stateDataTemp.description);
+      stateDataTemp.transition = helper.validationFunctions.isValidTransition(stateDataTemp.transition);
       setHasError(false);
     } catch (e) {
       setHasError(true);
       setError(e.message);
       return;
     }
-    const data = {
-      name: name,
-      description: description,
-      transition: transition,
-    };
+    setStateData(stateDataTemp)
     try {
-      const response = await updateState(state._id, data, companyId);
-      alert("State Edited");
-      router.push(`/state?companyId=${companyId}`);
+      delete stateDataTemp["_id"];
+      delete stateDataTemp["companyId"];
+      const {data} = await api.state.updateState(props.stateId, stateDataTemp);
+      setHasSuccessMessage(true);
       setHasError(false);
+      setStateData(data);
     } catch (e) {
       setHasError(true);
       if (!e.response) setError("Error");
@@ -60,24 +66,34 @@ const EditStateForm = (props) => {
   };
 
   const handleSelect = (e) => {
+    if(hasSuccessMessage)
+      setHasSuccessMessage(false);
+    if(hasError)
+      setError(false);
     const option = e.target.value;
-    const options = transition.includes(option)
-      ? transition.filter((t) => t !== option)
-      : [...transition, option];
-    setTransition(options);
+    const options = stateData.transition.includes(option)
+      ? stateData.transition.filter((t) => t !== option)
+      : [...stateData.transition, option];
+    setStateData({...stateData,transition: options});
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+    {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
+{ stateData && allState ? <form onSubmit={handleSubmit}>
         <div>
           <label>
             Name:
             <input
               type="text"
               name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={stateData.name}
+              onChange={(e) => {    
+                if(hasSuccessMessage)
+                  setHasSuccessMessage(false);
+                if(hasError)
+                  setError(false);
+                setStateData({...stateData, name:e.target.value})}}
               placeholder="Enter Name"
               required
             />
@@ -91,32 +107,40 @@ const EditStateForm = (props) => {
               name="description"
               placeholder="Enter Description"
               required
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={stateData.description}
+              onChange={(e) => {    
+                if(hasSuccessMessage)
+                  setHasSuccessMessage(false);
+                if(hasError)
+                  setError(false);
+                setStateData({...stateData, description:e.target.value})}}
             />
           </label>
         </div>
 
-        <div>
+        {allState.length != 1 && <div>
           <label>
             Transitions:
-            {allStates.map((state) => (
+            {allState.map((state) => {
+              if(state._id!=props.stateId)
+              return(
               <div key={state._id}>
                 <input
                   type="checkbox"
                   name="transitions"
                   value={state._id}
-                  checked={transition.includes(state._id)}
+                  checked={stateData.transition.includes(state._id)}
                   onChange={handleSelect}
                 />
                 <label>{state.name}</label>
               </div>
-            ))}
+            )})}
           </label>
-        </div>
+        </div>}
 
         <button type="submit">Submit</button>
       </form>
+      :<div>Loading.....</div>}
       {hasError && <div className="error">{error}</div>}
     </>
   );

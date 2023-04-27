@@ -1,30 +1,41 @@
-import React from "react";
-import { getAllState } from "@/api/state";
-import StateComponent from "../../components/state";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import StateComponent from "../../components/State";
+import {api} from "../../api"
 
-export const getServerSideProps = async (context) => {
-  const companyId = context.query.companyId;
-  const response = await getAllState(companyId);
-  const states = response.data;
+const State = () => {
+  const [stateData, setStateData] = useState('');
+  useEffect(() => {
+    const fetchData = async () =>{
+        try{
+            const {data: stateDataTemp} = await api.state.getAllState();
+            setStateData(stateDataTemp);
+        }
+        catch(e){
+          if(e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            router.push("/login");
+          }else{
+            setHasError(true);
+            setError(e.response.data);
+          }
+        }
+    }
+    fetchData();
+  },[]);
 
-  return {
-    props: {
-      states,
-      companyId,
-    },
-  };
-};
-
-const State = ({ states, companyId }) => {
   return (
     <div>
-      <Link href={`/state/create-state?companyId=${companyId}`}>
+      {stateData ? <><Link href={`/state/create-state`}>
         <button>Create State </button>
       </Link>
-      {states.map((state) => (
-        <StateComponent state={state} companyId={companyId} />
+      {stateData.map((state) => (
+        <StateComponent state={state}/>
       ))}
+      </> :
+      <div>Loading...</div>}
     </div>
   );
 };

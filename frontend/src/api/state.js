@@ -1,17 +1,17 @@
-import { axiosNoAuth, axiosAuth } from "./axios";
+import { axiosAuth } from "./axios";
 
-export const createState = (data, companyId) => {
-  return axiosNoAuth.post(`/state?companyId=${companyId}`, data);
+export const createState = (data) => {
+  return axiosAuth.post(`/state`, data);
 };
 
-export const getAllState = (companyId) => {
-  return axiosNoAuth.get(`/state?companyId=${companyId}`);
+export const getAllState = () => {
+  return axiosAuth.get(`/state`);
 };
 
 export const getStateById = (id) => {
-  return axiosNoAuth.get(`/state/${id}`);
+  return axiosAuth.get(`/state/${id}`);
 };
 
-export const updateState = (id, data, companyId) => {
-  return axiosNoAuth.patch(`/state/${id}?companyId=${companyId}`, data);
+export const updateState = (id, data) => {
+  return axiosAuth.patch(`/state/${id}`, data);
 };

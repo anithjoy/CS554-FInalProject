@@ -1,32 +1,46 @@
-import React, { useState } from "react";
-import { createState } from "@/api/state";
+import { useState, useEffect } from "react";
+import {api} from "../api";
 import { useRouter } from "next/router";
-import {
-  isValidStateName,
-  isValidDescription,
-  isValidTransition,
-} from "@/helper/validationFunctions";
+import {helper} from "../helper";
 
-const CreateStateForm = (props) => {
+const CreateStateForm = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [transition, setTransition] = useState("");
+  const [transition, setTransition] = useState([]);
+  const [allStates, setAllStates] = useState(null);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState("");
 
   const router = useRouter();
 
-  const allStates = props.allStates;
-
-  let companyId = props.companyId;
+  useEffect(() => {
+    const fetchData = async () =>{
+        try{
+            const {data: stateDataTemp} = await api.state.getAllState();
+            setAllStates(stateDataTemp);
+        }
+        catch(e){
+          if(e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            router.push("/login");
+          }else{
+            setHasError(true);
+            setError(e.response.data);
+          }
+        }
+    }
+    fetchData();
+  },[]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      let nameCheck = isValidStateName(name);
-      let descriptionCheck = isValidDescription(description);
-      let transitionCheck = isValidTransition(transition);
+      setName(helper.validationFunctions.isValidStateName(name));
+      setDescription(helper.validationFunctions.isValidDescription(description));
+      setTransition(helper.validationFunctions.isValidTransition(transition));
       setHasError(false);
     } catch (e) {
       setHasError(true);
@@ -34,20 +48,23 @@ const CreateStateForm = (props) => {
       return;
     }
     const data = {
-      name: name,
-      description: description,
-      transition: transition,
+      name: helper.validationFunctions.isValidStateName(name),
+      description: helper.validationFunctions.isValidDescription(description),
+      transition: helper.validationFunctions.isValidTransition(transition),
     };
     try {
-      const response = await createState(data, companyId);
-      alert("State Created");
-      router.push(`/state?companyId=${companyId}`);
-      setHasError(false);
+      await api.state.createState(data);
+      router.push(`/state`);
     } catch (e) {
-      setHasError(true);
-      if (!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      if(e.response.status===500)
+            router.push("/error");
+      else if(e.response.status===401 )
+      {
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   };
 
@@ -61,7 +78,7 @@ const CreateStateForm = (props) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      {allStates ? <form onSubmit={handleSubmit}>
         <div>
           <label>
             Name:
@@ -108,7 +125,8 @@ const CreateStateForm = (props) => {
         </div>
 
         <button type="submit">Submit</button>
-      </form>
+      </form>:
+      <div>Loading....</div>}
       {hasError && <div className="error">{error}</div>}
     </>
   );
