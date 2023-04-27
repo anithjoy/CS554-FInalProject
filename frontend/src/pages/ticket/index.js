@@ -78,7 +78,7 @@ const Tickets = () => {
   return (
     <div>
       {hasError && <div className="error">{error}</div>}
-      <Link href={`/state/create-state`}>
+      <Link href={`/ticket/create-ticket`}>
         <button>Create State </button>
       </Link>
       <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>
