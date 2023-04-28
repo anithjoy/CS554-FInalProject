@@ -35,6 +35,12 @@ export const isValidCompanyName = (inputName) => {
   return inputName;
 }
 
+export const isValidId = (id) => {
+  id = isValidString(id, "ID");
+  if (!ObjectId.isValid(id))
+    throw { status: "400", error: "Invalid object ID" };
+  return id;
+};
 export const isValidName = (inputName) => {
   inputName = isValidString(inputName,"Name");
   let name=inputName.split(' '); 

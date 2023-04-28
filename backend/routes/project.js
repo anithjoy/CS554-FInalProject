@@ -38,6 +38,7 @@ router
       data.companyId = helper.common.isValidId(data.companyId);
       data.creator = helper.common.isValidEmail(data.creator); 
       data.manager = helper.common.isValidEmail(data.manager);
+      data.description = helper.common.isValidString(data.description,"description");
       if(data.watchers)
         data.watchers = helper.common.isValidWatchers(data.watchers);
       else
@@ -53,7 +54,7 @@ router
     }
 
     try{
-      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager, data.watchers)
+      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager , data.description , data.watchers)
       res.status(201).json(newProject);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
