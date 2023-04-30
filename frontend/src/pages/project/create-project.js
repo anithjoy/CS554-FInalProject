@@ -1,36 +1,59 @@
 import { useState, useEffect} from "react";
 import { api } from "../../api";
-import {ROLE} from "../../helper/constants" 
 import {helper} from "../../helper"
 import { useRouter } from "next/router";
-import { createProject } from "@/api/project";
-// import { useNavigate } from "react-router-dom";
 
 const CreateProject = () => {
-  const [managerEmail, setManagerEmail]  = useState('');
-  const [projectName, setProjectName] = useState('');
-  const [description, setDescription] = useState('');
+  const [projectData, setProjectData] = useState({});
+  const [userData, setUserData] = useState(null);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    const fetchData = async () =>{
+        try{
+            const {data: userDataTemp} = await api.user.getAllUser();
+            setUserData(userDataTemp);
+        }
+        catch(e){
+          if(e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            router.push("/login");
+          }else{
+            setHasError(true);
+            setError(e.response.data);
+          }
+        }
+    }
+    fetchData();
+  },[]);
+
   const handleInputChange = (e) => {
+    setHasError(false);
+    const projectDataTemp = {...projectData};
     if(e.target.id === 'projectName')
-      setProjectName(e.target.value); 
-    else 
-    if(e.target.id === 'projectManagerEmail')
-      setManagerEmail(e.target.value); 
-    else 
-    if(e.target.id === 'projectDesc')
-      setDescription(e.target.value);
+    projectDataTemp.name = e.target.value; 
+    else if(e.target.id === 'projectManagerEmail')
+      projectDataTemp.manager = e.target.value; 
+    else if(e.target.id === 'projectDesc')
+      projectDataTemp.description = e.target.value;
+    else if(e.target.id === 'projectWatchers' ) 
+      projectDataTemp.watchers = Array.from(e.target.selectedOptions, option => option.value);
+    setProjectData(projectDataTemp); 
   }
 
   const validateCreateProjectData = async (e) =>{
     e.preventDefault();
+    const projectDataTemp ={}
     try{
-      helper.validationFunctions.isValidEmail(managerEmail);
-      helper.validationFunctions.isValidProjectName(projectName);
-      setHasError(false);
+      projectDataTemp.description = helper.validationFunctions.isValidString(projectData.description);
+      projectDataTemp.name  = helper.validationFunctions.isValidProjectName(projectData.name);
+      projectDataTemp.manager = helper.validationFunctions.isValidEmail(projectData.manager);
+      projectDataTemp.watchers = helper.validationFunctions.isValidWatchers(projectData.watchers);
+      setProjectData(projectDataTemp);
     }catch(e){
       setHasError(true);
       setError(e.message);
@@ -38,11 +61,8 @@ const CreateProject = () => {
     }
 
     try{
-      const data = {"name" : projectName ,"manager" : managerEmail ,"description" : description }
-      const response =  await api.project.createProject(data);
-      alert("Project Created");
+      const response =  await api.project.createProject(projectDataTemp);
       router.push("/project");
-      setHasError(false);
     }catch(e){
       console.log(e)
       setHasError(true);
@@ -56,18 +76,26 @@ const CreateProject = () => {
     <div>
         <div className="loginHeading">Create Project</div>
        <div className="CreateUserCard">
-        <form onSubmit={validateCreateProjectData}>
+        {userData && <form onSubmit={validateCreateProjectData}>
             <label htmlFor="projectName">Enter Project Name</label>
-            <input placeholder="Starship" id="projectName" value={projectName} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
-            <br/>
-            <label htmlFor="projectManagerEmail">Enter Manager Email</label>
-            <input placeholder="username@example.com" id="projectManagerEmail" value={managerEmail} onChange={handleInputChange}  type="email" className="projectinput" autoFocus/>
+            <input placeholder="Starship" id="projectName" value={projectData.name} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
             <br/>
             <label htmlFor="projectDesc">Enter description</label>
-            <textarea placeholder="Project Description" id="projectDesc" value={description} onChange={handleInputChange}  className="projectinput" autoFocus/>
+            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description} onChange={handleInputChange}  className="projectinput" autoFocus/>
+            <br/>
+            <label htmlFor='projectManagerEmail'>Manager : </label>
+            <select value={projectData.manager} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
+              <option value="">Select Option</option>
+              {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option value={user.email}>{user.email}</option>)})}
+            </select>
+            <br/>
+            <label htmlFor='projectWatchers'>Watchers : </label>
+            <select value={projectData.watchers} className="projectinput" id='projectWatchers' name="projectWatchers" onChange={handleInputChange} multiple>
+              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
+            </select >
             <br/>
             <button type="submit" className="loginButton">Create Project</button>
-        </form>
+        </form>}
         {hasError && <div className="error">{error}</div>}
       </div>
     </div>

@@ -4,51 +4,77 @@ import { api } from "../../../api";
 import { useRouter } from 'next/router'
 
 const Project = () => {
-  const [data, setData] = useState('');
-  const [manager , setManager] = useState('');
-  const [name , setProjectName] = useState('');
-  const [description , setDescription] = useState('');
+  const [projectData, setProjectData] = useState({});
+  const [userData, setUserData] = useState(null);
+  const [updateFlag, setUpdateFlag] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
   const router = useRouter()
   
+  useEffect(() => {
+    const fetchData = async () =>{
+        try{
+            const {data: userDataTemp} = await api.user.getAllUser();
+            const {data} = await api.project.getProjectById(router.query.projectId);
+            setProjectData(data);
+            setUserData(userDataTemp);
+        }
+        catch(e){
+          if(e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            router.push("/login");
+          }else{
+            setHasError(true);
+            setError(e.response.data);
+          }
+        }
+    }
+    fetchData();
+  },[]);
+
   const handleInputChange = (e) => {
     if(hasSuccessMessage)
         setHasSuccessMessage(false);
     if(hasError)
         setError(false);
+        const projectDataTemp = {...projectData};
     if(e.target.id === 'projectName')
-      setProjectName(e.target.value); 
-    else 
-    if(e.target.id === 'projectManagerEmail')
-      setManager(e.target.value); 
-    else 
-    if(e.target.id === 'projectDesc')
-      setDescription(e.target.value);
+    projectDataTemp.name = e.target.value; 
+    else if(e.target.id === 'projectManagerEmail')
+      projectDataTemp.manager = e.target.value; 
+    else if(e.target.id === 'projectDesc')
+      projectDataTemp.description = e.target.value;
+    else if(e.target.id === 'projectWatchers' ) 
+      projectDataTemp.watchers = Array.from(e.target.selectedOptions, option => option.value);
+    setProjectData(projectDataTemp); 
   }
 
   const validateUpdate = async (e) =>{
     e.preventDefault();
+    const projectDataTemp ={}
     try{
-      setManager(helper.validationFunctions.isValidEmail(manager));
-      setProjectName(helper.validationFunctions.isValidProjectName(name));
-      setDescription(helper.validationFunctions.isValidString(description,"description"))
-      setHasError(false);
+      projectDataTemp.description = helper.validationFunctions.isValidString(projectData.description);
+      projectDataTemp.name  = helper.validationFunctions.isValidProjectName(projectData.name);
+      projectDataTemp.manager = helper.validationFunctions.isValidEmail(projectData.manager);
+      projectDataTemp.watchers = helper.validationFunctions.isValidWatchers(projectData.watchers);
+      setProjectData(projectDataTemp);
     }catch(e){
       setHasError(true);
       setError(e.message);
       return;
     }
 
+
     try{
-      const data = {"name" : name ,"manager" : manager ,"description" : description }
-      console.log(data)
-      const response = await api.project.updateProject(router.query.projectId,data)
-      console.log(response)
-      setData(response.data);
+      delete projectDataTemp["_id"];
+      delete projectDataTemp["companyId"];
+      const {data} = await api.project.updateProject(router.query.projectId, projectDataTemp);
       setHasError(false);
       setHasSuccessMessage(true);
+      setProjectData(data);
     }catch(e){
       console.log(e)
       setHasError(true);
@@ -57,64 +83,33 @@ const Project = () => {
       return;
     }
   }
-  useEffect(()=>{
-    const fetchData = async () =>{
-      try{
-        const response = await api.project.getProjectById(router.query.projectId);
-        console.log(response);
-        setData(response.data)
-        setManager(response.data.manager)
-        setProjectName(response.data.name); 
-        setDescription(response.data.description);
-        console.log(response.data.watchers);
-      }catch(e){
-        if(e.response.status===500)
-            router.push("/error");
-        else if(e.response.status===401 )
-        {
-            localStorage.clear();
-            router.push("/login");
-        }else{
-            setHasError(true);
-            setError(e.response.data);
-        }
-      }
-    }
-    if(!data){
-      fetchData();
-    }
-  },[])
   return (
     <div>
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
-       {data && <div  className='container'>
+       {projectData && userData && <div  className='container'>
+            <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>
             <form onSubmit={validateUpdate}>
+                <label htmlFor="projectName">Project Name</label>
+                <input disabled={!updateFlag} placeholder="Starship" id="projectName" value={projectData.name} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
                 <br/>
-                <div className="profileInputField"> <label className="profileInputText" htmlFor="profileName"> Name : </label> <input placeholder="Starship" id="projectName" value={name} onChange={handleInputChange} type="text" className="profileInput" autoFocus/></div>
+                <label htmlFor="projectDesc">description</label>
+                <textarea disabled={!updateFlag} placeholder="Project Description" id="projectDesc" value={projectData.description} onChange={handleInputChange}  className="projectinput" autoFocus/>
                 <br/>
-                <div className="profileInputField"><span className="profileInputText" > Creator : </span> <span id="projectCreator">{data.creator}</span> </div>
+                <div className="profileInputField"><span className="profileInputText" > Creator : </span> <span id="projectName">{projectData.creator}</span> </div>
                 <br/>
-                <div className="profileInputField"> <label className="profileInputText" htmlFor="profileManager"> Manager : </label> <input placeholder="username@example.com" id="projectManagerEmail" value={manager} onChange={handleInputChange} type="email" className="profileInput" autoFocus/></div>
+                <label htmlFor='projectManagerEmail'>Manager : </label>
+                <select disabled={!updateFlag} value={projectData.manager} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
+                  <option value="">Select Option</option>
+                  {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option value={user.email}>{user.email}</option>)})}
+                </select>
                 <br/>
-                <div className="profileInputField"><span className="profileInputText" > Sprints : </span> <span id="profileSprint">
-                {
-                  data.sprint.map((sprint) =>{
-                    return <li key={sprint}> {sprint}</li>
-                  })
-                }</span> </div>
+                <label htmlFor='projectWatchers'>Watchers : </label>
+                <select disabled={!updateFlag} value={projectData.watchers} className="projectinput" id='projectWatchers' name="projectWatchers" onChange={handleInputChange} multiple>
+                  {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
+                </select >
                 <br/>
-                <div className="profileInputField"><span className="profileInputText" > Watchers : </span> <span id="profileWatcher">
-                {
-                  data.watchers.map((watcher) =>{
-                    return <li key={watcher}> {watcher}</li>
-                  })
-                }</span> </div>
-                <br/>
-                <div className="profileInputField"> <label className="profileInputText" htmlFor="profileDesc"> Description : </label> <textarea placeholder="Starship" id="projectDesc" value={description} onChange={handleInputChange} type="text" className="profileInput" autoFocus/></div>
-                <br/>
-                <button type="submit" className="updateProfileButton">Update Project
-                </button>
+                {updateFlag &&<button type="submit" className="updateProfileButton">Update Project</button>}
             </form>
             </div>}
     </div>

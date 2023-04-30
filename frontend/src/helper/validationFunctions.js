@@ -43,12 +43,6 @@ export const isValidCompanyName = (inputName) => {
   return inputName;
 }
 
-export const isValidId = (id) => {
-  id = isValidString(id, "ID");
-  if (!ObjectId.isValid(id))
-    throw { status: "400", error: "Invalid object ID" };
-  return id;
-};
 export const isValidName = (inputName) => {
   inputName = isValidString(inputName,"Name");
   let name=inputName.split(' '); 
@@ -99,7 +93,7 @@ export const isValidWatchers = (watchers) => {
           throw new Error(`Invalid data type for watchers`);
   for(let i=0;i<watchers.length;i++)
   {            
-      watchers[i] = isValidEmail(watchers);
+      watchers[i] = isValidEmail(watchers[i]);
   }
   return watchers;    
 }
