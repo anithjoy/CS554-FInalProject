@@ -80,7 +80,7 @@ const Tickets = () => {
     <div>
       {hasError && <div className="error">{error}</div>}
       <Link href={`/ticket/create-ticket`}>
-        <button>Create State </button>
+        <button>Create Ticket </button>
       </Link>
       <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>
       {ticketData && createTicketTable()}
