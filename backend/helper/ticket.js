@@ -24,7 +24,7 @@ const isValidDependedOnTickets = (dependedOnTickets) => {
             throw {status: '400', error : `Invalid data type for dependedOnTickets field`};
     for(let i=0;i<dependedOnTickets.length;i++)
     {            
-        dependedOnTickets[i] = common.isValidId(dependedOnTickets);
+        dependedOnTickets[i] = common.isValidId(dependedOnTickets[i]);
     }
     return dependedOnTickets;    
 }
@@ -34,13 +34,14 @@ const isValidTicketUpdateData = (data) =>{
         if(data[constant.FORBIDDEN_FIELD_FOR_TICKET_UPDATE[i]])
             throw {status: '400', error : `Invalid ${constant.FORBIDDEN_FIELD_FOR_TICKET_UPDATE[i]} field`};
     data = isValidTicketData(data);
+    return data;
 }
 
 const isValidTicketCreationData = (data) =>{
-    for(let i=0;i<constant.REQUIRE_FIELD_FOR_TICKET_CREATION;i++)
+    for(let i=0;i<constant.REQUIRE_FIELD_FOR_TICKET_CREATION.length;i++)
         if(!data[constant.REQUIRE_FIELD_FOR_TICKET_CREATION[i]])
             throw {status: '400', error : `Require ${constant.REQUIRE_FIELD_FOR_TICKET_CREATION[i]} field`};
-    for(let i=0;i<constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION;i++)
+    for(let i=0;i<constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION.length;i++)
         if(data[constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]])
             throw {status: '400', error : `Invalid ${constant.FORBIDDEN_FIELD_FOR_TICKET_CREATION[i]} field`};
     data = isValidTicketData(data);

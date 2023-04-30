@@ -25,16 +25,7 @@ const getAllProjectsByEmail = async (email) => {
     email = helper.common.isValidEmail(email);
 
     const projectCollection = await projectCol();
-    let projects = await projectCollection.find({watchers:{$elemMatch:email}}).toArray();
-
-    if (projects === null || projects.length==0) 
-    {
-        throw {status: 404, error : 'No project with that user'};
-    }
-
-
-    for(let i of projects)
-        i._id = i._id.toString();
+    let projects = await projectCollection.find({watchers:{$elemMatch:{$eq:email}}}).toArray();
 
     return projects;
 }
@@ -77,8 +68,11 @@ const updateProject = async (projectId, data) =>{
 
     data = helper.project.isValidUpdateData(data);
 
-    await getProjectById(projectId);
-
+    let projectInDb = await getProjectById(projectId);
+    if(data.manager){
+        if(data.watchers) data.watchers = [...new Set([...data.watchers, data.manager])];
+        else data.watchers = [...new Set([...projectInDb.watchers, data.manager])];
+      }
     const projectCollection = await projectCol();
     const updatedInfo = await projectCollection.updateMany(
       {_id: new ObjectId(projectId)},
@@ -89,7 +83,7 @@ const updateProject = async (projectId, data) =>{
       throw {status: 400, error : 'could not update because values are same as previous one'};
     }
 
-    const project = await getProjectById(id);
+    const project = await getProjectById(projectId);
 
     service.email.sendProjectUpdateEmail(project);
 
@@ -134,8 +128,6 @@ const getAllSprintbyProjectId = async (projectId) => {
     const projects = await projectCollection.findOne({ _id: new ObjectId(projectId)})
     if (projects === null || projects.length==0)
         throw {status: 404, error : 'No project found with that ID'};
-    else if(projects.sprint === null || projects.sprint.length === 0)
-        throw {status: 404, error : 'No sprints found for this project'};
 
     const sprints = projects.sprint;
     return sprints;
@@ -165,20 +157,36 @@ const updateSprint = async(projectId, sprintId, data) => {
 
     projectId = helper.common.isValidId(projectId);
     sprintId = helper.common.isValidId(sprintId);
-
+    data = helper.project.isValidSprintUpdateData(data);
+    
     await getProjectById(projectId);
 
     const sprint = await getSprintbyId(projectId, sprintId);
-
+    let endDate=data.endDate||sprint.endDate;
+    let startDate = data.startDate || sprint.startDate;
+    if((endDate && startDate) && endDate<startDate) throw{status:400,error:'Invalid date'};
     const projectCollection = await projectCol();
-    const updatedInfo = await projectCollection.findOneAndUpdate(
-        {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
-        {$set: {
-            'sprint.$.name': data.name || sprint.name,
-            'sprint.$.startDate': data.startDate || sprint.startDate,
-            'sprint.$.description': data.description || sprint.description
-        }}
-    )
+    if(endDate){
+        const updatedInfo = await projectCollection.findOneAndUpdate(
+            {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
+            {$set: {
+                'sprint.$.name': data.name || sprint.name,
+                'sprint.$.startDate': data.startDate || sprint.startDate,
+                'sprint.$.endDate': data.endDate || sprint.endDate,
+                'sprint.$.description': data.description || sprint.description
+            }}
+        )
+    }
+    else{
+         const updatedInfo = await projectCollection.findOneAndUpdate(
+            {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
+            {$set: {
+                'sprint.$.name': data.name || sprint.name,
+                'sprint.$.startDate': data.startDate || sprint.startDate,
+                'sprint.$.description': data.description || sprint.description
+            }}
+        )
+    }
     if (updatedInfo.modifiedCount === 0) {
         throw {status: 400, error : 'could not update because values are same as previous one'};
     }

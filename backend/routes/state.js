@@ -1,51 +1,53 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const helper = require('../helper');
-const {state : stateData} = require("../data");
+const redis = require('redis');
+const client = redis.createClient({});
+client.connect().then(() => {});
+const helper = require("../helper");
+const { state: stateData } = require("../data");
 
 //Anith
 router
   .route("/")
   .get(async (req, res) => {
+
+    let companyId = req.user.companyId;
     try{
-      let companyId = req.query.companyId;
       companyId = helper.common.isValidId(companyId);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
 
     try {
       const states = await stateData.getAllState(companyId);
+      await client.hSet("state", req.user.companyId, JSON.stringify(states));
       return res.status(200).json(states);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   })
   .post(async (req, res) => {
     const data = req.body;
-    try{
+    try {
       data.name = helper.state.isValidStateName(data.name);
-      data.companyId = helper.common.isValidId(data.companyId);
+      data.companyId = helper.common.isValidId(req.user.companyId);
       data.transition = helper.state.isValidTransition(data.transition);
       data.description = helper.state.isValidDescription(data.description);
       await Promise.all(
-        transition.map(async (id) => {
+        data.transition.map(async (id) => {
           await stateData.getStateById(id);
         })
       );
     } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
     try {
@@ -55,13 +57,13 @@ router
         data.transition,
         data.description
       );
-
+      await client.set(newState._id.toString(), JSON.stringify(newState));
+      await client.hDel("state", req.user.companyId);
       return res.status(201).json(newState);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   });
@@ -75,33 +77,31 @@ router
       stateId = helper.common.isValidId(stateId);
 
       const state = await stateData.getStateById(stateId);
+      await client.set(state._id.toString(), JSON.stringify(state));
       return res.status(200).json(state);
-    } catch (error) {
-      if(typeof e !== 'object' || !('status' in e))
+    } catch (e) {
+      if (typeof e !== "object" || !("status" in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   })
   .patch(async (req, res) => {
     try {
       let stateId = req.params.stateId;
-      let data = body.data;
+      let data = req.body;
 
       stateId = helper.common.isValidId(stateId);
       data = helper.state.isValidData(data);
 
-      const updatedState = await stateData.updateState(
-        stateId,
-        data
-      );
+      const updatedState = await stateData.updateState(stateId, data);
+      await client.set(updatedState._id.toString(), JSON.stringify(updatedState));
+      await client.hDel("state", req.user.companyId);
       return res.status(200).json(updatedState);
-    } catch (error) {
+    } catch (e) {
       if(typeof e !== 'object' || !('status' in e))
         res.status(500).json("Internal server error");
-      else
-        res.status(parseInt(e.status)).json(e.error);
+      else res.status(parseInt(e.status)).json(e.error);
       return;
     }
   });

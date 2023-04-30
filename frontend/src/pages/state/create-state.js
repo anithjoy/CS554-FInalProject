@@ -1,9 +1,12 @@
-import React from 'react'
+import CreateStateForm from "@/components/CreateStateForm";
 
 const CreateState = () => {
   return (
-    <div>CreateState</div>
-  )
-}
+    <div>
+      <h1>Create State Form</h1>
+      <CreateStateForm/>
+    </div>
+  );
+};
 
-export default CreateState
+export default CreateState;
