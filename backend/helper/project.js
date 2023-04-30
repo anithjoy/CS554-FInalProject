@@ -23,6 +23,9 @@ const isValidUpdateData = (data) =>{
             case "watchers":
                 data.watchers = common.isValidWatchers(data.watchers);
                 break;
+            case "description":
+                data.description = common.isValidString(data.description);
+                break;
             default:
                 throw {status: '400', error : `Invalid key - ${key}`};
             

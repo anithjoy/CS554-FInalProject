@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api";
-import { ROLE } from "../../helper/constants";
-import { helper } from "../../helper";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
 const Users = () => {
-  const [email, setEmail] = useState("");
-  const [fullName, setName] = useState("");
-  const [Role, setRole] = useState("");
-  const [users, setUsers] = useState([]);
+  const [users,setUsers] = useState([]);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState("");
 

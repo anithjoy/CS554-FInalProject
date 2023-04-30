@@ -24,7 +24,7 @@ const isValidDependedOnTickets = (dependedOnTickets) => {
             throw {status: '400', error : `Invalid data type for dependedOnTickets field`};
     for(let i=0;i<dependedOnTickets.length;i++)
     {            
-        dependedOnTickets[i] = common.isValidId(dependedOnTickets);
+        dependedOnTickets[i] = common.isValidId(dependedOnTickets[i]);
     }
     return dependedOnTickets;    
 }

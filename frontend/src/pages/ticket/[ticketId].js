@@ -4,6 +4,7 @@ import { api } from "../../api";
 import { helper } from "../../helper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CommentWindow from "../../components/CommentWindow";
 
 const Ticket = () => {
   const [ticketData, setTicketData] = useState("");
@@ -148,23 +149,23 @@ const Ticket = () => {
             </select >
             <br/>
             <label htmlFor='ticketExpectedDate'>Expected Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" selected={new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
+            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate ? new Date(ticketData.expectedDate) : new Date()} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
             <br/>
             <label htmlFor='ticketCloseDate'>Close Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketCloseDate' name="ticketCloseDate" selected={new Date(ticketData.closeDate)} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
+            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate ? new Date(ticketData.closeDate) : new Date()} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
             <br/>
             <label htmlFor='ticketReopenDate'>Reopen Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketReopenDate' name="ticketReopenDate" selected={new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
+            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate ? new Date(ticketData.reopenDate) : new Date()} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
             <br/>
             { allTicket.length!=0 && allTicket.length!=1 && <><label htmlFor='ticketDependedOnTickets'>Depended On Tickets : </label>
-            <select className="TicketInput" id='ticketDependedOnTickets' name="ticketDependedOnTickets" onChange={handleInputChange} multiple>
+            <select disabled={!updateFlag} className="TicketInput" id='ticketDependedOnTickets' name="ticketDependedOnTickets" onChange={handleInputChange} multiple>
               {allTicket.map((ticket)=>{if(ticket._id!=ticketData._id)return(<option value={ticket._id}>{ticket.name}</option>)})}
             </select>
             <br/></>}
             <br/>
             {updateFlag && <button type="submit" className="createTicketButton">Update Ticket</button>}
-              
           </form>
+          {!updateFlag && <div><h2>Comment Section</h2><CommentWindow ticketId = {router.query.ticketId}/></div>}
           {hasError && <div className="error">{error}</div>}
         </div>
         :

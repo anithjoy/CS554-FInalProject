@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const redis = require('redis');
+const client = redis.createClient({});
+client.connect().then(() => {});
 const helper = require("../helper");
 const { state: stateData } = require("../data");
 
@@ -20,6 +23,7 @@ router
 
     try {
       const states = await stateData.getAllState(companyId);
+      await client.hSet("state", req.user.companyId, JSON.stringify(states));
       return res.status(200).json(states);
     } catch (e) {
       if (typeof e !== "object" || !("status" in e))
@@ -30,9 +34,6 @@ router
   })
   .post(async (req, res) => {
     const data = req.body;
-
-    let companyId = req.query.companyId;
-
     try {
       data.name = helper.state.isValidStateName(data.name);
       data.companyId = helper.common.isValidId(req.user.companyId);
@@ -56,7 +57,8 @@ router
         data.transition,
         data.description
       );
-
+      await client.set(newState._id.toString(), JSON.stringify(newState));
+      await client.hDel("state", req.user.companyId);
       return res.status(201).json(newState);
     } catch (e) {
       if (typeof e !== "object" || !("status" in e))
@@ -75,6 +77,7 @@ router
       stateId = helper.common.isValidId(stateId);
 
       const state = await stateData.getStateById(stateId);
+      await client.set(state._id.toString(), JSON.stringify(state));
       return res.status(200).json(state);
     } catch (e) {
       if (typeof e !== "object" || !("status" in e))
@@ -92,6 +95,8 @@ router
       data = helper.state.isValidData(data);
 
       const updatedState = await stateData.updateState(stateId, data);
+      await client.set(updatedState._id.toString(), JSON.stringify(updatedState));
+      await client.hDel("state", req.user.companyId);
       return res.status(200).json(updatedState);
     } catch (e) {
       if(typeof e !== 'object' || !('status' in e))
