@@ -113,7 +113,6 @@ router
     try{
       req.params.ticketId = helper.common.isValidId(req.params.ticketId);
       const comments = await ticketData.getCommentsByTicketId(req.params.ticketId);
-      if(!comments) throw {status:500,error:'Could not get comments'};
       res.json(comments);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -122,16 +121,13 @@ router
         res.status(parseInt(e.status)).json(e.error);
       return;
     }
-    
-    
   })
   .post(async (req, res) => {
     try{
       req.params.ticketId = helper.common.isValidId(req.params.ticketId);
       req.body.text = helper.common.isValidString(req.body.text,'comment');
-      if(req.body.document) req.body.document = helper.ticket.isValidDocument(req.body.document);
-
-      const updatedTicket = await ticketData.createComment(req.params.ticketId ,req.body);
+      req.body.sender = helper.common.isValidEmail(req.body.sender);
+      const updatedTicket = await ticketData.createComment(req.params.ticketId , req.body.sender, req.body.text);
       res.json(updatedTicket);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -153,7 +149,7 @@ router
     ticketId = helper.common.isValidId(ticketId);
     commentId = helper.common.isValidId(commentId);
 
-    await ticketData.deleteTicketComment(ticketId, commentId);
+    await ticketData.deleteTicketComment(commentId);
     return res.status(200).json("Removed");
   } catch (e) {
     if(typeof e !== 'object' || !('status' in e))
