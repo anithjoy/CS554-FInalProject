@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import {api} from "../api";
+import { api } from "../api";
 import { useRouter } from "next/router";
-import {helper} from "../helper";
+import { helper } from "../helper";
 
 const CreateStateForm = () => {
   const [name, setName] = useState("");
@@ -14,32 +14,31 @@ const CreateStateForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () =>{
-        try{
-            const {data: stateDataTemp} = await api.state.getAllState();
-            setAllStates(stateDataTemp);
+    const fetchData = async () => {
+      try {
+        const { data: stateDataTemp } = await api.state.getAllState();
+        setAllStates(stateDataTemp);
+      } catch (e) {
+        if (e.response.status === 500) router.push("/error");
+        else if (e.response.status === 401) {
+          router.push("/login");
+        } else {
+          setHasError(true);
+          setError(e.response.data);
         }
-        catch(e){
-          if(e.response.status===500)
-            router.push("/error");
-          else if(e.response.status===401 )
-          {
-            router.push("/login");
-          }else{
-            setHasError(true);
-            setError(e.response.data);
-          }
-        }
-    }
+      }
+    };
     fetchData();
-  },[]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       setName(helper.validationFunctions.isValidStateName(name));
-      setDescription(helper.validationFunctions.isValidDescription(description));
+      setDescription(
+        helper.validationFunctions.isValidDescription(description)
+      );
       setTransition(helper.validationFunctions.isValidTransition(transition));
       setHasError(false);
     } catch (e) {
@@ -56,12 +55,10 @@ const CreateStateForm = () => {
       await api.state.createState(data);
       router.push(`/state`);
     } catch (e) {
-      if(e.response.status===500)
-            router.push("/error");
-      else if(e.response.status===401 )
-      {
+      if (e.response.status === 500) router.push("/error");
+      else if (e.response.status === 401) {
         router.push("/login");
-      }else{
+      } else {
         setHasError(true);
         setError(e.response.data);
       }
@@ -78,10 +75,12 @@ const CreateStateForm = () => {
 
   return (
     <>
-      {allStates ? <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Name:
+      {allStates ? (
+        <form onSubmit={handleSubmit} className="p-3">
+          <div className="mb-3">
+            <label htmlFor="name" className="form-label">
+              Name:
+            </label>
             <input
               type="text"
               name="name"
@@ -89,12 +88,13 @@ const CreateStateForm = () => {
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter Name"
               required
+              className="form-control"
             />
-          </label>
-        </div>
-        <div>
-          <label>
-            Description:
+          </div>
+          <div className="mb-3">
+            <label htmlFor="description" className="form-label">
+              Description:
+            </label>
             <input
               type="text"
               name="description"
@@ -102,31 +102,39 @@ const CreateStateForm = () => {
               required
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              className="form-control"
             />
-          </label>
-        </div>
+          </div>
 
-        <div>
-          <label>
-            Transitions:
-            {allStates.map((state) => (
-              <div key={state._id}>
-                <input
-                  type="checkbox"
-                  name="transitions"
-                  value={state._id}
-                  checked={transition.includes(state._id)}
-                  onChange={handleSelect}
-                />
-                <label>{state.name}</label>
-              </div>
-            ))}
-          </label>
-        </div>
+          <div className="form-check form-switch">
+            <label className="form-label">
+              Transitions:
+              {allStates.map((state) => (
+                <div key={state._id} className="form-check mb-2">
+                  <input
+                    type="checkbox"
+                    name="transitions"
+                    value={state._id}
+                    checked={transition.includes(state._id)}
+                    onChange={handleSelect}
+                    className="form-check-input"
+                    id={state.name}
+                  />
+                  <label htmlFor={state.name} className="form-check-label">
+                    {state.name}
+                  </label>
+                </div>
+              ))}
+            </label>
+          </div>
 
-        <button type="submit">Submit</button>
-      </form>:
-      <div>Loading....</div>}
+          <button type="submit" className="btn btn-primary mt-3">
+            Submit
+          </button>
+        </form>
+      ) : (
+        <div>Loading....</div>
+      )}
       {hasError && <div className="error">{error}</div>}
     </>
   );
