@@ -93,7 +93,7 @@ export const isValidWatchers = (watchers) => {
           throw new Error(`Invalid data type for watchers`);
   for(let i=0;i<watchers.length;i++)
   {            
-      watchers[i] = isValidEmail(watchers);
+      watchers[i] = isValidEmail(watchers[i]);
   }
   return watchers;    
 }

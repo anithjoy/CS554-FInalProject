@@ -29,12 +29,13 @@ const getAllProjectsByEmail = async (email) => {
 
     return projects;
 }
-const createProject = async (name,companyId,creator,manager,watchers) =>{
+const createProject = async (name,companyId,creator,manager,description,watchers) =>{
 
     name = helper.project.isValidProjectName(name);
     companyId = helper.common.isValidId(companyId);
     creator = helper.common.isValidEmail(creator);  
     manager = helper.common.isValidEmail(manager);
+    description = helper.common.isValidString(description,"description")
     watchers = helper.common.isValidWatchers(watchers);
     watchers = [...new Set([...watchers, creator, manager])];
     sprint = [];
@@ -45,7 +46,8 @@ const createProject = async (name,companyId,creator,manager,watchers) =>{
         creator,
         manager,
         watchers,
-        sprint
+        sprint,
+        description
     };
 
     const projectCollection = await projectCol();

@@ -51,6 +51,7 @@ const CreateTicket = () => {
     fetchData();
   },[]);
   const handleInputChange = (e) => {
+    setHasError(false);
     const ticketDataTemp = {...ticketData};
     if(e.target.id === 'ticketName')
       ticketDataTemp.name = e.target.value;

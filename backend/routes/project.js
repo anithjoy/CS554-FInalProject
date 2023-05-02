@@ -31,6 +31,7 @@ router
       data.companyId = helper.common.isValidId(req.user.companyId);
       data.creator = helper.common.isValidEmail(req.user.email); 
       data.manager = helper.common.isValidEmail(data.manager);
+      data.description = helper.common.isValidString(data.description,"description");
       if(data.watchers)
         data.watchers = helper.common.isValidWatchers(data.watchers);
       else
@@ -46,7 +47,7 @@ router
     }
 
     try{
-      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager, data.watchers);
+      const newProject = await projectData.createProject(data.name, data.companyId, data.creator, data.manager, data.description, data.watchers);
       await client.set(newProject._id.toString(), JSON.stringify(newProject));
       await client.del("project");
       res.status(201).json(newProject);
