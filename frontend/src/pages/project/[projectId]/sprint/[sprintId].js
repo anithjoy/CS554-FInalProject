@@ -10,9 +10,6 @@ import "react-datepicker/dist/react-datepicker.css";
 const Sprint = () => {
 
   const [sprintData, setSprintData] = useState('');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [startDate, setStartDate] = useState('');
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('')
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
@@ -23,10 +20,7 @@ const Sprint = () => {
       try{
         const sprintDataTemp = await api.project.getSprintById(router.query.projectId, router.query.sprintId);
         console.log(sprintDataTemp.data);
-        setSprintData(sprintDataTemp.data)
-        setName(sprintDataTemp.data.name)
-        setDescription(sprintDataTemp.data.description);
-        setStartDate(sprintDataTemp.data.startDate);  
+        setSprintData(sprintDataTemp.data);  
       }catch(e){
         if(e.response.status===500)
             router.push("/error");
@@ -62,11 +56,14 @@ const Sprint = () => {
 
   const validateUpdate = async (e) =>{
     e.preventDefault();
+    const sprintDataTemp = {};
     try{
       //console.log(sprintData);
-      setName(helper.validationFunctions.isValidSprintName(sprintData.name));
-      setDescription(helper.validationFunctions.isValidString(sprintData.description, 'Description'));
-      setStartDate(helper.validationFunctions.isValidDate(sprintData.startDate));
+      sprintDataTemp.name = helper.validationFunctions.isValidSprintName(sprintData.name);
+      sprintDataTemp.description = helper.validationFunctions.isValidString(sprintData.description, 'Description');
+      sprintDataTemp.startDate = helper.validationFunctions.isValidDate(sprintData.startDate);
+      if(sprintData.endDate)
+        sprintDataTemp.endDate = helper.validationFunctions.isValidDate(sprintData.endDate);
       setHasError(false);
     }catch(e){
       setHasError(true);
@@ -75,9 +72,7 @@ const Sprint = () => {
     }
 
     try{
-      const data = {"name" : sprintData.name ,"description" : sprintData.description , "startDate" : sprintData.startDate}
-      console.log(data)
-      const response = await api.project.updateSprint(router.query.projectId, router.query.sprintId ,data)
+      const response = await api.project.updateSprint(router.query.projectId, router.query.sprintId ,sprintDataTemp)
       console.log(response)
       setSprintData(response.data);
       setHasError(false);
@@ -101,6 +96,9 @@ const Sprint = () => {
                 <br/>
                 <label  htmlFor='sprintStartDate'>Start Date : </label>
                 <DatePicker className="sprintInputField" id='sprintStartDate' name="sprintStartDate" selected={new Date(sprintData.startDate)} onChange={(date)=>setSprintData({...sprintData, startDate: date})} />
+                <br/>
+                <label  htmlFor='sprintEndDate'>End Date : </label>
+                <DatePicker className="sprintInputField" id='sprintEndDate' name="sprintEndDate" selected={sprintData.endDate && new Date(sprintData.endDate)} onChange={(date)=>setSprintData({...sprintData, endDate: date})} />
                 <br/>
                 <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintDescription"> Description : </label> <textarea placeholder="Description" id="sprintDescription" value={sprintData.description} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>
                 <br/>
