@@ -205,5 +205,40 @@ export const isValidTicketData = (data) =>{
           
       }
   }
+
+  return data;
+}
+
+export const isValidSprintName = (name) => {
+
+  name = isValidString(name, "Sprint Name");
+
+  if(name.length<4)
+      throw {status:400, error : 'less than 4 character name'};
+
+  return name;
+};
+
+export const isValidSprintData = (data) => {
+  for(let key in data)
+  {
+      switch(key){
+          case "name":
+              data.name = isValidSprintName(data.name);
+              break;
+          case "startDate":
+              data.startDate = isValidDate(data.startDate);
+              break;
+          case "endDate":
+              data.endDate = isValidDate(data.endDate);
+              break;
+          case "description":
+              data.description = isValidString(data.description);
+              break;
+          default:
+              break;
+          
+      }
+  }
   return data;
 }
