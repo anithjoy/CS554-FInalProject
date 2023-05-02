@@ -1,0 +1,57 @@
+version: '1'
+services:
+  workmate-frontend:
+    restart: on-failure
+    container_name: workmate-frontend
+    build: "./frontend"
+    image: workmate-frontend
+    ports: 
+      - "3003:3003"
+    expose: 
+      - "3003" 
+    hostname: 'workmate-frontend'
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - 'workmate_network'    
+    
+  redis:
+    image: redis
+    hostname: 'redis'
+    expose: 
+      - "6379"  
+    networks: 
+      - 'workmate_network'
+
+  workmate-backend:
+    restart: on-failure
+    container_name: workmate-backend
+    build: "./backend"
+    image: workmate-backend
+    ports: 
+      - "3000:3000"
+    expose: 
+      - "3000" 
+    hostname: 'workmate-backend'
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - 'workmate_network' 
+  
+  mongodb:
+    image: mongo:6-jammy
+    expose:
+      - '27017'
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - 'workmate_network'
+
+networks:
+  workmate_network: 
+
+volumes: 
+  dbdata:
+    driver: local
