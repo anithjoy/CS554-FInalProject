@@ -12,24 +12,27 @@ const User = () => {
   const [error, setError] = useState("");
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.user.getUserInfo(router.query.userId);
-        console.log(response);
-        setName(response.data.name);
-        setRole(response.data.role);
-        setData(response.data);
-        setHasError(false);
-      } catch (e) {
-        if (e.response.status === 500) router.push("/error");
-        else if (e.response.status === 401) {
-          localStorage.clear();
-          router.push("/login");
-        } else {
-          setHasError(true);
-          setError(e.response.data);
+    useEffect(() => {
+        const fetchData = async()=>{
+            try{
+                const response = await api.user.getUserById(router.query.userId)
+                console.log(response)
+                setName(response.data.name);
+                setRole(response.data.role);
+                setData(response.data);
+                setHasError(false);
+            }catch(e){
+            if(e.response.status===500)
+                router.push("/error");
+            else if(e.response.status===401 )
+            {
+                localStorage.clear();
+                router.push("/login");
+            }else{
+                setHasError(true);
+                setError(e.response.data);
+            }
+            }
         }
       }
     };

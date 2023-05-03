@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {helper} from "../../../helper"
-import { api } from "../../../api";
+import {helper} from "../helper"
+import { api } from "../api";
 import { useRouter } from 'next/router'
 
-const Project = () => {
+const ProjectDetail = (props) => {
   const [projectData, setProjectData] = useState({});
   const [userData, setUserData] = useState(null);
   const [updateFlag, setUpdateFlag] = useState(false);
@@ -16,7 +16,7 @@ const Project = () => {
     const fetchData = async () =>{
         try{
             const {data: userDataTemp} = await api.user.getAllUser();
-            const {data} = await api.project.getProjectById(router.query.projectId);
+            const {data} = await api.project.getProjectById(props.projectId);
             setProjectData(data);
             setUserData(userDataTemp);
         }
@@ -71,7 +71,7 @@ const Project = () => {
     try{
       delete projectDataTemp["_id"];
       delete projectDataTemp["companyId"];
-      const {data} = await api.project.updateProject(router.query.projectId, projectDataTemp);
+      const {data} = await api.project.updateProject(props.projectId, projectDataTemp);
       setHasError(false);
       setHasSuccessMessage(true);
       setProjectData(data);
@@ -116,4 +116,4 @@ const Project = () => {
   )
 }
 
-export default Project
+export default ProjectDetail

@@ -158,6 +158,8 @@ const updateSprint = async(projectId, sprintId, data) => {
     projectId = helper.common.isValidId(projectId);
     sprintId = helper.common.isValidId(sprintId);
     data = helper.project.isValidSprintUpdateData(data);
+
+    let updatedInfo = {};
     
     await getProjectById(projectId);
 
@@ -167,7 +169,7 @@ const updateSprint = async(projectId, sprintId, data) => {
     if((endDate && startDate) && endDate<startDate) throw{status:400,error:'Invalid date'};
     const projectCollection = await projectCol();
     if(endDate){
-        const updatedInfo = await projectCollection.findOneAndUpdate(
+        updatedInfo = await projectCollection.findOneAndUpdate(
             {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
             {$set: {
                 'sprint.$.name': data.name || sprint.name,
@@ -178,7 +180,7 @@ const updateSprint = async(projectId, sprintId, data) => {
         )
     }
     else{
-         const updatedInfo = await projectCollection.findOneAndUpdate(
+        updatedInfo = await projectCollection.findOneAndUpdate(
             {_id: new ObjectId(projectId), 'sprint._id': new ObjectId(sprintId)},
             {$set: {
                 'sprint.$.name': data.name || sprint.name,
