@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
 import { useAuth } from './authContext'
+import NavBar from './NavBar'
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useAuth()
@@ -12,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [router, user])
 
-  return <>{user ? children : null}</>
+  return <>{user ? <div><NavBar/>{children}</div> : null}</>
 }
 
 export default ProtectedRoute

@@ -63,8 +63,8 @@ app.use('/:url/:id', async (req, res, next) => {
   if (req.url === '/' && req.method == "GET") {
     let exists = await client.exists(req.params.id);
     if (exists) {
-      const recipesList = await client.get(req.params.id);
-      res.json(JSON.parse(recipesList));
+      const data = await client.get(req.params.id);
+      res.json(JSON.parse(data));
       return;
     } else {
       next();

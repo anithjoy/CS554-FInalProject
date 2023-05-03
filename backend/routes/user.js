@@ -45,6 +45,22 @@ router
   return;
   }  
  })
+
+router
+.route('/info')
+.get(async (req, res) => {
+  try{
+      let user = await data.user.getUserByEmail(req.user.email);
+      await client.set(user._id.toString(), JSON.stringify(user));
+      res.json(user);
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+    res.status(500).json("Internal server error");
+  else
+    res.status(parseInt(e.status)).json(e.error);
+  return;
+  }
+})
 //Anyone can pickup this
 router
   .route('/:userId')
@@ -52,16 +68,22 @@ router
     try {
       req.params.userId = helper.common.isValidId(req.params.userId);
     } catch (e) {
-        res.status(e.status).json(e.error);
-      return;
+      if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
     }
     try{
         let user = await data.user.getUserById(req.params.userId);
         await client.set(user._id.toString(), JSON.stringify(user));
         res.json(user);
     }catch(e){
-        res.status(e.status).json(e.error);
-      return;
+      if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
     }
 
   })
@@ -92,10 +114,12 @@ router
         await client.hDel("user", req.user.companyId);
         res.json(newUser);
     }catch(e){
-        res.status(e.status).json(e.error);
-        return;
+      if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
     }
 
     })
-
 module.exports = router;
