@@ -9,10 +9,14 @@ const State = (props) => {
   };
 
   return (
-    <div key={state._id}>
-      <h1>{state.name}</h1>
-      <p>{state.description}</p>
-      <button onClick={handleEditClick}>Edit</button>
+    <div className="card">
+      <div className="card-body">
+        <h5 className="card-title">{state.name}</h5>
+        <p className="card-text">{state.description}</p>
+        <button onClick={handleEditClick} className="btn btn-primary">
+          Edit
+        </button>
+      </div>
     </div>
   );
 };
