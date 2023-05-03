@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { api } from "../../../../api";
-import { helper } from "../../../../helper";
+import { api } from "../api";
+import { helper } from "../helper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-const Sprint = () => {
+const EditSprint = (props) => {
 
   const [sprintData, setSprintData] = useState('');
   const [hasError, setHasError] = useState(false);
@@ -18,7 +18,7 @@ const Sprint = () => {
   useEffect(()=>{
     const fetchData = async () =>{
       try{
-        const sprintDataTemp = await api.project.getSprintById(router.query.projectId, router.query.sprintId);
+        const sprintDataTemp = await api.project.getSprintById(props.projectId, props.sprintId);
         console.log(sprintDataTemp.data);
         setSprintData(sprintDataTemp.data);  
       }catch(e){
@@ -49,8 +49,6 @@ const Sprint = () => {
       sprintDataTemp.name = e.target.value;
     else if (e.target.id === "sprintDescription")
       sprintDataTemp.description = e.target.value;
-    // else if (e.target.id === "sprintStartDate")
-    //   sprintDataTemp.startDate = e.target.value;
     setSprintData(sprintDataTemp);
   }
 
@@ -72,7 +70,7 @@ const Sprint = () => {
     }
 
     try{
-      const response = await api.project.updateSprint(router.query.projectId, router.query.sprintId ,sprintDataTemp)
+      const response = await api.project.updateSprint(props.projectId, props.sprintId ,sprintDataTemp)
       console.log(response)
       setSprintData(response.data);
       setHasError(false);
@@ -110,4 +108,4 @@ const Sprint = () => {
   )
 }
 
-export default Sprint
+export default EditSprint

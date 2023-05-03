@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { useAuth } from '../../../../components/authContext';
-import { api } from "../../../../api";
+import { api } from "../api";
 import Link from "next/link";
 
-const Sprints = () => {
+const DisplaySprints = (props) => {
   const [sprintData, setSprintData] = useState('');
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
-  const { user } = useAuth();
   const router = useRouter();
-  //const { projectId } = router.query
+  const projectId  = props.projectId;
 
   useEffect(() => {
     const fetchData = async () =>{
         try{
-            console.log(router.query.projectId);
-            const {data: sprintDataTemp} = await api.project.getAllSprint(router.query.projectId);
+            console.log(projectId);
+            const {data: sprintDataTemp} = await api.project.getAllSprint(projectId);
             console.log(sprintDataTemp)
             setSprintData(sprintDataTemp);
         }
@@ -38,14 +36,13 @@ const Sprints = () => {
   },[]);
   return (
     <div>
-      {sprintData ? <><Link href={`/project/${router.query.projectId}/sprint/create-sprint`}>
-        <button>Create Sprint </button>
-      </Link>
+      {sprintData ? <>
       <ul>
         {
           sprintData.map((sprint) => {
-            return <li key={sprint._id}>
-              <Link href={`/project/${router.query.projectId}/sprint/${sprint._id}`}>{sprint.name}</Link>
+            return <li key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
+              props.setTab("Edit-Sprint")}}>
+              {sprint.name}
             </li>
           })
         }
@@ -56,4 +53,4 @@ const Sprints = () => {
   );
 };
 
-export default Sprints
+export default DisplaySprints
