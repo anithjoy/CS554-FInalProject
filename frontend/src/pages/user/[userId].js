@@ -16,7 +16,7 @@ const User = () => {
     useEffect(() => {
         const fetchData = async()=>{
             try{
-                const response = await api.user.getUserInfo(router.query.userId)
+                const response = await api.user.getUserById(router.query.userId)
                 console.log(response)
                 setName(response.data.name);
                 setRole(response.data.role);
