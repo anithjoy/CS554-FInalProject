@@ -4,6 +4,7 @@ import { api } from "../../api";
 import { helper } from "../../helper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import CommentWindow from "../../components/CommentWindow";
 
 const Ticket = () => {
   const [ticketData, setTicketData] = useState("");
@@ -163,8 +164,8 @@ const Ticket = () => {
             <br/></>}
             <br/>
             {updateFlag && <button type="submit" className="createTicketButton">Update Ticket</button>}
-              
           </form>
+          {!updateFlag && <div><h2>Comment Section</h2><CommentWindow ticketId = {router.query.ticketId}/></div>}
           {hasError && <div className="error">{error}</div>}
         </div>
         :

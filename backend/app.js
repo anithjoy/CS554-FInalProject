@@ -121,7 +121,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on('ticket_update', ({ticketId}) => {
-    io.to(ticketId).emit('recieve_ticket_updets');
+    io.to(ticketId).emit('recieve_ticket_updates');
   });
 });
 
