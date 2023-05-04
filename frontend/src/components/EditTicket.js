@@ -12,7 +12,7 @@ const EditTicket = (props) => {
   const [stateData, setStateData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [hasError, setHasError] = useState(false);
-  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
+  const [updateFlag, setUpdateFlag] = useState(false);
   const [transition, setTransition] = useState(null);
   const [projectName, setProjectName] = useState(null);
   const [sprintName, setSprintName] = useState(null);

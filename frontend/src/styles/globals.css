@@ -25,11 +25,18 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+.dashboardPage{
+  display: flex;
+}
+.rbc-calendar{
+  width: 75% !important;
+}
 .rbc-month-view{
   display: block !important;
-
 }
-
 .rbc-month-row{
   height: 80px !important;
+}
+.expectedDateColum{
+  margin: 20px;
 }

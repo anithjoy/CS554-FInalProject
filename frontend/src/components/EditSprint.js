@@ -13,7 +13,7 @@ const EditSprint = (props) => {
   const [error, setError] = useState('')
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
   const router = useRouter();
-  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
+  const [updateFlag, setUpdateFlag] = useState(false);
 
   useEffect(()=>{
     const fetchData = async () =>{

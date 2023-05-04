@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 const ProjectDetail = (props) => {
   const [projectData, setProjectData] = useState({});
   const [userData, setUserData] = useState(null);
-  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
+  const [updateFlag, setUpdateFlag] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
