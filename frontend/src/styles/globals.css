@@ -25,3 +25,11 @@ body {
     )
     rgb(var(--background-start-rgb));
 } */
+.rbc-month-view{
+  display: block !important;
+
+}
+
+.rbc-month-row{
+  height: 80px !important;
+}
