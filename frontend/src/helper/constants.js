@@ -6,6 +6,8 @@ export const ROLE = ['ADMIN', 'MANAGER', 'DEVELOPER', 'QA', 'SUPPORT'];
 
 export const REQUIRE_FIELD_FOR_TICKET_CREATION = ["companyId", "projectId", "type", "priority", "name", "stateId", "creator", "description"];
 
+export const DEFAULT_STATE = ["TO DO", "IN PROGRESS", "DONE", "REOPEN", "CLOSE"];
+
 export const NAV_LINKS = [
     {
         id: 1,

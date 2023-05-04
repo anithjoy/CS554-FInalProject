@@ -97,6 +97,7 @@ const EditStateForm = (props) => {
               Name:
             </label>
             <input
+            disabled={helper.constants.DEFAULT_STATE.includes(stateData.name)} 
               type="text"
               name="name"
               value={stateData.name}
@@ -115,6 +116,7 @@ const EditStateForm = (props) => {
               Description:
             </label>
             <input
+              disabled={helper.constants.DEFAULT_STATE.includes(stateData.name)} 
               type="text"
               name="description"
               placeholder="Enter Description"

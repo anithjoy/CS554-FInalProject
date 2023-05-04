@@ -3,7 +3,8 @@ const companies = mongoCollections.company;
 const userData = require("./user");
 const {ObjectId} = require('mongodb');
 const helper = require('../helper');
-
+const stateData = require("./state");
+ 
 const getCompanyById = async (id) => {
     id = helper.common.isValidId(id);
 
@@ -53,6 +54,11 @@ const createCompany = async (email,EIN,name) => {
     throw {status:"400",error:'Could not add Company'};
 
     const newCompanyId = insertInfo.insertedId.toString();
+    await stateData.createState("TO DO", newCompanyId, [], "It's TO DO for person whom it's assigned", false);
+    await stateData.createState("IN PROGRESS", newCompanyId, [], "Person started woring on it", false);
+    await stateData.createState("DONE", newCompanyId, [], "Done by the person who was working on it", false);
+    await stateData.createState("REOPEN", newCompanyId, [], "Task or Issue was not properly done or resolved so it is reopened", false);
+    await stateData.createState("CLOSE", newCompanyId, [], "Perpose of the ticket is served", false);
     await userData.createUser(newCompanyId,email,"Company Account","SUPER-ADMIN");
     return await getCompanyById(newCompanyId);
 }

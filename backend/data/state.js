@@ -2,12 +2,19 @@ const mongoCollections = require("../config/mongoCollections");
 const stateCol = mongoCollections.state;
 const helper = require("../helper");
 const { ObjectId } = require("mongodb");
+const constant = require("../constant");
 
-const createState = async (name, companyId, transition, description) => {
+const createState = async (name, companyId, transition, description, flag=true) => {
   name = helper.state.isValidStateName(name);
   companyId = helper.common.isValidId(companyId);
   description = helper.state.isValidDescription(description);
   transition = helper.state.isValidTransition(transition);
+
+  if(flag && constant.DEFAULT_STATE.includes(name.toUpperCase()))
+  throw {
+    status: 403,
+    error: "Forbidden - can't create state with this name",
+  };
 
   await Promise.all(
     transition.map(async (id) => {
@@ -60,6 +67,12 @@ const updateState = async (stateId, data) => {
   stateId = helper.common.isValidId(stateId);
   data = helper.state.isValidData(data);
 
+  const state = await getStateById(stateId);
+  if(constant.DEFAULT_STATE.includes(state.name))
+    throw {
+      status: 403,
+      error: "Forbidden",
+    };
   const stateCollection = await stateCol();
   const updatedInfo = await stateCollection.updateMany(
     { _id: new ObjectId(stateId) },
