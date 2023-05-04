@@ -6,12 +6,11 @@ import { useRouter } from 'next/router'
 const ProjectDetail = (props) => {
   const [projectData, setProjectData] = useState({});
   const [userData, setUserData] = useState(null);
-  const [updateFlag, setUpdateFlag] = useState(false);
+  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
   const router = useRouter()
-  
   useEffect(() => {
     const fetchData = async () =>{
         try{
@@ -88,7 +87,7 @@ const ProjectDetail = (props) => {
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
        {projectData && userData && <div  className='container'>
-            <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>
+            {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>}
             <form onSubmit={validateUpdate}>
                 <label htmlFor="projectName">Project Name</label>
                 <input disabled={!updateFlag} placeholder="Starship" id="projectName" value={projectData.name} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>

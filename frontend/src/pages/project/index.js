@@ -6,12 +6,14 @@ const Projects = () => {
   const [projects,setProjects] = useState([]);
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState(null);
   const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       try{
         const response = await api.project.getAllProject();
-        console.log(response);
+        const {data} = await api.user.getUserInfo();
+        setUser(data);
         setProjects(response.data);
       }catch(e){
         if(e.response.status===500)
@@ -30,8 +32,8 @@ const Projects = () => {
     router.push(`/project/${id}`)
   }
   return (
-    <div>
-      <Link href={'/project/create-project'}><button>Create New Project</button></Link>
+    user && projects && <div>
+      {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button>Create New Project</button></Link>}
       <h1>Current Projects</h1>
       <ul>
         {

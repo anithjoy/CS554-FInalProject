@@ -8,12 +8,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 
 const EditSprint = (props) => {
-
   const [sprintData, setSprintData] = useState('');
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('')
   const [hasSuccessMessage, setHasSuccessMessage] = useState(false);
   const router = useRouter();
+  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
 
   useEffect(()=>{
     const fetchData = async () =>{
@@ -88,20 +88,21 @@ const EditSprint = (props) => {
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
        {sprintData && <div  className='container'>
+       {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Sprint" : "Cancel Edit"}</button>}
             <form onSubmit={validateUpdate}>
                 <br/>
-                <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintName"> Name : </label> <input placeholder="Sprint Name" id="sprintName" value={sprintData.name} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>
+                <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintName"> Name : </label> <input disabled={!updateFlag} placeholder="Sprint Name" id="sprintName" value={sprintData.name} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>
                 <br/>
                 <label  htmlFor='sprintStartDate'>Start Date : </label>
-                <DatePicker className="sprintInputField" id='sprintStartDate' name="sprintStartDate" selected={new Date(sprintData.startDate)} onChange={(date)=>setSprintData({...sprintData, startDate: date})} />
+                <DatePicker disabled={!updateFlag} className="sprintInputField" id='sprintStartDate' name="sprintStartDate" selected={new Date(sprintData.startDate)} onChange={(date)=>setSprintData({...sprintData, startDate: date})} />
                 <br/>
                 <label  htmlFor='sprintEndDate'>End Date : </label>
-                <DatePicker className="sprintInputField" id='sprintEndDate' name="sprintEndDate" selected={sprintData.endDate && new Date(sprintData.endDate)} onChange={(date)=>setSprintData({...sprintData, endDate: date})} />
+                <DatePicker disabled={!updateFlag} className="sprintInputField" id='sprintEndDate' name="sprintEndDate" selected={sprintData.endDate && new Date(sprintData.endDate)} onChange={(date)=>setSprintData({...sprintData, endDate: date})} />
                 <br/>
-                <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintDescription"> Description : </label> <textarea placeholder="Description" id="sprintDescription" value={sprintData.description} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>
+                <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintDescription"> Description : </label> <textarea disabled={!updateFlag} placeholder="Description" id="sprintDescription" value={sprintData.description} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>
                 <br/>
-                <button type="submit" className="updateSprintButton">Update Sprint
-                </button>
+                {updateFlag &&<button type="submit" className="updateSprintButton">Update Sprint
+                </button>}
             </form>
             </div>}
     </div>

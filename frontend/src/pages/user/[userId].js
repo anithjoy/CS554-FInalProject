@@ -33,9 +33,7 @@ const User = () => {
                 setError(e.response.data);
             }
             }
-        }
       }
-    };
     if (!data) {
       fetchData();
     }

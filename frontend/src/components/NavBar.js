@@ -28,6 +28,8 @@ const NavBar = () => {
         router.push('/dashboard');
       else if((router.pathname=="/state" || router.pathname=="/state/create-state" || router.pathname=="/state/[stateId]")  && (user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
         router.push('/dashboard');
+      else if(router.pathname=="/project/create-project"  && (user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
+        router.push('/dashboard');
   }, [router.pathname, user])
   return (
     <nav>

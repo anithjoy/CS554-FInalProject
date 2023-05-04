@@ -12,7 +12,7 @@ const EditTicket = (props) => {
   const [stateData, setStateData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [hasError, setHasError] = useState(false);
-  const [updateFlag, setUpdateFlag] = useState(false);
+  const [updateFlag, setUpdateFlag] = useState((props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN"));
   const [transition, setTransition] = useState(null);
   const [projectName, setProjectName] = useState(null);
   const [sprintName, setSprintName] = useState(null);
@@ -116,7 +116,7 @@ const EditTicket = (props) => {
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
           {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
-          <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>
+          {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
             <input disabled={!updateFlag} value={ticketData.name} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>

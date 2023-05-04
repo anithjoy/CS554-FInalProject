@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { api } from "../api";
-import Link from "next/link";
 
 const DisplaySprints = (props) => {
   const [sprintData, setSprintData] = useState('');
