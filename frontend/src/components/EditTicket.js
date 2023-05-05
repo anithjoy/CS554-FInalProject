@@ -170,7 +170,7 @@ const EditTicket = (props) => {
           {hasError && <div className="error">{error}</div>}
         </div>
         :
-        <div>Loading....</div>}
+        hasError ? <div className="error">You can not access this ticket ask for access permission to your manager</div> :<div>Loading....</div>}
     </div>
   )
 }

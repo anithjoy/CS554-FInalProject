@@ -5,6 +5,23 @@ const ticketCol = mongoCollections.ticket;
 const commentCol = mongoCollections.comment;
 const {ObjectId} = require('mongodb');
 
+const getCommentById = async(commentId) =>{
+
+  commentId = helper.common.isValidId(commentId);
+
+  const commentCollection = await commentCol();
+  const comment = await commentCollection.findOne({_id: new ObjectId(commentId)});
+
+    if (comment === null) 
+    {
+        throw {status: 404, error : 'No comment with that id'};
+    }
+
+    comment._id = comment._id.toString();
+
+    return comment;
+}
+
 const deleteTicketComment = async (commentId) => {
 
   commentId = helper.common.isValidId(commentId);
@@ -151,5 +168,6 @@ createTicket,
 updateTicket,
 deleteTicketComment,
 createComment,
-getCommentsByTicketId
+getCommentsByTicketId,
+getCommentById
 };

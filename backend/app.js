@@ -7,7 +7,6 @@ const http = require("http");
 const redis = require('redis');
 const firebaseAdmin = require('./config/firebase-config');
 const data = require("./data");
-
 const client = redis.createClient({});
 client.connect().then(() => {});
 
@@ -38,6 +37,167 @@ app.use("/login",async(req, res) => {
     return res.json("Success");
   } catch (e) {
     return res.status(500).json("Internal server error");
+  }
+});
+
+app.use('/user', async (req, res, next) => {
+  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN")){
+    return res.status(403).json("Forbidden");
+  } else {
+    next();
+  }
+});
+
+app.use('/user/:userId', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || !await data.validation.isUserHaveAccessToUser(req.user.companyId, req.params.userId))){
+      return res.status(403).json("Forbidden");
+    } else if(req.url === '/' && req.params.userId !== 'info' && req.method == "GET" && !await data.validation.isUserHaveAccessToUser(req.user.companyId, req.params.userId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/state', async (req, res, next) => {
+  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER")){
+    return res.status(403).json("Forbidden");
+  } else {
+    next();
+  }
+});
+
+app.use('/state/:stateId', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToState(req.user.companyId, req.params.stateId))){
+      return res.status(403).json("Forbidden");
+    } else if(req.url === '/' && req.method == "GET" && !await data.validation.isUserHaveAccessToState(req.user.companyId, req.params.stateId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/project', async (req, res, next) => {
+  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER")){
+    return res.status(403).json("Forbidden");
+  } else {
+    next();
+  }
+});
+
+app.use('/project/:projectId', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId))){
+      return res.status(403).json("Forbidden");
+    } else if((req.url === '/' || req.url === '/ticket') && req.method == "GET" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/project/:projectId/sprint', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId))){
+      return res.status(403).json("Forbidden");
+    } else if(req.url === '/' && req.method == "GET" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/project/:projectId/sprint/:sprintId', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId) || !await data.validation.isProjectHaveThisSprint(req.params.projectId, req.params.sprintId))){
+      return res.status(403).json("Forbidden");
+    } else if(req.url === '/' && req.method == "GET" && (!await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId) || !await data.validation.isProjectHaveThisSprint(req.params.projectId, req.params.sprintId))){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/ticket', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method === "POST" && (! await data.validation.isUserHaveAccessToProject(req.user.email, req.body.projectId) || (req.body.sprintId && ! await isProjectHaveThisSprint(req.body.projectId, req.body.sprintId)))){
+      return res.status(403).json("Forbidden");
+    } else {
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+app.use('/ticket/:ticketId', async (req, res, next) => {
+  try{
+    if((req.url === '/' || req.url === "/comment") && !await data.validation.isUserHaveAccessToTicket(req.user, req.params.ticketId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
+  }
+});
+
+app.use('/ticket/:ticketId/comment/:commentId', async (req, res, next) => {
+  try{
+    if(req.url === '/' && req.method == "DELETE" && !await data.validation.isUserComment(req.user.email, req.params.commentId)){
+      return res.status(403).json("Forbidden");
+    }else{
+      next();
+    }
+  }catch(e){
+    if(typeof e !== 'object' || !('status' in e))
+      res.status(500).json("Internal server error");
+    else
+      res.status(parseInt(e.status)).json(e.error);
+    return;
   }
 });
 
