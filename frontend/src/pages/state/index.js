@@ -36,8 +36,8 @@ const State = () => {
           <Link href={`/state/create-state`}>
             <button className="btn btn-success">Create State </button>
           </Link>
-          {stateData.map((state) => (
-            <StateComponent state={state} />
+          {stateData.map((state, index) => (
+            <StateComponent key={index} state={state} />
           ))}
         </>
       ) : (

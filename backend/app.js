@@ -157,7 +157,7 @@ app.use('/project/:projectId/sprint/:sprintId', async (req, res, next) => {
 
 app.use('/ticket', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method === "POST" && (!await data.validation.isUserHaveAccessToProject(req.user.email, req.body.projectId) || (req.body.sprintId && !await isProjectHaveThisSprint(req.body.projectId, req.body.sprintId)))){
+    if(req.url === '/' && req.method === "POST" && (!await data.validation.isUserHaveAccessToProject(req.user.email, req.body.projectId) || (req.body.sprintId && !await data.validation.isProjectHaveThisSprint(req.body.projectId, req.body.sprintId)))){
       return res.status(403).json("Forbidden");
     } else {
       next();

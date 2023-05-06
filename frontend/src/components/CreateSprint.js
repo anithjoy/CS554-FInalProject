@@ -12,13 +12,28 @@ const CreateSprint = (props) => {
   const projectId  = props.projectId;
   
   const handleInputChange = (e) => {
+    setError(false);
     const sprintDataTemp = { ...sprintData };
-    if (e.target.id === "sprintName") 
+    if (e.target.id === "sprintName")
+    {
+      if(e.target.value=="")
+      {
+        delete sprintDataTemp.name
+        setSprintData(sprintDataTemp)
+        return;
+      } 
       sprintDataTemp.name = e.target.value;
+    }
     else if (e.target.id === "sprintDescription")
+    {
+      if(e.target.value=="")
+      {
+        delete sprintDataTemp.description
+        setSprintData(sprintDataTemp)
+        return;
+      }
       sprintDataTemp.description = e.target.value;
-    else if (e.target.id === "sprintStartDate")
-      sprintDataTemp.startDate = e.target.value;
+    }
     setSprintData(sprintDataTemp);
   };
 
@@ -60,10 +75,10 @@ const CreateSprint = (props) => {
           <h1>Sprint</h1>
           <form onSubmit={validateSprint} id="sprintForm">
             <label htmlFor='sprintName'>Name : </label>
-            <input value={sprintData.name} className="SprintInput" id='sprintName' placeholder="Enter Sprint Name" name="sprintName" type="text" onChange={handleInputChange}/>
+            <input value={sprintData.name ? sprintData.name : ""} className="SprintInput" id='sprintName' placeholder="Enter Sprint Name" name="sprintName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='sprintDescription'>Description : </label>
-            <textarea value={sprintData.description} className="SprintInput" id='sprintDescription' placeholder="Enter Sprint Description" name="sprintDescription" type="text" onChange={handleInputChange}/>
+            <textarea value={sprintData.description ? sprintData.description : ""} className="SprintInput" id='sprintDescription' placeholder="Enter Sprint Description" name="sprintDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <label  htmlFor='sprintStartDate'>Start Date : </label>
             <DatePicker selected={sprintData.startDate && new Date(sprintData.startDate)} className="SprintInput" id='sprintStartDate' name="sprintStartDate" onChange={(date)=>setSprintData({...sprintData, startDate: date})}/>

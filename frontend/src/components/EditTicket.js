@@ -64,19 +64,50 @@ const EditTicket = (props) => {
       setError(false);
     const ticketDataTemp = {...ticketData};
     if(e.target.id === 'ticketName')
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.name = e.target.value;
+    }
     else if(e.target.id === 'ticketDescription' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.description = e.target.value;
+    }
     else if(e.target.id === 'ticketState' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.stateId = e.target.value;
+    }
     else if(e.target.id === 'ticketPriority' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.priority = e.target.value;
+    }
     else if(e.target.id === 'ticketAssign' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.assign = e.target.value;
-    else if(e.target.id === 'ticketWatchers' ) 
-      ticketDataTemp.watchers = Array.from(e.target.selectedOptions, option => option.value);
-    else if(e.target.id === 'ticketDependedOnTickets' ) 
-      ticketDataTemp.dependedOnTickets = Array.from(e.target.selectedOptions, option => option.value);
+    }
     setTicketData(ticketDataTemp);
   }
   const validateTicket = async (e) =>{
@@ -118,6 +149,39 @@ const EditTicket = (props) => {
         }
       }
   }
+
+  const handleWatchersSelect = (e) => {
+    if(hasSuccessMessage)
+      setHasSuccessMessage(false);
+    if(hasError)
+      setError(false);
+    const option = e.target.value;
+    if(!ticketData.watchers)
+      setTicketData({...ticketData, watchers: [e.target.value]})
+    else{
+      const options = ticketData.watchers.includes(option)
+      ? ticketData.watchers.filter((t) => t !== option)
+      : [...ticketData.watchers, option];
+    setTicketData({...ticketData, watchers:options});
+    }
+  };
+
+  const handleDependedOnTicketsSelect = (e) => {
+    if(hasSuccessMessage)
+      setHasSuccessMessage(false);
+    if(hasError)
+      setError(false);
+    const option = e.target.value;
+    if(!ticketData.dependedOnTickets)
+      setTicketData({...ticketData, dependedOnTickets: [e.target.value]})
+    else{
+      const options = ticketData.dependedOnTickets.includes(option)
+      ? ticketData.dependedOnTickets.filter((t) => t !== option)
+      : [...ticketData.dependedOnTickets, option];
+    setTicketData({...ticketData, dependedOnTickets:options});
+    }
+  };
+
   return (
     <div className='ticketPage'>
         {ticketData && allTicket &&  stateData && ticketData && userData   ?    
@@ -128,10 +192,10 @@ const EditTicket = (props) => {
           {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
-            <input disabled={!updateFlag} value={ticketData.name} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
+            <input disabled={!updateFlag} value={ticketData.name ? ticketData.name : ""} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketDescription'>Description : </label>
-            <textarea disabled={!updateFlag} value={ticketData.description} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
+            <textarea disabled={!updateFlag} value={ticketData.description? ticketData.description : ""} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <p>Type : {ticketData.type}</p>
             <br/>
@@ -139,24 +203,43 @@ const EditTicket = (props) => {
             <br/>
             {ticketData.sprintId && <p>Sprint : {ticketData.sprintName}</p>}
             <label htmlFor='ticketState'>State : </label>
-            <select disabled={!updateFlag} value={ticketData.state} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
-              {stateData.map((state)=>{if(transition.length==1 || transition.includes(state._id))return(<option value={state._id}>{state.name}</option>)})}
+            <select disabled={!updateFlag} value={ticketData.state ? ticketData.state : ""} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
+              {stateData.map((state)=>{if(transition.length==1 || transition.includes(state._id))return(<option key={state._id} value={state._id}>{state.name}</option>)})}
             </select >
             <br/>
             <label htmlFor='ticketPriority'>Priority : </label>
-            <select disabled={!updateFlag} value={ticketData.priority} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
-              {helper.constants.PRIORITY.map((priority)=>{return(<option value={priority}>{priority}</option>)})}
+            <select disabled={!updateFlag} value={ticketData.priority ? ticketData.priority : ""} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
+              {helper.constants.PRIORITY.map((priority, index)=>{return(<option value={priority} key={index}>{priority}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketAssign'>Assign : </label>
-            <select disabled={!updateFlag} value={ticketData.assign} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
-              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
+            <select disabled={!updateFlag} value={ticketData.assign ? ticketData.assign : ""} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
+              {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
-            <label htmlFor='ticketWatchers'>Watchers : </label>
-            <select disabled={!updateFlag} value={ticketData.watchers} className="TicketInput" id='ticketWatchers' name="ticketWatchers" onChange={handleInputChange} multiple>
-              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
-            </select >
+            <div className="form-switch">
+              <label>
+                Watchers:
+                  {userData.map((user)=>{
+                    return(
+                    <div key={user._id} className="form-check mb-2">
+                      <input
+                        disabled={!updateFlag}
+                        type="checkbox"
+                        name="watchers"
+                        value={user.email}
+                        checked={ticketData.watchers ? ticketData.watchers.includes(user.email) : false}
+                        onChange={handleWatchersSelect}
+                        className="form-check-input"
+                        id={user._id}
+                      />
+                      <label htmlFor={user._id} className="form-check-label">
+                        {user.email} - {user.role}
+                      </label>
+                    </div>)
+                  })}
+              </label>
+            </div>
             <br/>
             <label htmlFor='ticketExpectedDate'>Expected Date : </label>
             <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
@@ -167,11 +250,29 @@ const EditTicket = (props) => {
             <label htmlFor='ticketReopenDate'>Reopen Date : </label>
             <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
             <br/>
-            { allTicket.length!=0 && allTicket.length!=1 && <><label htmlFor='ticketDependedOnTickets'>Depended On Tickets : </label>
-            <select disabled={!updateFlag} className="TicketInput" id='ticketDependedOnTickets' name="ticketDependedOnTickets" onChange={handleInputChange} multiple>
-              {allTicket.map((ticket)=>{if(ticket._id!=ticketData._id)return(<option value={ticket._id}>{ticket.name}</option>)})}
-            </select>
-            <br/></>}
+            { allTicket.length!=0 && allTicket.length!=1 && <div className="form-switch">
+              <label>
+                Depended On Tickets: 
+                  {allTicket.map((ticket)=>{
+                    return(
+                    <div key={ticket._id} className="form-check mb-2">
+                      <input
+                        disabled={!updateFlag}
+                        type="checkbox"
+                        name="ticketDependedOnTickets"
+                        value={ticket._id}
+                        checked={ticketData.dependedOnTickets ? ticketData.dependedOnTickets.includes(ticket._id) : false}
+                        onChange={handleDependedOnTicketsSelect}
+                        className="form-check-input"
+                        id={ticket._id}
+                      />
+                      <label htmlFor={ticket._id} className="form-check-label">
+                        {ticket.name}
+                      </label>
+                    </div>)
+                  })}
+              </label>
+            </div>}
             <br/>
             {updateFlag && <button type="submit" className="createTicketButton">Update Ticket</button>}
           </form>

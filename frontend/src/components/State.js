@@ -9,7 +9,7 @@ const State = (props) => {
   };
 
   return (
-    <div className="card">
+    <div className="card" key={state._id}>
       <div className="card-body">
         <h5 className="card-title">{state.name}</h5>
         <p className="card-text">{state.description}</p>

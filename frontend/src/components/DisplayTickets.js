@@ -67,7 +67,7 @@ const DisplayTickets = (props) => {
   }
   const getTicketRow = (ticket) =>{
     return(
-        <tr onClick={()=>redirect(ticket._id)}>
+        <tr key={ticket._id} onClick={()=>redirect(ticket._id)}>
           <td>{ticket.name}</td>
           <td>{ticket.priority}</td>
           <td>{ticket.state.name}</td>
@@ -79,21 +79,25 @@ const DisplayTickets = (props) => {
   const createTicketTable = () =>{
     return (
     <table>
-      <tr>
-        <th>Name</th>
-        <th>Priority</th>
-        <th>State</th>
-        <th>Assign</th>
-      </tr>
-      {ticketData.map((ticket)=>{
-        if(assignToMeFlag)
-        {
-          if(ticket.assign === user.email)
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Priority</th>
+          <th>State</th>
+          <th>Assign</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ticketData.map((ticket)=>{
+          if(assignToMeFlag)
+          {
+            if(ticket.assign === user.email)
+              return (getTicketRow(ticket));
+          }else{
             return (getTicketRow(ticket));
-        }else{
-          return (getTicketRow(ticket));
-        }
-        })}
+          }
+          })}
+      </tbody>
     </table>
     )
   }

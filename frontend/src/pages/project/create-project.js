@@ -36,13 +36,35 @@ const CreateProject = () => {
     setHasError(false);
     const projectDataTemp = {...projectData};
     if(e.target.id === 'projectName')
-    projectDataTemp.name = e.target.value; 
+    {
+      if(e.target.value=="")
+      {
+        delete projectDataTemp.name
+        setProjectData(projectDataTemp)
+        return;
+      }
+      projectDataTemp.name = e.target.value; 
+    }
     else if(e.target.id === 'projectManagerEmail')
+    {
+      if(e.target.value=="")
+      {
+        delete projectDataTemp.manager
+        setProjectData(projectDataTemp)
+        return;
+      }
       projectDataTemp.manager = e.target.value; 
+    }
     else if(e.target.id === 'projectDesc')
+    {
+      if(e.target.value=="")
+      {
+        delete projectDataTemp.description
+        setProjectData(projectDataTemp)
+        return;
+      }
       projectDataTemp.description = e.target.value;
-    else if(e.target.id === 'projectWatchers' ) 
-      projectDataTemp.watchers = Array.from(e.target.selectedOptions, option => option.value);
+    }
     setProjectData(projectDataTemp); 
   }
 
@@ -78,6 +100,19 @@ const CreateProject = () => {
     }
   }
 
+  const handleWatchersSelect = (e) => {
+    setHasError(false);
+    const option = e.target.value;
+    if(!projectData.watchers)
+      setProjectData({...projectData, watchers: [e.target.value]})
+    else{
+      const options = projectData.watchers.includes(option)
+      ? projectData.watchers.filter((t) => t !== option)
+      : [...projectData.watchers, option];
+    setProjectData({...projectData, watchers:options});
+    }
+  };
+
   return (
     <div>
         <div className="loginHeading">Create Project</div>
@@ -85,21 +120,39 @@ const CreateProject = () => {
         {hasError && <div className="error">{error}</div>}
         {userData && <form onSubmit={validateCreateProjectData}>
             <label htmlFor="projectName">Enter Project Name</label>
-            <input placeholder="Starship" id="projectName" value={projectData.name} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
+            <input placeholder="Starship" id="projectName" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
             <br/>
             <label htmlFor="projectDesc">Enter description</label>
-            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description} onChange={handleInputChange}  className="projectinput" autoFocus/>
+            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="projectinput" autoFocus/>
             <br/>
             <label htmlFor='projectManagerEmail'>Manager : </label>
-            <select value={projectData.manager} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
+            <select value={projectData.manager ? projectData.manager : ""} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option value={user.email}>{user.email}</option>)})}
+              {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option key={user._id} value={user.email}>{user.email}</option>)})}
             </select>
             <br/>
-            <label htmlFor='projectWatchers'>Watchers : </label>
-            <select value={projectData.watchers} className="projectinput" id='projectWatchers' name="projectWatchers" onChange={handleInputChange} multiple>
-              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
-            </select >
+            <div className="form-switch">
+              <label>
+                Watchers:
+                  {userData.map((user)=>{
+                    return(
+                    <div key={user._id} className="form-check mb-2">
+                      <input
+                        type="checkbox"
+                        name="watchers"
+                        value={user.email}
+                        checked={projectData.watchers ? projectData.watchers.includes(user.email) : false}
+                        onChange={handleWatchersSelect}
+                        className="form-check-input"
+                        id={user._id}
+                      />
+                      <label htmlFor={user._id} className="form-check-label">
+                        {user.email} - {user.role}
+                      </label>
+                    </div>)
+                  })}
+              </label>
+            </div>
             <br/>
             <button type="submit" className="loginButton">Create Project</button>
         </form>}

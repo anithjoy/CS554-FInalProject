@@ -58,8 +58,8 @@ const User = () => {
     }
 
     try {
-      if (fullName !== data.name || role !== data.role) {
-        const doctorData = { name: fullName, role: role };
+      if (helper.validationFunctions.isValidName(fullName) !== data.name || helper.validationFunctions.isValidRole(role) !== data.role) {
+        const doctorData = { name: helper.validationFunctions.isValidName(fullName), role: helper.validationFunctions.isValidRole(role) };
         const response = await api.user.updateUser(
           router.query.userId,
           doctorData

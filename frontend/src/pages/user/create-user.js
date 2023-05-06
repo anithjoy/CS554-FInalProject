@@ -14,6 +14,7 @@ const CreateUser = () => {
   const router = useRouter();
 
   const handleInputChange = (e) => {
+    setHasError(false);
     if (e.target.id === "signUpEmail") setEmail(e.target.value);
     else if (e.target.id === "signUpRole") setRole(e.target.value);
     else if (e.target.id === "signUpName") setName(e.target.value);
@@ -33,7 +34,7 @@ const CreateUser = () => {
     }
 
     try {
-      const data = { email: email, role: Role, name: fullName };
+      const data = { email: helper.validationFunctions.isValidEmail(email), role: helper.validationFunctions.isValidRole(Role), name: helper.validationFunctions.isValidName(fullName) };
       await api.user.createUser(data);
       router.push("/user");
       setHasError(false);

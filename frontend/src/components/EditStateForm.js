@@ -110,10 +110,17 @@ const EditStateForm = (props) => {
             disabled={helper.constants.DEFAULT_STATE.includes(stateData.name)} 
               type="text"
               name="name"
-              value={stateData.name}
+              value={stateData.name ? stateData.name : ""}
               onChange={(e) => {
                 if (hasSuccessMessage) setHasSuccessMessage(false);
                 if (hasError) setError(false);
+                if(e.target.value=="")
+                {
+                  let stateDataTemp = {...stateData}
+                  delete stateDataTemp.name
+                  setStateData(stateDataTemp)
+                  return;
+                }
                 setStateData({ ...stateData, name: e.target.value });
               }}
               placeholder="Enter Name"
@@ -131,10 +138,17 @@ const EditStateForm = (props) => {
               name="description"
               placeholder="Enter Description"
               required
-              value={stateData.description}
+              value={stateData.description ? stateData.description : ""}
               onChange={(e) => {
                 if (hasSuccessMessage) setHasSuccessMessage(false);
                 if (hasError) setError(false);
+                if(e.target.value=="")
+                {
+                  let stateDataTemp = {...stateData}
+                  delete stateDataTemp.description
+                  setStateData(stateDataTemp)
+                  return;
+                }
                 setStateData({ ...stateData, description: e.target.value });
               }}
               className="form-control"

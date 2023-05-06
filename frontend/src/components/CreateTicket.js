@@ -57,29 +57,106 @@ const CreateTicket = (props) => {
     setHasError(false);
     const ticketDataTemp = {...ticketData};
     if(e.target.id === 'ticketName')
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.name = e.target.value;
+    }
     else if(e.target.id === 'ticketDescription' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.description = e.target.value;
-    else if(e.target.id === 'ticketType' ) 
+    }
+    else if(e.target.id === 'ticketType' )
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      } 
       ticketDataTemp.type = e.target.value;
-    else if(e.target.id === 'ticketProject' ) 
+    }
+    else if(e.target.id === 'ticketProject' )
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      } 
       ticketDataTemp.projectId = e.target.value;
-    else if(e.target.id === 'ticketSprint' ) 
+    }
+    else if(e.target.id === 'ticketSprint' )
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      } 
       ticketDataTemp.sprintId = e.target.value;
+    }
     else if(e.target.id === 'ticketState' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.stateId = e.target.value;
+    }
     else if(e.target.id === 'ticketPriority' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.priority = e.target.value;
+    }
     else if(e.target.id === 'ticketAssign' ) 
+    {
+      if(e.target.value=="")
+      {
+        delete ticketDataTemp.name
+        setTicketData(ticketDataTemp)
+      }
       ticketDataTemp.assign = e.target.value;
-    else if(e.target.id === 'ticketWatchers' ) 
-      ticketDataTemp.watchers = Array.from(e.target.selectedOptions, option => option.value);
-    else if(e.target.id === 'ticketExpectedDate' ) 
-      ticketDataTemp.expectedDate = e.target.value;
-    else if(e.target.id === 'ticketDependedOnTickets' ) 
-      ticketDataTemp.dependedOnTickets = Array.from(e.target.selectedOptions, option => option.value);
+    }
     setTicketData(ticketDataTemp);
-  }
+  };
+
+  const handleWatchersSelect = (e) => {
+    setHasError(false);
+    const option = e.target.value;
+    if(!ticketData.watchers)
+      setTicketData({...ticketData, watchers: [e.target.value]})
+    else{
+      const options = ticketData.watchers.includes(option)
+      ? ticketData.watchers.filter((t) => t !== option)
+      : [...ticketData.watchers, option];
+      setTicketData({...ticketData, watchers:options});
+    }
+  };
+
+  const handleDependedOnTicketsSelect = (e) => {
+    setHasError(false);
+    const option = e.target.value;
+    if(!ticketData.dependedOnTickets)
+      setTicketData({...ticketData, dependedOnTickets: [e.target.value]})
+    else{
+      const options = ticketData.dependedOnTickets.includes(option)
+      ? ticketData.dependedOnTickets.filter((t) => t !== option)
+      : [...ticketData.dependedOnTickets, option];
+    setTicketData({...ticketData, dependedOnTickets:options});
+    }
+  };
+  
   const validateTicket = async (e) =>{
       e.preventDefault();
       try
@@ -119,60 +196,95 @@ const CreateTicket = (props) => {
           <h1>Ticket</h1>
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
-            <input value={ticketData.name} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
+            <input value={ticketData.name ? ticketData.name : ""} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketDescription'>Description : </label>
-            <textarea value={ticketData.description} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
+            <textarea value={ticketData.description ? ticketData.description : ""} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketType'>Type : </label>
-            <select value={ticketData.type} className="TicketInput" id='ticketType' name="ticketType" onChange={handleInputChange}>
+            <select value={ticketData.type ? ticketData.type : ""} className="TicketInput" id='ticketType' name="ticketType" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {helper.constants.TICKET_TYPE.map((type)=>{return(<option value={type}>{type}</option>)})}
+              {helper.constants.TICKET_TYPE.map((type, index)=>{return(<option key={index} value={type}>{type}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketProject'>Project : </label>
-            <select disabled={props.projectId ? true : false} value={props.projectId ? props.projectId : ticketData.projectId} className="TicketInput" id='ticketProject' name="ticketProject" onChange={handleInputChange}>
+            <select disabled={props.projectId ? true : false} value={props.projectId ? props.projectId : ticketData.projectId ? ticketData.projectId : ""} className="TicketInput" id='ticketProject' name="ticketProject" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {projectData.map((project)=>{return(<option value={project._id}>{project.name}</option>)})}
+              {projectData.map((project)=>{return(<option key={project._id} value={project._id}>{project.name}</option>)})}
             </select>
             <br/>
             {sprintData[ticketData.projectId] && sprintData[ticketData.projectId].length!=0 && <><label htmlFor='ticketSprint'>Sprint : </label>
-            <select value={ticketData.spritnId} className="TicketInput" id='ticketSprint' name="ticketSprint" onChange={handleInputChange}>
+            <select value={ticketData.spritnId ? ticketData.spritnId : ""} className="TicketInput" id='ticketSprint' name="ticketSprint" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {sprintData[ticketData.projectId].map((sprint)=>{return(<option value={sprint._id}>{sprint.name}</option>)})}
+              {sprintData[ticketData.projectId].map((sprint)=>{return(<option key={sprint._id} value={sprint._id}>{sprint.name}</option>)})}
             </select>
             <br/></>}
             <label htmlFor='ticketState'>State : </label>
-            <select value={ticketData.state} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
+            <select value={ticketData.state ? ticketData.state : ""} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {stateData.map((state)=>{return(<option value={state._id}>{state.name}</option>)})}
+              {stateData.map((state)=>{return(<option key={state._id} value={state._id}>{state.name}</option>)})}
             </select >
             <br/>
             <label htmlFor='ticketPriority'>Priority : </label>
-            <select value={ticketData.priority} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
+            <select value={ticketData.priority ? ticketData.priority : ""} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {helper.constants.PRIORITY.map((priority)=>{return(<option value={priority}>{priority}</option>)})}
+              {helper.constants.PRIORITY.map((priority, index)=>{return(<option key={index} value={priority}>{priority}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketAssign'>Assign : </label>
-            <select value={ticketData.assign} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
+            <select value={ticketData.assign ? ticketData.assign : ""} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
               <option value="">Select Option</option>
-              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
+              {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
-            <label htmlFor='ticketWatchers'>Watchers : </label>
-            <select value={ticketData.watchers} className="TicketInput" id='ticketWatchers' name="ticketWatchers" onChange={handleInputChange} multiple>
-              {userData.map((user)=>{return(<option value={user.email}>{user.email}</option>)})}
-            </select >
+            <div className="form-switch">
+              <label>
+                Watchers:
+                  {userData.map((user)=>{
+                    return(
+                    <div key={user._id} className="form-check mb-2">
+                      <input
+                        type="checkbox"
+                        name="watchers"
+                        value={user.email}
+                        checked={ticketData.watchers ? ticketData.watchers.includes(user.email) : false}
+                        onChange={handleWatchersSelect}
+                        className="form-check-input"
+                        id={user._id}
+                      />
+                      <label htmlFor={user._id} className="form-check-label">
+                        {user.email} - {user.role}
+                      </label>
+                    </div>)
+                  })}
+              </label>
+            </div>
             <br/>
             <label  htmlFor='ticketExpectedDate'>Expected Date : </label>
             <DatePicker selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
             <br/>
-            { allTicket.length!=0 && <><label htmlFor='ticketDependedOnTickets'>Depended On Tickets : </label>
-            <select value={ticketData.dependedOnTickets} className="TicketInput" id='ticketDependedOnTickets' name="ticketDependedOnTickets" onChange={handleInputChange} multiple>
-              {allTicket.map((ticket)=>{return(<option value={ticket._id}>{ticket.name}</option>)})}
-            </select>
-            <br/></>}
+            { allTicket.length!=0 && <div className="form-switch">
+              <label>
+                Depended On Tickets: 
+                  {allTicket.map((ticket)=>{
+                    return(
+                    <div key={ticket._id} className="form-check mb-2">
+                      <input
+                        type="checkbox"
+                        name="ticketDependedOnTickets"
+                        value={ticket._id}
+                        checked={ticketData.dependedOnTickets ? ticketData.dependedOnTickets.includes(ticket._id) : false}
+                        onChange={handleDependedOnTicketsSelect}
+                        className="form-check-input"
+                        id={ticket._id}
+                      />
+                      <label htmlFor={ticket._id} className="form-check-label">
+                        {ticket.name}
+                      </label>
+                    </div>)
+                  })}
+              </label>
+            </div>}
             <button type="submit" className="createTicketButton">Create Ticket</button>
               
           </form>
