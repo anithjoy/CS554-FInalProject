@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import { api } from "../api";
 import { helper } from "../helper";
 import DatePicker from "react-datepicker";
@@ -10,7 +9,6 @@ const CreateSprint = (props) => {
   const [sprintData, setSprintData] = useState({});
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('')
-  const router = useRouter();
   const projectId  = props.projectId;
   
   const handleInputChange = (e) => {
@@ -42,15 +40,22 @@ const CreateSprint = (props) => {
         props.setTab("All-Sprints");
         setHasError(false);
     }catch(e){
-        //console.log(e);
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
         setHasError(true);
         setError(e.response.data);
-        return;
+      }
     }
 }
 
     return (
-    <div className='sprintPage'>   
+    <div className='sprintPage'>
+        {hasError && <div className="error">{error}</div>}   
         <div className="sprintCard" id="sprintFormWrap">    
           <h1>Sprint</h1>
           <form onSubmit={validateSprint} id="sprintForm">
@@ -66,7 +71,6 @@ const CreateSprint = (props) => {
             <button type="submit" className="createSprintButton">Create Sprint</button>
               
           </form>
-          {hasError && <div className="error">{error}</div>}
         </div>
     </div>
   )

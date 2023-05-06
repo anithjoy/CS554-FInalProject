@@ -5,16 +5,21 @@ import { api } from "../../api";
 
 const State = () => {
   const [stateData, setStateData] = useState("");
+  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data: stateDataTemp } = await api.state.getAllState();
         setStateData(stateDataTemp);
       } catch (e) {
-        if (e.response.status === 500) router.push("/error");
-        else if (e.response.status === 401) {
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
           router.push("/login");
-        } else {
+        }else{
           setHasError(true);
           setError(e.response.data);
         }
@@ -25,6 +30,7 @@ const State = () => {
 
   return (
     <div>
+      {hasError && <div className="error">{error}</div>}
       {stateData ? (
         <>
           <Link href={`/state/create-state`}>

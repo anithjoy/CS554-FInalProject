@@ -1,5 +1,5 @@
-import {axiosAuth} from './axios'
+import {axiosNoAuth} from './axios'
 
 export const post = (data) => {
-    return axiosAuth.post(`/company`, data)
+    return axiosNoAuth.post(`/company`, data)
 }

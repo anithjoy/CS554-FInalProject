@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { helper } from "../helper";
@@ -12,6 +12,13 @@ const Login = () => {
   const [error, setError] = useState("");
   const { login } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if(JSON.parse(localStorage.getItem('token_data')))
+    {
+      router.push("/dashboard");
+    }
+  },[]);
 
   const handleInputChange = (e) => {
     if (e.target.type === "email") setEmail(e.target.value);
@@ -40,9 +47,16 @@ const Login = () => {
       );
       router.push("/dashboard");
     } catch (e) {
-      setHasError(true);
-      setError(e.response.data);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   };
   return (

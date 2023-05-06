@@ -34,20 +34,28 @@ const CreateUser = () => {
 
     try {
       const data = { email: email, role: Role, name: fullName };
-      const response = await api.user.createUser(data);
-      alert("User created");
+      await api.user.createUser(data);
       router.push("/user");
       setHasError(false);
     } catch (e) {
-      setHasError(true);
-      if (!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   };
   return (
     <div>
       <div className="loginHeading">Create User</div>
+      {hasError && (
+          <div className="error alert alert-danger mt-3">{error}</div>
+        )}
       <div className="CreateUserCard card p-4 shadow-sm">
         <form onSubmit={validateCreateUserData}>
           <div className="form-group">
@@ -102,9 +110,6 @@ const CreateUser = () => {
             Register User
           </button>
         </form>
-        {hasError && (
-          <div className="error alert alert-danger mt-3">{error}</div>
-        )}
       </div>
     </div>
   );

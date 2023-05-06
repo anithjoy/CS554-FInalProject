@@ -21,10 +21,13 @@ const EditStateForm = (props) => {
         setStateData(stateDataTemp);
         setAllState(allStateDataTemp);
       } catch (e) {
-        if (e.response.status === 500) router.push("/error");
-        else if (e.response.status === 401) {
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
           router.push("/login");
-        } else {
+        }else{
           setHasError(true);
           setError(e.response.data);
         }
@@ -66,10 +69,16 @@ const EditStateForm = (props) => {
       setHasError(false);
       setStateData(data);
     } catch (e) {
-      setHasError(true);
-      if (!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   };
 
@@ -85,6 +94,7 @@ const EditStateForm = (props) => {
 
   return (
     <>
+      {hasError && <div className="error">{error}</div>}
       {hasSuccessMessage && (
         <div className="alert alert-success" role="alert">
           Successfully updated
@@ -163,7 +173,6 @@ const EditStateForm = (props) => {
       ) : (
         <div>Loading.....</div>
       )}
-      {hasError && <div className="alert alert-danger">{error}</div>}
     </>
   );
 };

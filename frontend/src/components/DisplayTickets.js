@@ -36,10 +36,11 @@ const DisplayTickets = (props) => {
             setTicketData(ticketDataTemp);
         }
         catch(e){
-          if(e.response.status===500)
-            router.push("/error");
+          if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);

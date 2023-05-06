@@ -43,10 +43,11 @@ const EditTicket = (props) => {
             setTicketData(ticketDataTemp);
         }
         catch(e){
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);
@@ -105,9 +106,16 @@ const EditTicket = (props) => {
           setTicketData(ticketDataTemp);
           setUpdateFlag(!updateFlag);
       }catch(e){
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
           setHasError(true);
           setError(e.response.data);
-          return;
+        }
       }
   }
   return (
@@ -115,6 +123,7 @@ const EditTicket = (props) => {
         {ticketData && allTicket &&  stateData && ticketData && userData   ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
+          {hasError && <div className="error">{error}</div>}
           {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
           {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
@@ -167,7 +176,6 @@ const EditTicket = (props) => {
             {updateFlag && <button type="submit" className="createTicketButton">Update Ticket</button>}
           </form>
           {!updateFlag && <div><h2>Comment Section</h2><CommentWindow ticketId = {props.ticketId}/></div>}
-          {hasError && <div className="error">{error}</div>}
         </div>
         :
         hasError ? <div className="error">You can not access this ticket ask for access permission to your manager</div> :<div>Loading....</div>}

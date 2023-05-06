@@ -41,10 +41,11 @@ const Dashboard = () => {
             setTicketData(ticketDataTemp2);
         }
         catch(e){
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);

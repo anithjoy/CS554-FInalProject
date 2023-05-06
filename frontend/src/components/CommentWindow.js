@@ -22,15 +22,16 @@ const CommentWindow = (props) => {
                 setComments(data);
                 setHasError(false);
             }catch(e){
-                if(e.response.status===500)
-                    router.push("/error");
-                else if(e.response.status===401 )
-                {
-                    router.push("/login");
-                }else{
-                    setHasError(true);
-                    setError(e.response.data);
-                }
+              if(!e.response || !e.response.status || e.response.status===500)
+                router.push("/error");
+              else if(e.response.status===401 )
+              {
+                localStorage.clear();
+                router.push("/login");
+              }else{
+                setHasError(true);
+                setError(e.response.data);
+              }
             }
         }
         socket.emit('ticket_open', {ticketId:props.ticketId});
@@ -44,15 +45,16 @@ const CommentWindow = (props) => {
                 setComments(data);
                 setHasError(false);
             }catch(e){
-                if(e.response.status===500)
-                    router.push("/error");
-                else if(e.response.status===401 )
-                {
-                    router.push("/login");
-                }else{
-                    setHasError(true);
-                    setError(e.response.data);
-                }
+              if(!e.response || !e.response.status || e.response.status===500)
+                router.push("/error");
+              else if(e.response.status===401 )
+              {
+                localStorage.clear();
+                router.push("/login");
+              }else{
+                setHasError(true);
+                setError(e.response.data);
+              }
             }
         }
         socket.on("recieve_ticket_updates", () => {
@@ -74,10 +76,11 @@ const CommentWindow = (props) => {
             setNewComment("")
             setHasError(false);
         }catch(e){
-            if(e.response.status===500)
+            if(!e.response || !e.response.status || e.response.status===500)
                 router.push("/error");
             else if(e.response.status===401 )
             {
+                localStorage.clear();
                 router.push("/login");
             }else{
                 setHasError(true);

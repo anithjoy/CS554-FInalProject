@@ -4,6 +4,10 @@ export const axiosAuth = axios.create({
   baseURL: "http://localhost:3000",
 });
 
+export const axiosNoAuth = axios.create({
+  baseURL: "http://localhost:3000",
+});
+
 axiosAuth.interceptors.request.use((config) => {
   const token_data = localStorage.getItem("token_data");
   if (token_data) {

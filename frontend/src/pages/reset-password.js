@@ -18,9 +18,7 @@ const ResetPassword = () => {
     useEffect(() => {
         const checkToken = async (token) =>{
             try{
-                console.log("hello")
                 const {user} = await customTokenLogin(token);
-                console.log(user.uid)
                 setEmail(user.uid);
             }
             catch{
@@ -59,9 +57,16 @@ const ResetPassword = () => {
             await api.login.post({email});
             router.push("/dashboard");
         }catch(e){
+          if(!e.response || !e.response.status || e.response.status===500)
+            router.push("/error");
+          else if(e.response.status===401 )
+          {
+            localStorage.clear();
+            router.push("/login");
+          }else{
             setHasError(true);
             setError(e.response.data);
-            return;
+          }
         }
     }
     return (

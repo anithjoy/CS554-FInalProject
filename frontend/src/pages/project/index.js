@@ -16,11 +16,15 @@ const Projects = () => {
         setUser(data);
         setProjects(response.data);
       }catch(e){
-        if(e.response.status===500)
-            router.push('/error')
-        else{
-            setHasError(true);
-            setError(e.response.data);
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
+          setHasError(true);
+          setError(e.response.data);
         }
       }
     }
@@ -32,18 +36,21 @@ const Projects = () => {
     router.push(`/project/${id}`)
   }
   return (
-    user && projects && <div>
-      {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button>Create New Project</button></Link>}
-      <h1>Current Projects</h1>
-      <ul>
-        {
-          projects.map((project) => {
-            return <li key={project._id} onClick={()=>redirect(project._id)}>
-              {project.name}
-            </li>
-          })
-        }
-      </ul>
+    <div>
+      {hasError && <div className="error">{error}</div>}
+      {user && projects && <div>
+        {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button>Create New Project</button></Link>}
+        <h1>Current Projects</h1>
+        <ul>
+          {
+            projects.map((project) => {
+              return <li key={project._id} onClick={()=>redirect(project._id)}>
+                {project.name}
+              </li>
+            })
+          }
+        </ul>
+      </div>}
     </div>
   )
 }

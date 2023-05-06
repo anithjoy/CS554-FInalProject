@@ -6,15 +6,31 @@ import {api} from "../../api";
 const Ticket = () => {
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState('');
   useEffect(() => {
     const fetchData = async()=>{
-      const {data} = await api.user.getUserInfo();
-      setUser(data);
+      try{
+        const {data} = await api.user.getUserInfo();
+        setUser(data);
+      }catch(e){
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
+          setHasError(true);
+          setError(e.response.data);
+        }
+      }
     }
     fetchData();
   }, [])
   return (
     <div className='ticketPage'>
+        {hasError && <div className="error">{error}</div>}
         {user && <EditTicket ticketId={router.query.ticketId} user={user}/>}
     </div>
   )

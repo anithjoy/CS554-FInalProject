@@ -15,13 +15,14 @@ app.use(cors());
 
 app.use(async(req, res, next) => {
   try {
+    if(req.url === '/company'){
+      next();
+      return;
+    }
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
     if (decodedToken) {
-      if(req.url != '/company')
-        req.user = await data.user.getUserByEmail(decodedToken.email);
-      else
-        req.user = decodedToken.email;
+      req.user = await data.user.getUserByEmail(decodedToken.email);
       next();
       return;
     }
@@ -41,7 +42,7 @@ app.use("/login",async(req, res) => {
 });
 
 app.use('/user', async (req, res, next) => {
-  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN")){
+  if(req.url === '/' && req.method == "POST" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN"){
     return res.status(403).json("Forbidden");
   } else {
     next();
@@ -50,7 +51,7 @@ app.use('/user', async (req, res, next) => {
 
 app.use('/user/:userId', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || !await data.validation.isUserHaveAccessToUser(req.user.companyId, req.params.userId))){
+    if(req.url === '/' && req.method == "PATCH" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && !await data.validation.isUserHaveAccessToUser(req.user.companyId, req.params.userId)){
       return res.status(403).json("Forbidden");
     } else if(req.url === '/' && req.params.userId !== 'info' && req.method == "GET" && !await data.validation.isUserHaveAccessToUser(req.user.companyId, req.params.userId)){
       return res.status(403).json("Forbidden");
@@ -67,7 +68,7 @@ app.use('/user/:userId', async (req, res, next) => {
 });
 
 app.use('/state', async (req, res, next) => {
-  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER")){
+  if(req.url === '/' && req.method == "POST" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER"){
     return res.status(403).json("Forbidden");
   } else {
     next();
@@ -76,7 +77,7 @@ app.use('/state', async (req, res, next) => {
 
 app.use('/state/:stateId', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToState(req.user.companyId, req.params.stateId))){
+    if(req.url === '/' && req.method == "PATCH" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER" && !await data.validation.isUserHaveAccessToState(req.user.companyId, req.params.stateId)){
       return res.status(403).json("Forbidden");
     } else if(req.url === '/' && req.method == "GET" && !await data.validation.isUserHaveAccessToState(req.user.companyId, req.params.stateId)){
       return res.status(403).json("Forbidden");
@@ -93,7 +94,7 @@ app.use('/state/:stateId', async (req, res, next) => {
 });
 
 app.use('/project', async (req, res, next) => {
-  if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER")){
+  if(req.url === '/' && req.method == "POST" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER"){
     return res.status(403).json("Forbidden");
   } else {
     next();
@@ -102,7 +103,7 @@ app.use('/project', async (req, res, next) => {
 
 app.use('/project/:projectId', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId))){
+    if(req.url === '/' && req.method == "PATCH" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
       return res.status(403).json("Forbidden");
     } else if((req.url === '/' || req.url === '/ticket') && req.method == "GET" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
       return res.status(403).json("Forbidden");
@@ -120,7 +121,7 @@ app.use('/project/:projectId', async (req, res, next) => {
 
 app.use('/project/:projectId/sprint', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method == "POST" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId))){
+    if(req.url === '/' && req.method == "POST" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
       return res.status(403).json("Forbidden");
     } else if(req.url === '/' && req.method == "GET" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId)){
       return res.status(403).json("Forbidden");
@@ -138,7 +139,7 @@ app.use('/project/:projectId/sprint', async (req, res, next) => {
 
 app.use('/project/:projectId/sprint/:sprintId', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method == "PATCH" && (req.role !== "SUPER-ADMIN" || req.role !== "ADMIN" || req.role !== "MANAGER" || !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId) || !await data.validation.isProjectHaveThisSprint(req.params.projectId, req.params.sprintId))){
+    if(req.url === '/' && req.method == "PATCH" && req.user.role !== "SUPER-ADMIN" && req.user.role !== "ADMIN" && req.user.role !== "MANAGER" && !await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId) && !await data.validation.isProjectHaveThisSprint(req.params.projectId, req.params.sprintId)){
       return res.status(403).json("Forbidden");
     } else if(req.url === '/' && req.method == "GET" && (!await data.validation.isUserHaveAccessToProject(req.user.email, req.params.projectId) || !await data.validation.isProjectHaveThisSprint(req.params.projectId, req.params.sprintId))){
       return res.status(403).json("Forbidden");
@@ -156,7 +157,7 @@ app.use('/project/:projectId/sprint/:sprintId', async (req, res, next) => {
 
 app.use('/ticket', async (req, res, next) => {
   try{
-    if(req.url === '/' && req.method === "POST" && (! await data.validation.isUserHaveAccessToProject(req.user.email, req.body.projectId) || (req.body.sprintId && ! await isProjectHaveThisSprint(req.body.projectId, req.body.sprintId)))){
+    if(req.url === '/' && req.method === "POST" && (!await data.validation.isUserHaveAccessToProject(req.user.email, req.body.projectId) || (req.body.sprintId && !await isProjectHaveThisSprint(req.body.projectId, req.body.sprintId)))){
       return res.status(403).json("Forbidden");
     } else {
       next();

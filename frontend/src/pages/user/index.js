@@ -18,8 +18,13 @@ const Users = () => {
         setUsers(response.data);
         setHasError(false);
       } catch (e) {
-        if (e.response.status === 500) router.push("/error");
-        else {
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
           setHasError(true);
           setError(e.response.data);
         }
@@ -32,6 +37,7 @@ const Users = () => {
 
   return (
     <div className="container">
+      {hasError && <div className="error">{error}</div>}
       <Link href={"/user/create-user"}>Create New User</Link>
       <h1 className="mb-3">Company Users</h1>
       <ul className="list-group">

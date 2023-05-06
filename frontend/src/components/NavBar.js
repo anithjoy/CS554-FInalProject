@@ -9,15 +9,33 @@ const NavBar = () => {
   const [user, setUser] = useState(null);
   const { logout } = useAuth();
   const router = useRouter();
-
+  const [hasError, setHasError] = useState(false);
+  const [error, setError] = useState('');
+  
   const handleLogout = (e) =>{
     if(e.target.id === '6')
+    {
       logout();
+      localStorage.clear();
+    }
   }
   useEffect(() => {
     const fetchData = async()=>{
-      const {data} = await api.user.getUserInfo();
-      setUser(data);
+      try {
+        const {data} = await api.user.getUserInfo();
+        setUser(data);
+      } catch (e) {
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
+          setHasError(true);
+          setError(e.response.data);
+        }
+      }
     }
     fetchData();
   }, [])
@@ -33,29 +51,30 @@ const NavBar = () => {
   }, [router.pathname, user])
   return (
     <nav>
-   {user && <div className="nav-center">
-      <div className="nav-header">
-        <Link href="/dashboard">
-          <p>WorkMate</p>
-        </Link>
-      </div>
-      <div className="links-container">
-        <ul className="links">
-          {helper.constants.NAV_LINKS.map((link) => {
-            const { id, url, text } = link;
-            if( text=="Users" && (user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
-              return;
-            if( text=="States" && (user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
-              return;
-            return (
-              <li key={id} >
-                <Link href={`${url}`} id={id} onClick={handleLogout}>{text}</Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>}
+      {hasError && <div className="error">{error}</div>}
+      {user && <div className="nav-center">
+          <div className="nav-header">
+            <Link href="/dashboard">
+              <p>WorkMate</p>
+            </Link>
+          </div>
+          <div className="links-container">
+            <ul className="links">
+              {helper.constants.NAV_LINKS.map((link) => {
+                const { id, url, text } = link;
+                if( text=="Users" && (user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
+                  return;
+                if( text=="States" && (user.role.toUpperCase() == "DEVELOPER" || user.role.toUpperCase() == "QA" || user.role.toUpperCase() == "SUPPORT"))
+                  return;
+                return (
+                  <li key={id} >
+                    <Link href={`${url}`} id={id} onClick={handleLogout}>{text}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>}
   </nav>
   )
 }

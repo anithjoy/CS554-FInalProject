@@ -7,7 +7,6 @@ import {
   signInWithCustomToken
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
-import { useRouter } from "next/router";
 
 export const AuthContext = createContext({});
 
@@ -18,7 +17,6 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-  const router = useRouter();
   console.log(user)
 
   useEffect(() => {

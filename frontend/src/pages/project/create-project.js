@@ -17,10 +17,11 @@ const CreateProject = () => {
             setUserData(userDataTemp);
         }
         catch(e){
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);
@@ -61,14 +62,19 @@ const CreateProject = () => {
     }
 
     try{
-      const response =  await api.project.createProject(projectDataTemp);
+      await api.project.createProject(projectDataTemp);
       router.push("/project");
     }catch(e){
-      console.log(e)
-      setHasError(true);
-      if(!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   }
 
@@ -76,6 +82,7 @@ const CreateProject = () => {
     <div>
         <div className="loginHeading">Create Project</div>
        <div className="CreateUserCard">
+        {hasError && <div className="error">{error}</div>}
         {userData && <form onSubmit={validateCreateProjectData}>
             <label htmlFor="projectName">Enter Project Name</label>
             <input placeholder="Starship" id="projectName" value={projectData.name} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
@@ -96,7 +103,6 @@ const CreateProject = () => {
             <br/>
             <button type="submit" className="loginButton">Create Project</button>
         </form>}
-        {hasError && <div className="error">{error}</div>}
       </div>
     </div>
   );

@@ -18,11 +18,11 @@ const DisplaySprints = (props) => {
             setSprintData(sprintDataTemp);
         }
         catch(e){
-          console.log(e);
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);
@@ -35,6 +35,7 @@ const DisplaySprints = (props) => {
   },[]);
   return (
     <div>
+      {hasError && <div className="error">{error}</div>}
       {sprintData ? <>
       <ul>
         {

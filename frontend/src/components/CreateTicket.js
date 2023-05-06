@@ -39,10 +39,11 @@ const CreateTicket = (props) => {
                 setTicketData({...ticketData, projectId:props.projectId});
         }
         catch(e){
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);
@@ -98,13 +99,21 @@ const CreateTicket = (props) => {
           else
             router.push("/ticket");
       }catch(e){
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
+          router.push("/login");
+        }else{
           setHasError(true);
           setError(e.response.data);
-          return;
+        }
       }
   }
   return (
     <div className='ticketPage'>
+        {hasError && <div className="error">{error}</div>}
         {allTicket &&  stateData && stateData.length!=0 && projectData && projectData.length!=0 && userData  && userData.length!=0 ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
@@ -167,7 +176,6 @@ const CreateTicket = (props) => {
             <button type="submit" className="createTicketButton">Create Ticket</button>
               
           </form>
-          {hasError && <div className="error">{error}</div>}
         </div>
         : projectData !== null && projectData.length==0 ?
         <div>Please create project to create ticket</div>

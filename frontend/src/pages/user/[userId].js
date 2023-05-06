@@ -22,16 +22,16 @@ const User = () => {
                 setData(response.data);
                 setHasError(false);
             }catch(e){
-            if(e.response.status===500)
+              if(!e.response || !e.response.status || e.response.status===500)
                 router.push("/error");
-            else if(e.response.status===401 )
-            {
+              else if(e.response.status===401 )
+              {
                 localStorage.clear();
                 router.push("/login");
-            }else{
+              }else{
                 setHasError(true);
                 setError(e.response.data);
-            }
+              }
             }
       }
     if (!data) {
@@ -69,11 +69,13 @@ const User = () => {
         setHasSuccessMessage(true);
       }
     } catch (e) {
-      if (e.response.status === 500) router.push("/error");
-      else if (e.response.status === 401) {
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
         localStorage.clear();
         router.push("/login");
-      } else {
+      }else{
         setHasError(true);
         setError(e.response.data);
       }
@@ -82,11 +84,10 @@ const User = () => {
   return (
     <>
       <div className="container">
-        {/* {data && <components.Navbar doctorId={data.doctor._id}/>} */}
+        {hasError && <div className="alert alert-danger">{error}</div>}
         {hasSuccessMessage && (
           <div className="alert alert-success">Successfully updated</div>
         )}
-        {hasError && <div className="alert alert-danger">{error}</div>}
         {data && (
           <form onSubmit={validateUpdate}>
             <div className="form-group">

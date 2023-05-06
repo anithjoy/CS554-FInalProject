@@ -19,10 +19,13 @@ const CreateStateForm = () => {
         const { data: stateDataTemp } = await api.state.getAllState();
         setAllStates(stateDataTemp);
       } catch (e) {
-        if (e.response.status === 500) router.push("/error");
-        else if (e.response.status === 401) {
+        if(!e.response || !e.response.status || e.response.status===500)
+          router.push("/error");
+        else if(e.response.status===401 )
+        {
+          localStorage.clear();
           router.push("/login");
-        } else {
+        }else{
           setHasError(true);
           setError(e.response.data);
         }
@@ -55,10 +58,13 @@ const CreateStateForm = () => {
       await api.state.createState(data);
       router.push(`/state`);
     } catch (e) {
-      if (e.response.status === 500) router.push("/error");
-      else if (e.response.status === 401) {
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
         router.push("/login");
-      } else {
+      }else{
         setHasError(true);
         setError(e.response.data);
       }
@@ -75,6 +81,7 @@ const CreateStateForm = () => {
 
   return (
     <>
+      {hasError && <div className="error">{error}</div>}
       {allStates ? (
         <form onSubmit={handleSubmit} className="p-3">
           <div className="mb-3">
@@ -135,7 +142,6 @@ const CreateStateForm = () => {
       ) : (
         <div>Loading....</div>
       )}
-      {hasError && <div className="error">{error}</div>}
     </>
   );
 };

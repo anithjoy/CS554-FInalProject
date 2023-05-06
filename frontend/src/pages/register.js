@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { api } from "../api";
@@ -16,6 +16,13 @@ const Register = () => {
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    if(JSON.parse(localStorage.getItem('token_data')))
+    {
+      router.push("/dashboard");
+    }
+  },[]);
 
   const handleInputChange = (e) => {
     if (e.target.id === "registerEmail") setEmail(e.target.value);
@@ -38,9 +45,16 @@ const Register = () => {
       setName(helper.validationFunctions.isValidCompanyName(name));
       setHasError(false);
     } catch (e) {
-      setHasError(true);
-      setError(e.message);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
 
     try {
@@ -50,13 +64,12 @@ const Register = () => {
         password: helper.validationFunctions.isValidPassword(password),
         name: helper.validationFunctions.isValidCompanyName(name),
       };
-      console.log(signup);
+      await api.register.post(data);
       const { user } = await signup(data.email, data.password);
       await AsyncLocalStorage.setItem(
         "token_data",
         JSON.stringify(user.accessToken)
       );
-      await api.register.post(data);
       router.push("/dashboard");
       setHasError(false);
     } catch (e) {

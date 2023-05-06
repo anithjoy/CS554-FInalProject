@@ -20,10 +20,11 @@ const ProjectDetail = (props) => {
             setUserData(userDataTemp);
         }
         catch(e){
-          if(e.response.status===500)
+          if(!e.response || !e.response.status || e.response.status===500)
             router.push("/error");
           else if(e.response.status===401 )
           {
+            localStorage.clear();
             router.push("/login");
           }else{
             setHasError(true);
@@ -75,11 +76,16 @@ const ProjectDetail = (props) => {
       setHasSuccessMessage(true);
       setProjectData(data);
     }catch(e){
-      console.log(e)
-      setHasError(true);
-      if(!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   }
   return (
