@@ -13,6 +13,7 @@ const Register = () => {
   const [repassword, setRepassword] = useState("");
   const [name, setName] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { signup } = useAuth();
   const router = useRouter();
@@ -45,19 +46,13 @@ const Register = () => {
       setName(helper.validationFunctions.isValidCompanyName(name));
       setHasError(false);
     } catch (e) {
-      if(!e.response || !e.response.status || e.response.status===500)
-        router.push("/error");
-      else if(e.response.status===401 )
-      {
-        localStorage.clear();
-        router.push("/login");
-      }else{
-        setHasError(true);
-        setError(e.response.data);
-      }
+      setHasError(true);
+      setError(e.message);
+      return;
     }
 
     try {
+      setLoading(true);
       const data = {
         email: helper.validationFunctions.isValidEmail(email),
         EIN: helper.validationFunctions.isValidEIN(EIN),
@@ -73,14 +68,22 @@ const Register = () => {
       router.push("/dashboard");
       setHasError(false);
     } catch (e) {
-      setHasError(true);
-      if (!e.response) setError("Error");
-      else setError(e.response.data);
-      return;
+      setLoading(false);
+      if(!e.response || !e.response.status || e.response.status===500)
+        router.push("/error");
+      else if(e.response.status===401 )
+      {
+        localStorage.clear();
+        router.push("/login");
+      }else{
+        setHasError(true);
+        setError(e.response.data);
+      }
     }
   };
   return (
     <div className="container">
+      {loading ? <div>Loading....</div> :
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="card my-5">
@@ -168,7 +171,7 @@ const Register = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

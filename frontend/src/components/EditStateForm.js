@@ -142,12 +142,12 @@ const EditStateForm = (props) => {
           </div>
 
           {allState.length != 1 && (
-            <div className="mb-3">
+            <div className="form-check form-switch">
               <label className="form-label">Transitions:</label>
               {allState.map((state) => {
                 if (state._id != props.stateId)
                   return (
-                    <div key={state._id} className="form-check">
+                    <div key={state._id} className="form-check  mb-2">
                       <input
                         type="checkbox"
                         name="transitions"
