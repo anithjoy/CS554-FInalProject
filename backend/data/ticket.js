@@ -135,8 +135,8 @@ const updateTicket = async (
     }
     if(data.stateId){
       let companyStates = await stateData.getAllState(ticketInDb.companyId);
-      let companyStateIds = companyStates.map(s => s._id);
-      if(!companyStateIds.includes(data.state)) throw {status:400,error:'Invalid state id'}
+      let companyStateIds = companyStates.map(s => s._id.toString());
+      if(!companyStateIds.includes(data.stateId)) throw {status:400,error:'Invalid state id'}
     }
 
     const updatedInfo = await ticketCollection.updateMany(

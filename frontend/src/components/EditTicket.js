@@ -69,6 +69,7 @@ const EditTicket = (props) => {
       {
         delete ticketDataTemp.name
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.name = e.target.value;
     }
@@ -76,8 +77,9 @@ const EditTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.description
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.description = e.target.value;
     }
@@ -85,8 +87,9 @@ const EditTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.stateId
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.stateId = e.target.value;
     }
@@ -94,8 +97,9 @@ const EditTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.priority
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.priority = e.target.value;
     }
@@ -103,8 +107,9 @@ const EditTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.assign
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.assign = e.target.value;
     }
@@ -203,7 +208,7 @@ const EditTicket = (props) => {
             <br/>
             {ticketData.sprintId && <p>Sprint : {ticketData.sprintName}</p>}
             <label htmlFor='ticketState'>State : </label>
-            <select disabled={!updateFlag} value={ticketData.state ? ticketData.state : ""} className="loginInput form-control" id='ticketState' name="ticketState" onChange={handleInputChange}>
+            <select disabled={!updateFlag} value={ticketData.stateId ? ticketData.stateId : ""} className="loginInput form-control" id='ticketState' name="ticketState" onChange={handleInputChange}>
               {stateData.map((state)=>{if(transition.length==1 || transition.includes(state._id))return(<option key={state._id} value={state._id}>{state.name}</option>)})}
             </select >
             <br/>

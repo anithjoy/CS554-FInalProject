@@ -33,7 +33,7 @@ const Dashboard = () => {
                   ticketDataTemp2.push( {
                     id: ticket._id,
                     title: ticket.name,
-                    start: start,
+                    start: end,
                     end: end
                   });
                 }

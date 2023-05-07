@@ -62,6 +62,7 @@ const CreateTicket = (props) => {
       {
         delete ticketDataTemp.name
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.name = e.target.value;
     }
@@ -69,8 +70,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.description
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.description = e.target.value;
     }
@@ -78,8 +80,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.type
         setTicketData(ticketDataTemp)
+        return;
       } 
       ticketDataTemp.type = e.target.value;
     }
@@ -87,8 +90,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.projectId
         setTicketData(ticketDataTemp)
+        return;
       } 
       ticketDataTemp.projectId = e.target.value;
     }
@@ -96,8 +100,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.sprintId
         setTicketData(ticketDataTemp)
+        return;
       } 
       ticketDataTemp.sprintId = e.target.value;
     }
@@ -105,8 +110,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.stateId
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.stateId = e.target.value;
     }
@@ -114,8 +120,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.priority
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.priority = e.target.value;
     }
@@ -123,8 +130,9 @@ const CreateTicket = (props) => {
     {
       if(e.target.value=="")
       {
-        delete ticketDataTemp.name
+        delete ticketDataTemp.assign
         setTicketData(ticketDataTemp)
+        return;
       }
       ticketDataTemp.assign = e.target.value;
     }
