@@ -34,7 +34,7 @@ const DisplaySprints = (props) => {
       fetchData();
   },[]);
   return (
-    <div>
+    <div className="container">
       {hasError && <div className="error">{error}</div>}
       {sprintData ? <>
       <ul>

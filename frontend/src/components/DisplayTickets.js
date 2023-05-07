@@ -78,7 +78,7 @@ const DisplayTickets = (props) => {
 
   const createTicketTable = () =>{
     return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           <th>Name</th>
@@ -105,9 +105,9 @@ const DisplayTickets = (props) => {
     <div>
       {hasError && <div className="error">{error}</div>}
       {!props.projectId && <Link href={`/ticket/create-ticket`}>
-        <button>Create Ticket </button>
+        Create Ticket
       </Link>}
-      {!props.projectId && <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Tickets":"Tickets assigned to me"}</button>}
+      {!props.projectId && <button className="btn-right btn btn-primary"onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>}
       {ticketData && createTicketTable()}
     </div>
   )

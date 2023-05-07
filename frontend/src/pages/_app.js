@@ -3,6 +3,8 @@ import { AuthContextProvider } from "../components/authContext";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../components/ProtectedRoute";
 import "../styles/globals.css";
+import '../styles/login.css'
+import '../styles/general.css'
 
 const noAuthRequired = ["/login", "/register", "/reset-password"];
 

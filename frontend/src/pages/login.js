@@ -4,7 +4,6 @@ import Link from "next/link";
 import { helper } from "../helper";
 import { useAuth } from "../components/authContext";
 import AsyncLocalStorage from "@createnextapp/async-local-storage";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,7 +61,7 @@ const Login = () => {
   return (
     <div className="loginPage">
       <div className="loginCard card" id="login-form-wrap">
-        <h1 className="card-title">Login</h1>
+        <h1 className="card-title mt-3">Login</h1>
         <form onSubmit={validateLogin} id="login-form">
           <div className="form-group">
             <label htmlFor="loginEmail">Email</label>

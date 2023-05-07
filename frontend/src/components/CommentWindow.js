@@ -111,8 +111,9 @@ const CommentWindow = (props) => {
                     onChange={ (e) => setNewComment(e.target.value)}
                     value={newComment}
                     id="comment"
+                    className="loginInput form-control"
                 ></textarea>
-                <button onClick={handleSubmit}>
+                <button onClick={handleSubmit} className="btn btn-primary">
                     Send
                 </button>
             </div>

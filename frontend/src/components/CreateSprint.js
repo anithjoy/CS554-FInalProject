@@ -69,21 +69,21 @@ const CreateSprint = (props) => {
 }
 
     return (
-    <div className='sprintPage'>
+    <div className='sprintPage container'>
         {hasError && <div className="error">{error}</div>}   
         <div className="sprintCard" id="sprintFormWrap">    
           <h1>Sprint</h1>
           <form onSubmit={validateSprint} id="sprintForm">
             <label htmlFor='sprintName'>Name : </label>
-            <input value={sprintData.name ? sprintData.name : ""} className="SprintInput" id='sprintName' placeholder="Enter Sprint Name" name="sprintName" type="text" onChange={handleInputChange}/>
+            <input value={sprintData.name ? sprintData.name : ""} className="SprintInput loginInput form-control" id='sprintName' placeholder="Enter Sprint Name" name="sprintName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='sprintDescription'>Description : </label>
-            <textarea value={sprintData.description ? sprintData.description : ""} className="SprintInput" id='sprintDescription' placeholder="Enter Sprint Description" name="sprintDescription" type="text" onChange={handleInputChange}/>
+            <textarea value={sprintData.description ? sprintData.description : ""} className="SprintInput loginInput form-control" id='sprintDescription' placeholder="Enter Sprint Description" name="sprintDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <label  htmlFor='sprintStartDate'>Start Date : </label>
-            <DatePicker selected={sprintData.startDate && new Date(sprintData.startDate)} className="SprintInput" id='sprintStartDate' name="sprintStartDate" onChange={(date)=>setSprintData({...sprintData, startDate: date})}/>
+            <DatePicker selected={sprintData.startDate && new Date(sprintData.startDate)} className="SprintInput loginInput form-control" id='sprintStartDate' name="sprintStartDate" onChange={(date)=>setSprintData({...sprintData, startDate: date})}/>
             <br/>
-            <button type="submit" className="createSprintButton">Create Sprint</button>
+            <button type="submit" className="createSprintButton btn btn-primary">Create Sprint</button>
               
           </form>
         </div>

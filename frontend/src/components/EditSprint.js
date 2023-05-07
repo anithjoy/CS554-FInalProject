@@ -112,7 +112,7 @@ const EditSprint = (props) => {
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
        {sprintData && <div  className='container'>
-       {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Sprint" : "Cancel Edit"}</button>}
+       {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className='btn btn-primary' onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Sprint" : "Cancel Edit"}</button>}
             <form onSubmit={validateUpdate}>
                 <br/>
                 <div className="sprintInputField"> <label className="sprintInputText" htmlFor="sprintName"> Name : </label> <input disabled={!updateFlag} placeholder="Sprint Name" id="sprintName" value={sprintData.name ? sprintData.name : ""} onChange={handleInputChange} type="text" className="sprintInput" autoFocus/></div>

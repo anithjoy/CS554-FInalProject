@@ -2,7 +2,7 @@ import CreateTicket from '@/components/CreateTicket';
 
 const CreateTicketPage = () => {
   return (
-    <div>
+    <div className="container">
         <CreateTicket/>
     </div>
   )

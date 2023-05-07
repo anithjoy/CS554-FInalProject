@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 const EditState = () => {
   const router = useRouter();
   return (
-    <div>
+    <div className="container">
       <h1>Edit State Form</h1>
 
       <EditStateForm

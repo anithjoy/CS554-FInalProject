@@ -196,19 +196,19 @@ const CreateTicket = (props) => {
           <h1>Ticket</h1>
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
-            <input value={ticketData.name ? ticketData.name : ""} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
+            <input value={ticketData.name ? ticketData.name : ""} className="loginInput form-control" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketDescription'>Description : </label>
-            <textarea value={ticketData.description ? ticketData.description : ""} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
+            <textarea value={ticketData.description ? ticketData.description : ""} className="loginInput form-control" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketType'>Type : </label>
-            <select value={ticketData.type ? ticketData.type : ""} className="TicketInput" id='ticketType' name="ticketType" onChange={handleInputChange}>
+            <select value={ticketData.type ? ticketData.type : ""} className="loginInput form-control" id='ticketType' name="ticketType" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {helper.constants.TICKET_TYPE.map((type, index)=>{return(<option key={index} value={type}>{type}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketProject'>Project : </label>
-            <select disabled={props.projectId ? true : false} value={props.projectId ? props.projectId : ticketData.projectId ? ticketData.projectId : ""} className="TicketInput" id='ticketProject' name="ticketProject" onChange={handleInputChange}>
+            <select disabled={props.projectId ? true : false} value={props.projectId ? props.projectId : ticketData.projectId ? ticketData.projectId : ""} className="loginInput form-control" id='ticketProject' name="ticketProject" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {projectData.map((project)=>{return(<option key={project._id} value={project._id}>{project.name}</option>)})}
             </select>
@@ -226,20 +226,21 @@ const CreateTicket = (props) => {
             </select >
             <br/>
             <label htmlFor='ticketPriority'>Priority : </label>
-            <select value={ticketData.priority ? ticketData.priority : ""} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
+            <select value={ticketData.priority ? ticketData.priority : ""} className="loginInput form-control" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {helper.constants.PRIORITY.map((priority, index)=>{return(<option key={index} value={priority}>{priority}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketAssign'>Assign : </label>
-            <select value={ticketData.assign ? ticketData.assign : ""} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
+            <select value={ticketData.assign ? ticketData.assign : ""} className="loginInput form-control" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
-            <div className="form-switch">
               <label>
                 Watchers:
+              </label>
+            <div className="form-switch">
                   {userData.map((user)=>{
                     return(
                     <div key={user._id} className="form-check mb-2">
@@ -257,15 +258,15 @@ const CreateTicket = (props) => {
                       </label>
                     </div>)
                   })}
-              </label>
             </div>
             <br/>
             <label  htmlFor='ticketExpectedDate'>Expected Date : </label>
-            <DatePicker selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
+            <DatePicker selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
             <br/>
-            { allTicket.length!=0 && <div className="form-switch">
+            { allTicket.length!=0 && <div>
               <label>
                 Depended On Tickets: 
+              </label><div className="form-switch">
                   {allTicket.map((ticket)=>{
                     return(
                     <div key={ticket._id} className="form-check mb-2">
@@ -283,9 +284,8 @@ const CreateTicket = (props) => {
                       </label>
                     </div>)
                   })}
-              </label>
-            </div>}
-            <button type="submit" className="createTicketButton">Create Ticket</button>
+            </div></div>}
+            <button type="submit" className="createTicketButton btn btn-primary">Create Ticket</button>
               
           </form>
         </div>

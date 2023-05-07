@@ -2,7 +2,7 @@ import DisplayTickets from '@/components/DisplayTickets';
 
 const Tickets = () => {
   return (
-    <div>
+    <div className="container">
       <DisplayTickets/>
     </div>
   )

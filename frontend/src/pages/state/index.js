@@ -29,12 +29,12 @@ const State = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       {hasError && <div className="error">{error}</div>}
       {stateData ? (
         <>
           <Link href={`/state/create-state`}>
-            <button className="btn btn-success">Create State </button>
+            Create State 
           </Link>
           {stateData.map((state, index) => (
             <StateComponent key={index} state={state} />
