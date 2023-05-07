@@ -12,8 +12,9 @@ router
  .get(async (req, res) => {
   try{  
     let users = await data.user.getUsersByCompanyId(req.user.companyId);
-    await client.hSet("user", req.user.companyId, JSON.stringify(users));
-    res.json(users);
+    let results = users.filter(user => user.role!='SUPER-ADMIN')
+    await client.hSet("user", req.user.companyId, JSON.stringify(results));
+    res.json(results);
   }catch(e){
     if(typeof e !== 'object' || !('status' in e))
     res.status(500).json("Internal server error");
@@ -90,6 +91,15 @@ router
   .patch(async (req, res) => {
     try{
         let body = req.body;
+        for(let i in body)
+      {
+        if(i == 'accessProjects'){
+          for(let w of body[i]){
+            body[i][w] = xss(body[i][w]);
+          }
+        }
+        else body[i]=xss(body[i]);
+      }
         for(let field in body){
           switch(field)
           {

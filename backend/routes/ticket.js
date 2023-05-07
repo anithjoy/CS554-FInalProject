@@ -5,7 +5,7 @@ const client = redis.createClient({});
 client.connect().then(() => {});
 const helper = require('../helper');
 const {ticket : ticketData} = require("../data");
-
+const xss = require('xss')
 //PD
 router
 .route('/')
@@ -25,6 +25,15 @@ router
  })
 .post(async (req, res) => {
     let data = req.body;
+    for(let i in data)
+      {
+        if(i == 'watchers' || i == 'dependedOnTickets'){
+          for(let w=0;w<data[i].length;w++){
+            data[i][w] = xss(data[i][w]);
+          }
+        }
+        else data[i]=xss(data[i]);
+      }
     data.companyId = req.user.companyId;
     data.creator = req.user.email;
     try{
@@ -80,6 +89,15 @@ router
  })
  .patch(async (req, res) => {
     let data = req.body;
+    for(let i in data)
+    {
+      if(i == 'watchers' || i == 'dependedOnTickets'){
+        for(let w=0;w<data[i].length;w++){
+          data[i][w] = xss(data[i][w]);
+        }
+      }
+      else data[i]=xss(data[i]);
+    }
     let ticketId;
     try{
       data = helper.ticket.isValidTicketUpdateData(data);
@@ -124,6 +142,9 @@ router
   })
   .post(async (req, res) => {
     try{
+      req.body.text = xss(req.body.text);
+      req.body.sender = xss(req.body.sender);
+
       req.params.ticketId = helper.common.isValidId(req.params.ticketId);
       req.body.text = helper.common.isValidString(req.body.text,'comment');
       req.body.sender = helper.common.isValidEmail(req.body.sender);

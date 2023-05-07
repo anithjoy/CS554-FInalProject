@@ -1,8 +1,11 @@
 const mongoCollections = require('../config/mongoCollections');
+const companies = mongoCollections.company;
+const users = mongoCollections.user;
 const helper = require('../helper');
 const service =  require("../service");
 const projectCol = mongoCollections.project;
 const {ObjectId} = require('mongodb');
+
 
 const getProjectById = async (projectId) =>{
     projectId = helper.common.isValidId(projectId);
@@ -29,15 +32,50 @@ const getAllProjectsByEmail = async (email) => {
 
     return projects;
 }
+const getCompanyById = async (id) => {
+    id = helper.common.isValidId(id);
+
+    const companyCollection = await companies();
+    const company = await companyCollection.findOne({_id: new ObjectId(id)},{projection:{hashedPassword:0}});
+    if (company === null) throw {status:"404",error:'No company with that id'};
+    company['_id']=company['_id'].toString()
+    return company;
+  };
+
+  const getUsersByCompanyId = async(companyId) => {
+    companyId = helper.common.isValidId(companyId);
+    //check if a company exists with that id
+    const userCollection = await users()
+    const companyUsers = await userCollection.find({companyId: companyId}).toArray();
+    if (companyUsers === null) throw {status:"404",error:'No users in that company'};
+    for(let tempUser of companyUsers)
+    tempUser['_id']=tempUser['_id'].toString()
+    return companyUsers;
+}
+
+
 const createProject = async (name,companyId,creator,manager,description,watchers) =>{
 
     name = helper.project.isValidProjectName(name);
+    
     companyId = helper.common.isValidId(companyId);
-    creator = helper.common.isValidEmail(creator);  
+    await getCompanyById(companyId);
+
+    let companyUsers = await getUsersByCompanyId(companyId);
+    let companyUserIds = companyUsers.map(u => u.email);
+
+    creator = helper.common.isValidEmail(creator);
+    
     manager = helper.common.isValidEmail(manager);
+    
     description = helper.common.isValidString(description,"description")
     watchers = helper.common.isValidWatchers(watchers);
     watchers = [...new Set([...watchers, creator, manager])];
+    
+    for(let w of watchers){
+        if(!companyUserIds.includes(w)) throw {status:400,error:"invalid watcher/manager/creator id"} 
+    }
+
     sprint = [];
 
     let newProject = {
@@ -72,7 +110,12 @@ const updateProject = async (projectId, data) =>{
     if(data.manager){
         if(data.watchers) data.watchers = [...new Set([...data.watchers, data.manager])];
         else data.watchers = [...new Set([...projectInDb.watchers, data.manager])];
-      }
+    }
+    let companyUsers = await getUsersByCompanyId(projectInDb.companyId);
+    let companyUserIds = companyUsers.map(u => u.email);
+    for(let w of data.watchers){
+        if(!companyUserIds.includes(w)) throw {status:400,error:"invalid watcher/manager/creator id"} 
+    }
     const projectCollection = await projectCol();
     const updatedInfo = await projectCollection.updateMany(
       {_id: new ObjectId(projectId)},
