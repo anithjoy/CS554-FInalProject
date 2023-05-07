@@ -132,14 +132,14 @@ const ProjectDetail = (props) => {
     <div>
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
-       {projectData && userData && <div  className='container'>
-            {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>}
+       {projectData && userData && <div>
+            {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className='btn btn-primary'onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>}
             <form onSubmit={validateUpdate}>
                 <label htmlFor="projectName">Project Name</label>
-                <input disabled={!updateFlag} placeholder="Starship" id="projectName" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
+                <input disabled={!updateFlag} placeholder="Starship" id="projectName" className="loginInput form-control" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text"  autoFocus/>
                 <br/>
                 <label htmlFor="projectDesc">description</label>
-                <textarea disabled={!updateFlag} placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="projectinput" autoFocus/>
+                <textarea disabled={!updateFlag} placeholder="Project Description"className="loginInput form-control" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  autoFocus/>
                 <br/>
                 <div className="profileInputField"><span className="profileInputText" > Creator : </span> <span id="projectName">{projectData.creator}</span> </div>
                 <br/>

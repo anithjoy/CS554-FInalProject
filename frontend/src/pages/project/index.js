@@ -36,10 +36,10 @@ const Projects = () => {
     router.push(`/project/${id}`)
   }
   return (
-    <div>
+    <div className="container">
       {hasError && <div className="error">{error}</div>}
       {user && projects && <div>
-        {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button>Create New Project</button></Link>}
+        {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}>Create New Project</Link>}
         <h1>Current Projects</h1>
         <ul>
           {

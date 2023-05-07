@@ -114,26 +114,27 @@ const CreateProject = () => {
   };
 
   return (
-    <div>
+    <div className="container">
         <div className="loginHeading">Create Project</div>
        <div className="CreateUserCard">
         {hasError && <div className="error">{error}</div>}
         {userData && <form onSubmit={validateCreateProjectData}>
             <label htmlFor="projectName">Enter Project Name</label>
-            <input placeholder="Starship" id="projectName" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text" className="projectinput" autoFocus/>
+            <input placeholder="Starship" id="projectName" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text" className="form-control" autoFocus/>
             <br/>
             <label htmlFor="projectDesc">Enter description</label>
-            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="projectinput" autoFocus/>
+            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="form-control" autoFocus/>
             <br/>
             <label htmlFor='projectManagerEmail'>Manager : </label>
-            <select value={projectData.manager ? projectData.manager : ""} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
+            <select value={projectData.manager ? projectData.manager : ""} className="form-control" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option key={user._id} value={user.email}>{user.email}</option>)})}
             </select>
             <br/>
-            <div className="form-switch">
-              <label>
+              <label className="form-label">
                 Watchers:
+              </label>
+            <div className="form-switch">
                   {userData.map((user)=>{
                     return(
                     <div key={user._id} className="form-check mb-2">
@@ -143,7 +144,7 @@ const CreateProject = () => {
                         value={user.email}
                         checked={projectData.watchers ? projectData.watchers.includes(user.email) : false}
                         onChange={handleWatchersSelect}
-                        className="form-check-input"
+                        className="form-check-input form-control"
                         id={user._id}
                       />
                       <label htmlFor={user._id} className="form-check-label">
@@ -151,10 +152,9 @@ const CreateProject = () => {
                       </label>
                     </div>)
                   })}
-              </label>
-            </div>
+                  </div>
             <br/>
-            <button type="submit" className="loginButton">Create Project</button>
+            <button type="submit" className="loginButton btn btn-primary">Create Project</button>
         </form>}
       </div>
     </div>

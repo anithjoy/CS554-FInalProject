@@ -183,19 +183,19 @@ const EditTicket = (props) => {
   };
 
   return (
-    <div className='ticketPage'>
+    <div className='ticketPage container'>
         {ticketData && allTicket &&  stateData && ticketData && userData   ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
           {hasError && <div className="error">{error}</div>}
           {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
-          {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
+          {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className="btn btn-primary" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
-            <input disabled={!updateFlag} value={ticketData.name ? ticketData.name : ""} className="TicketInput" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
+            <input disabled={!updateFlag} value={ticketData.name ? ticketData.name : ""} className="loginInput form-control" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
             <br/>
             <label htmlFor='ticketDescription'>Description : </label>
-            <textarea disabled={!updateFlag} value={ticketData.description? ticketData.description : ""} className="TicketInput" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
+            <textarea disabled={!updateFlag} value={ticketData.description? ticketData.description : ""} className="loginInput form-control" id='ticketDescription' placeholder="Enter Ticket Description" name="ticketDescription" type="text" onChange={handleInputChange}/>
             <br/>
             <p>Type : {ticketData.type}</p>
             <br/>
@@ -203,17 +203,17 @@ const EditTicket = (props) => {
             <br/>
             {ticketData.sprintId && <p>Sprint : {ticketData.sprintName}</p>}
             <label htmlFor='ticketState'>State : </label>
-            <select disabled={!updateFlag} value={ticketData.state ? ticketData.state : ""} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
+            <select disabled={!updateFlag} value={ticketData.state ? ticketData.state : ""} className="loginInput form-control" id='ticketState' name="ticketState" onChange={handleInputChange}>
               {stateData.map((state)=>{if(transition.length==1 || transition.includes(state._id))return(<option key={state._id} value={state._id}>{state.name}</option>)})}
             </select >
             <br/>
             <label htmlFor='ticketPriority'>Priority : </label>
-            <select disabled={!updateFlag} value={ticketData.priority ? ticketData.priority : ""} className="TicketInput" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
+            <select disabled={!updateFlag} value={ticketData.priority ? ticketData.priority : ""} className="loginInput form-control" id='ticketPriority' name="ticketPriority" onChange={handleInputChange}>
               {helper.constants.PRIORITY.map((priority, index)=>{return(<option value={priority} key={index}>{priority}</option>)})}
             </select>
             <br/>
             <label htmlFor='ticketAssign'>Assign : </label>
-            <select disabled={!updateFlag} value={ticketData.assign ? ticketData.assign : ""} className="TicketInput" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
+            <select disabled={!updateFlag} value={ticketData.assign ? ticketData.assign : ""} className="loginInput form-control" id='ticketAssign' name="ticketAssign" onChange={handleInputChange}>
               {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
@@ -242,13 +242,13 @@ const EditTicket = (props) => {
             </div>
             <br/>
             <label htmlFor='ticketExpectedDate'>Expected Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
             <br/>
             <label htmlFor='ticketCloseDate'>Close Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate && new Date(ticketData.closeDate)} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate && new Date(ticketData.closeDate)} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
             <br/>
             <label htmlFor='ticketReopenDate'>Reopen Date : </label>
-            <DatePicker disabled={!updateFlag} className="TicketInput" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
             <br/>
             { allTicket.length!=0 && allTicket.length!=1 && <div className="form-switch">
               <label>
@@ -274,7 +274,7 @@ const EditTicket = (props) => {
               </label>
             </div>}
             <br/>
-            {updateFlag && <button type="submit" className="createTicketButton">Update Ticket</button>}
+            {updateFlag && <button type="submit"  className="btn btn-primary createTicketButton">Update Ticket</button>}
           </form>
           {!updateFlag && <div><h2>Comment Section</h2><CommentWindow ticketId = {props.ticketId}/></div>}
         </div>
