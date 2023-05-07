@@ -66,7 +66,7 @@ const Dashboard = () => {
     router.push(`/ticket/${e.id}`)
   }
   return (
-    <div className="dashboardPage">
+    <div className="dashboardPage container">
       {hasError && <div className="error">{error}</div>}
       {ticketData && <Calendar onSelectEvent={(e)=>redirect(e)} localizer={momentLocalizer(moment)} events={ticketData} startAccessor="start" endAccessor="end" defaultDate={new Date()} /> }
       <div className="dashboard-ticket-list">

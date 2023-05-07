@@ -52,7 +52,7 @@ const CreateUser = () => {
     }
   };
   return (
-    <div>
+    <div className="container">
       <div className="loginHeading">Create User</div>
       {hasError && (
           <div className="error alert alert-danger mt-3">{error}</div>
