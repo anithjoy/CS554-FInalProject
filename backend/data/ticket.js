@@ -4,6 +4,10 @@ const mongoCollections = require('../config/mongoCollections');
 const ticketCol = mongoCollections.ticket;
 const commentCol = mongoCollections.comment;
 const {ObjectId} = require('mongodb');
+const companyData = require('./company')
+const projectData = require('./project')
+const stateData = require('./state')
+const userData = require('./user')
 
 const getCommentById = async(commentId) =>{
 
@@ -88,6 +92,17 @@ const createTicket = async(data) => {
     else if(data.watchers) data.watchers = [...new Set([...data.watchers,data.creator])];
     else data.watchers = [...new Set([data.creator])];
     
+    await companyData.getCompanyById(data.companyId);
+    await projectData.getProjectById(data.projectId);
+
+    let companyStates = await stateData.getAllState(data.companyId);
+    let companyStateIds = companyStates.map(s => s._id.toString());
+    if(!companyStateIds.includes(data.stateId)) throw {status:400,error:'Invalid state id'}
+    
+    let companyUsers = await userData.getUsersByCompanyId(data.companyId);
+    let companyUserIds = companyUsers.map(u => u.email);
+    if(!companyUserIds.includes(data.creator)) throw {status:400,error:'Invalid creator id'}
+
     const ticketCollection = await ticketCol();
   
     const insertInfo = await ticketCollection.insertOne(data);
@@ -118,6 +133,12 @@ const updateTicket = async (
       if(data.watchers) data.watchers = [...new Set([...data.watchers, data.assign])];
       else data.watchers = [...new Set([...ticketInDb.watchers, data.assign])];
     }
+    if(data.stateId){
+      let companyStates = await stateData.getAllState(ticketInDb.companyId);
+      let companyStateIds = companyStates.map(s => s._id);
+      if(!companyStateIds.includes(data.state)) throw {status:400,error:'Invalid state id'}
+    }
+
     const updatedInfo = await ticketCollection.updateMany(
       {_id: new ObjectId(ticketId)},
       {$set: data}
@@ -143,6 +164,11 @@ const createComment = async( ticketId, sender, text) =>{
     timeStamp:new Date(),
     text
   }
+  let ticketInDb = await getTicketById(ticketId);
+  let companyUsers = await userData.getUsersByCompanyId(ticketInDb.companyId);
+  let companyUserIds = companyUsers.map(u => u.email);
+  if(!companyUserIds.includes(sender)) throw {status:400,error:'Invalid sender email'}
+
   const commentCollection = await commentCol();
   const commentInsertInfo = await commentCollection.insertOne(newComment);
   if (!commentInsertInfo.acknowledged || !commentInsertInfo.insertedId)

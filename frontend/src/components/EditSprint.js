@@ -93,6 +93,7 @@ const EditSprint = (props) => {
       setSprintData(response.data);
       setHasError(false);
       setHasSuccessMessage(true);
+      setUpdateFlag(false);
     }catch(e){
       if(!e.response || !e.response.status || e.response.status===500)
         router.push("/error");

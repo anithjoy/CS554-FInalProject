@@ -107,7 +107,7 @@ const DisplayTickets = (props) => {
       {!props.projectId && <Link href={`/ticket/create-ticket`}>
         <button>Create Ticket </button>
       </Link>}
-      {!props.projectId && <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>}
+      {!props.projectId && <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Tickets":"Tickets assigned to me"}</button>}
       {ticketData && createTicketTable()}
     </div>
   )

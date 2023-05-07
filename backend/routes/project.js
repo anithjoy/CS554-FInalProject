@@ -5,6 +5,7 @@ const client = redis.createClient({});
 client.connect().then(() => {});
 const helper = require('../helper');
 const {ticket : ticketData, project : projectData} = require("../data");
+const xss = require('xss');
 
 //Dhru
 router
@@ -27,6 +28,15 @@ router
  .post(async (req, res) => {
     const data = req.body;
     try{
+      for(let i in data)
+      {
+        if(i == 'watchers'){
+          for(let w=0;w<data[i].length;w++){
+            data[i][w] = xss(data[i][w]);
+          }
+        }
+        else data[i]=xss(data[i]);
+      }
       data.name = helper.project.isValidProjectName(data.name);
       data.companyId = helper.common.isValidId(req.user.companyId);
       data.creator = helper.common.isValidEmail(req.user.email); 
@@ -92,6 +102,15 @@ router
     let data = req.body;
     let projectId = req.params.projectId
     try{
+      for(let i in data)
+      {
+        if(i == 'watchers'){
+          for(let w=0;w<data[i].length;w++){
+            data[i][w] = xss(data[i][w]);
+          }
+        }
+        else data[i]=xss(data[i]);
+      }
       data = helper.project.isValidUpdateData(data);
     }catch(e){
       if(typeof e !== 'object' || !('status' in e))
@@ -151,6 +170,8 @@ router
     const data = req.body;
     let projectId = req.params.projectId;
     try{
+      for(let i in data)
+        data[i]=xss(data[i])
       data.name = helper.project.isValidSprintName(data.name);
       projectId = helper.common.isValidId(projectId);
       data.startDate = helper.common.isValidDate(data.startDate); 
@@ -214,6 +235,8 @@ router
   let projectId = req.params.projectId
   let sprintId = req.params.sprintId
   try{
+    for(let i in data)
+        data[i]=xss(data[i])
     data = helper.project.isValidSprintUpdateData(data);
     projectId = helper.common.isValidId(projectId);
     sprintId = helper.common.isValidId(sprintId);

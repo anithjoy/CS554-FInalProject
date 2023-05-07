@@ -59,7 +59,7 @@ const Project = () => {
         </div>
         {tab==="All-Sprints" && (user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <button onClick={()=>setTab("Create-Sprint")}>Create Sprint</button>}
         {tab==="Tickets" && <button onClick={()=>setTab("Create-Ticket")}>Create Ticket</button>}
-        {tab==="Tickets" && <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>}
+        {tab==="Tickets" && <button onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Tickets":"Tickets assigned to me"}</button>}
         {tab==="Details" && <ProjectDetail projectId={router.query.projectId} user={user}/>}
         {tab==="All-Sprints" && <DisplaySprints projectId={router.query.projectId} setTab={setTab} setSprintId={setSprintId}/>}
         {tab==="Create-Sprint" && <CreateSprint projectId={router.query.projectId} setTab={setTab}/>}

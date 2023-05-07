@@ -5,6 +5,7 @@ const client = redis.createClient({});
 client.connect().then(() => {});
 const helper = require("../helper");
 const { state: stateData } = require("../data");
+const xss = require('xss');
 
 //Anith
 router
@@ -35,6 +36,15 @@ router
   .post(async (req, res) => {
     const data = req.body;
     try {
+      for(let i in data)
+      {
+        if(i == 'transition'){
+          for(let w=0;w<data[i].length;w++){
+            data[i][w] = xss(data[i][w]);
+          }
+        }
+        else data[i]=xss(data[i]);
+      }
       data.name = helper.state.isValidStateName(data.name);
       data.companyId = helper.common.isValidId(req.user.companyId);
       data.transition = helper.state.isValidTransition(data.transition);
@@ -90,7 +100,15 @@ router
     try {
       let stateId = req.params.stateId;
       let data = req.body;
-
+      for(let i in data)
+      {
+        if(i == 'transition'){
+          for(let w=0;w<data[i].length;w++){
+            data[i][w] = xss(data[i][w]);
+          }
+        }
+        else data[i]=xss(data[i]);
+      }
       stateId = helper.common.isValidId(stateId);
       data = helper.state.isValidData(data);
 

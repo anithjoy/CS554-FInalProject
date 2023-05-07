@@ -1,9 +1,11 @@
 const mongoCollections = require('../config/mongoCollections');
+const companies = mongoCollections.company;
 const helper = require('../helper');
 const users = mongoCollections.user;
 const {ObjectId} = require('mongodb');
 const firebaseAdmin = require('../config/firebase-config');
 const service =  require("../service");
+const projectData = require('./project')
 
 const getUserById = async (id) =>{
     id = helper.common.isValidId(id);
@@ -42,7 +44,9 @@ const updateUser = async (userId,body) =>{
     if(!userInDb) throw {status:400,error:'No user with that ID'}  
     if(body.accessProjects){
         body.accessProjects = [...userInDb.accessProjects,...body.accessProjects];
+        body.accessProjects.forEach(async (p) => await projectData.getProjectById(p))
     }
+
     const userCollection = await users();
     const updateInfo = await userCollection.updateMany({_id : new ObjectId(userId)}, {$set : body});
     if (updateInfo.modifiedCount === 0) {
@@ -52,16 +56,23 @@ const updateUser = async (userId,body) =>{
     return await getUserById(userId);
 }
 
+const getCompanyById = async (id) => {
+  id = helper.common.isValidId(id);
+
+  const companyCollection = await companies();
+  const company = await companyCollection.findOne({_id: new ObjectId(id)},{projection:{hashedPassword:0}});
+  if (company === null) throw {status:"404",error:'No company with that id'};
+  company['_id']=company['_id'].toString()
+  return company;
+};
+
 const createUser = async(companyId,email,name,role) => {
     companyId = helper.common.isValidId(companyId);
     email = helper.common.isValidEmail(email);
     name = helper.common.isValidString(name,'user name');
     role = helper.user.isValidRole(role);
     
-// Add checking if a company exists with this companyId
-// 
-// 
-// 
+    await getCompanyById(companyId);
 
   if(await isUserEmailInDb(email)) throw {status:400,error:'A user account already exists with this email'};
 
@@ -102,10 +113,9 @@ const getUsersByCompanyId = async(companyId) => {
     const userCollection = await users()
     const companyUsers = await userCollection.find({companyId: companyId}).toArray();
     if (companyUsers === null) throw {status:"404",error:'No users in that company'};
-    let results = companyUsers.filter(user => user.role!='SUPER-ADMIN')
-    for(let tempUser of results)
+    for(let tempUser of companyUsers)
     tempUser['_id']=tempUser['_id'].toString()
-    return results;
+    return companyUsers;
 }
 
 module.exports = {
