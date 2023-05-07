@@ -214,13 +214,13 @@ const CreateTicket = (props) => {
             </select>
             <br/>
             {sprintData[ticketData.projectId] && sprintData[ticketData.projectId].length!=0 && <><label htmlFor='ticketSprint'>Sprint : </label>
-            <select value={ticketData.sprintId ? ticketData.sprintId : ""} className="TicketInput" id='ticketSprint' name="ticketSprint" onChange={handleInputChange}>
+            <select value={ticketData.sprintId ? ticketData.sprintId : ""} className="loginInput form-control" id='ticketSprint' name="ticketSprint" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {sprintData[ticketData.projectId].map((sprint)=>{return(<option key={sprint._id} value={sprint._id}>{sprint.name}</option>)})}
             </select>
             <br/></>}
             <label htmlFor='ticketState'>State : </label>
-            <select value={ticketData.stateId ? ticketData.stateId : ""} className="TicketInput" id='ticketState' name="ticketState" onChange={handleInputChange}>
+            <select value={ticketData.stateId ? ticketData.stateId : ""} className="loginInput form-control" id='ticketState' name="ticketState" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {stateData.map((state)=>{return(<option key={state._id} value={state._id}>{state.name}</option>)})}
             </select >
