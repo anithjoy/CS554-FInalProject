@@ -70,12 +70,11 @@ const Register = () => {
     } catch (e) {
       setLoading(false);
       if(!e.response || !e.response.status || e.response.status===500)
-        router.push("/error");
-      else if(e.response.status===401 )
       {
-        localStorage.clear();
-        router.push("/login");
-      }else{
+        setHasError(true);
+        setError("Unable to create account right now");
+      }
+      else{
         setHasError(true);
         setError(e.response.data);
       }

@@ -188,7 +188,7 @@ const EditTicket = (props) => {
   };
 
   return (
-    <div className='ticketPage container'>
+    <div className='ticketPage'>
         {ticketData && allTicket &&  stateData && ticketData && userData   ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
@@ -196,6 +196,7 @@ const EditTicket = (props) => {
           {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
           {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className="btn btn-primary" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
+            <br/>
             <label htmlFor='ticketName'>Name : </label>
             <input disabled={!updateFlag} value={ticketData.name ? ticketData.name : ""} className="loginInput form-control" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
             <br/>
@@ -206,7 +207,7 @@ const EditTicket = (props) => {
             <br/>
             <p>Project : {ticketData.projectName}</p>
             <br/>
-            {ticketData.sprintId && <p>Sprint : {ticketData.sprintName}</p>}
+            {ticketData.sprintId && <><p>Sprint : {ticketData.sprintName}</p><br/></>}
             <label htmlFor='ticketState'>State : </label>
             <select disabled={!updateFlag} value={ticketData.stateId ? ticketData.stateId : ""} className="loginInput form-control" id='ticketState' name="ticketState" onChange={handleInputChange}>
               {stateData.map((state)=>{if(transition.length==1 || transition.includes(state._id))return(<option key={state._id} value={state._id}>{state.name}</option>)})}
@@ -222,66 +223,68 @@ const EditTicket = (props) => {
               {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
+            <label className="form-label">
+                Watchers :
+            </label>
             <div className="form-switch">
-              <label>
-                Watchers:
-                  {userData.map((user)=>{
-                    return(
-                    <div key={user._id} className="form-check mb-2">
-                      <input
-                        disabled={!updateFlag}
-                        type="checkbox"
-                        name="watchers"
-                        value={user.email}
-                        checked={ticketData.watchers ? ticketData.watchers.includes(user.email) : false}
-                        onChange={handleWatchersSelect}
-                        className="form-check-input"
-                        id={user._id}
-                      />
-                      <label htmlFor={user._id} className="form-check-label">
-                        {user.email} - {user.role}
-                      </label>
-                    </div>)
-                  })}
-              </label>
+              {userData.map((user)=>{
+                return(
+                <div key={user._id} className="form-check mb-2">
+                  <input
+                    disabled={!updateFlag}
+                    type="checkbox"
+                    name="watchers"
+                    value={user.email}
+                    checked={ticketData.watchers ? ticketData.watchers.includes(user.email) : false}
+                    onChange={handleWatchersSelect}
+                    className="form-check-input"
+                    id={user._id}
+                  />
+                  <label htmlFor={user._id} className="form-check-label">
+                    {user.email} - {user.role}
+                  </label>
+                </div>)
+              })}
             </div>
             <br/>
             <label htmlFor='ticketExpectedDate'>Expected Date : </label>
             <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
             <br/>
+            <br/>
             <label htmlFor='ticketCloseDate'>Close Date : </label>
             <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate && new Date(ticketData.closeDate)} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
+            <br/>
             <br/>
             <label htmlFor='ticketReopenDate'>Reopen Date : </label>
             <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
             <br/>
-            { allTicket.length!=0 && allTicket.length!=1 && <div className="form-switch">
-              <label>
-                Depended On Tickets: 
-                  {allTicket.map((ticket)=>{
-                    return(
-                    <div key={ticket._id} className="form-check mb-2">
-                      <input
-                        disabled={!updateFlag}
-                        type="checkbox"
-                        name="ticketDependedOnTickets"
-                        value={ticket._id}
-                        checked={ticketData.dependedOnTickets ? ticketData.dependedOnTickets.includes(ticket._id) : false}
-                        onChange={handleDependedOnTicketsSelect}
-                        className="form-check-input"
-                        id={ticket._id}
-                      />
-                      <label htmlFor={ticket._id} className="form-check-label">
-                        {ticket.name}
-                      </label>
-                    </div>)
-                  })}
-              </label>
-            </div>}
+            <br/>
+            { allTicket.length!=0 && allTicket.length!=1 && <><label className="form-label">
+                Depended On Tickets : 
+              </label><div className="form-switch">
+              {allTicket.map((ticket)=>{
+                return(
+                <div key={ticket._id} className="form-check mb-2">
+                  <input
+                    disabled={!updateFlag}
+                    type="checkbox"
+                    name="ticketDependedOnTickets"
+                    value={ticket._id}
+                    checked={ticketData.dependedOnTickets ? ticketData.dependedOnTickets.includes(ticket._id) : false}
+                    onChange={handleDependedOnTicketsSelect}
+                    className="form-check-input"
+                    id={ticket._id}
+                  />
+                  <label htmlFor={ticket._id} className="form-check-label">
+                    {ticket.name}
+                  </label>
+                </div>)
+              })}
+            </div></>}
             <br/>
             {updateFlag && <button type="submit"  className="btn btn-primary createTicketButton">Update Ticket</button>}
           </form>
-          {!updateFlag && <div><h2>Comment Section</h2><CommentWindow ticketId = {props.ticketId}/></div>}
+          {!updateFlag && <div><h2>Comment Section</h2><br/><CommentWindow ticketId = {props.ticketId}/></div>}
         </div>
         :
         hasError ? <div className="error">You can not access this ticket ask for access permission to your manager</div> :<div>Loading....</div>}

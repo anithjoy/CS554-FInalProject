@@ -113,6 +113,7 @@ const CommentWindow = (props) => {
                     id="comment"
                     className="loginInput form-control"
                 ></textarea>
+                <br/>
                 <button onClick={handleSubmit} className="btn btn-primary">
                     Send
                 </button>

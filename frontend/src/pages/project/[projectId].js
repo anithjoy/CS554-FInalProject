@@ -11,7 +11,6 @@ import {api} from "../../api";
 
 const Project = () => {
   const [tab, setTab] = useState("Details");
-  const [assignToMeFlag, setAssignToMeFlag] = useState(false);
   const [ticketId, setTicketId] = useState(null);
   const [sprintId, setSprintId] = useState(null);
   const [user, setUser] = useState(null);
@@ -57,14 +56,11 @@ const Project = () => {
             </li>
           </ul>
         </div>
-        {tab==="All-Sprints" && (user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <button className='btn btn-primary' onClick={()=>setTab("Create-Sprint")}>Create Sprint</button>}
-        {tab==="Tickets" && <button onClick={()=>setTab("Create-Ticket")} className='btn btn-primary' >Create Ticket</button>}
-        {tab==="Tickets" && <button className='btn btn-primary btn-right' onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Type Ticket":"Assign To Me Ticket"}</button>}
         {tab==="Details" && <ProjectDetail projectId={router.query.projectId} user={user}/>}
-        {tab==="All-Sprints" && <DisplaySprints projectId={router.query.projectId} setTab={setTab} setSprintId={setSprintId}/>}
+        {tab==="All-Sprints" && <DisplaySprints projectId={router.query.projectId} setTab={setTab} setSprintId={setSprintId} user={user}/>}
         {tab==="Create-Sprint" && <CreateSprint projectId={router.query.projectId} setTab={setTab}/>}
         {tab==="Edit-Sprint" && <EditSprint projectId={router.query.projectId} user={user} sprintId={sprintId} setTab={setTab}/>}
-        {tab==="Tickets" && <DisplayTickets projectId={router.query.projectId} assignToMeFlag={assignToMeFlag} setTab={setTab} setTicketId={setTicketId}/>}
+        {tab==="Tickets" && <DisplayTickets projectId={router.query.projectId} setTab={setTab} setTicketId={setTicketId}/>}
         {tab==="Create-Ticket" && <CreateTicket projectId={router.query.projectId} setTab={setTab}/> }
         {tab==="Edit-Ticket" && <EditTicket projectId={router.query.projectId} user={user} ticketId={ticketId} setTab={setTab}/>}
       </div>}

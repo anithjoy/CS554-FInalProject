@@ -39,12 +39,12 @@ const Projects = () => {
     <div className="container">
       {hasError && <div className="error">{error}</div>}
       {user && projects && <div>
-        {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}>Create New Project</Link>}
+        {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button className='btn btn-primary'>Create New Project</button></Link>}
         <h1>Current Projects</h1>
-        <ul>
+        <ul className="list-group">
           {
             projects.map((project) => {
-              return <li key={project._id} onClick={()=>redirect(project._id)}>
+              return <li className="list-group-item" key={project._id} onClick={()=>redirect(project._id)}>
                 {project.name}
               </li>
             })

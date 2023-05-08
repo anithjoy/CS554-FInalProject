@@ -29,7 +29,7 @@ const Ticket = () => {
     fetchData();
   }, [])
   return (
-    <div className='ticketPage'>
+    <div className='container'>
         {hasError && <div className="error">{error}</div>}
         {user && <EditTicket ticketId={router.query.ticketId} user={user}/>}
     </div>

@@ -69,10 +69,10 @@ const CreateSprint = (props) => {
 }
 
     return (
-    <div className='sprintPage container'>
+    <div>
+        <h1>Sprint</h1>
         {hasError && <div className="error">{error}</div>}   
-        <div className="sprintCard" id="sprintFormWrap">    
-          <h1>Sprint</h1>
+        <div className="CreateUserCard card p-4 shadow-sm" id="sprintFormWrap">    
           <form onSubmit={validateSprint} id="sprintForm">
             <label htmlFor='sprintName'>Name : </label>
             <input value={sprintData.name ? sprintData.name : ""} className="SprintInput loginInput form-control" id='sprintName' placeholder="Enter Sprint Name" name="sprintName" type="text" onChange={handleInputChange}/>
@@ -83,8 +83,8 @@ const CreateSprint = (props) => {
             <label  htmlFor='sprintStartDate'>Start Date : </label>
             <DatePicker selected={sprintData.startDate && new Date(sprintData.startDate)} className="SprintInput loginInput form-control" id='sprintStartDate' name="sprintStartDate" onChange={(date)=>setSprintData({...sprintData, startDate: date})}/>
             <br/>
+            <br/>
             <button type="submit" className="createSprintButton btn btn-primary">Create Sprint</button>
-              
           </form>
         </div>
     </div>

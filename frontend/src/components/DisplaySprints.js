@@ -34,13 +34,14 @@ const DisplaySprints = (props) => {
       fetchData();
   },[]);
   return (
-    <div className="container">
+    <div>
+      {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <><button className='btn btn-primary' onClick={()=>props.setTab("Create-Sprint")}>Create Sprint</button><br/><br/></>}
       {hasError && <div className="error">{error}</div>}
       {sprintData ? <>
-      <ul>
+      <ul className="list-group">
         {
           sprintData.map((sprint) => {
-            return <li key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
+            return <li className="list-group-item" key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
               props.setTab("Edit-Sprint")}}>
               {sprint.name}
             </li>

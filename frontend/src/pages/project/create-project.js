@@ -115,24 +115,24 @@ const CreateProject = () => {
 
   return (
     <div className="container">
-        <div className="loginHeading">Create Project</div>
-       <div className="CreateUserCard">
+        <h1>Create Project</h1>
+       <div className="CreateUserCard card p-4 shadow-sm">
         {hasError && <div className="error">{error}</div>}
         {userData && <form onSubmit={validateCreateProjectData}>
-            <label htmlFor="projectName">Enter Project Name</label>
+            <label htmlFor="projectName">Enter Project Name :</label>
             <input placeholder="Starship" id="projectName" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text" className="form-control" autoFocus/>
             <br/>
-            <label htmlFor="projectDesc">Enter description</label>
-            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="form-control" autoFocus/>
+            <label htmlFor="projectDesc">Enter Description :</label>
+            <textarea placeholder="Project Description" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  className="form-control"/>
             <br/>
-            <label htmlFor='projectManagerEmail'>Manager : </label>
+            <label htmlFor='projectManagerEmail'>Manager :</label>
             <select value={projectData.manager ? projectData.manager : ""} className="form-control" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
               <option value="">Select Option</option>
               {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option key={user._id} value={user.email}>{user.email}</option>)})}
             </select>
             <br/>
               <label className="form-label">
-                Watchers:
+                Watchers :
               </label>
             <div className="form-switch">
                   {userData.map((user)=>{

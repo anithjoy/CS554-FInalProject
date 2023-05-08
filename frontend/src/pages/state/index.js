@@ -2,11 +2,14 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import StateComponent from "../../components/State";
 import { api } from "../../api";
+import { useRouter } from "next/router";
 
 const State = () => {
   const [stateData, setStateData] = useState("");
   const [hasError, setHasError] = useState(false);
   const [error, setError] = useState('');
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,7 +36,7 @@ const State = () => {
       {hasError && <div className="error">{error}</div>}
       {stateData ? (
         <>
-          <Link href={`/state/create-state`}>
+          <Link href={`/state/create-state`} className="btn btn-primary">
             Create State 
           </Link>
           {stateData.map((state, index) => (

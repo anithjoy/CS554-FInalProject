@@ -53,7 +53,7 @@ const CreateUser = () => {
   };
   return (
     <div className="container">
-      <div className="loginHeading">Create User</div>
+      <h1>Create User</h1>
       {hasError && (
           <div className="error alert alert-danger mt-3">{error}</div>
         )}
@@ -61,7 +61,7 @@ const CreateUser = () => {
         <form onSubmit={validateCreateUserData}>
           <div className="form-group">
             <label htmlFor="signUpEmail" className="form-label">
-              Enter Name
+              Enter Name : 
             </label>
             <input
               placeholder="Elon Musk"
@@ -73,9 +73,10 @@ const CreateUser = () => {
               autoFocus
             />
           </div>
+          <br/>
           <div className="form-group">
             <label htmlFor="signUpEmail" className="form-label">
-              Enter Email
+              Enter Email : 
             </label>
             <input
               placeholder="username@example.com"
@@ -84,12 +85,12 @@ const CreateUser = () => {
               onChange={handleInputChange}
               type="email"
               className="loginInput form-control"
-              autoFocus
             />
           </div>
+          <br/>
           <div className="form-group">
             <label htmlFor="signUpRole" className="form-label">
-              Choose a Role
+              Choose a Role : 
             </label>
             <select
               id="signUpRole"
@@ -106,6 +107,7 @@ const CreateUser = () => {
                 );
               })}
             </select>
+            <br/>
           </div>
           <button type="submit" className="loginButton btn btn-primary">
             Register User

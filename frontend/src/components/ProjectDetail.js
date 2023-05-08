@@ -133,25 +133,26 @@ const ProjectDetail = (props) => {
     {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
     {hasError && <div className="error">{error}</div>}
        {projectData && userData && <div>
-            {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className='btn btn-primary'onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button>}
+            {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <><button type="button" className='btn btn-primary'onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button><br/><br/></>}
             <form onSubmit={validateUpdate}>
-                <label htmlFor="projectName">Project Name</label>
+                <label htmlFor="projectName">Project Name :</label>
                 <input disabled={!updateFlag} placeholder="Starship" id="projectName" className="loginInput form-control" value={projectData.name ? projectData.name : ""} onChange={handleInputChange}  type="text"  autoFocus/>
                 <br/>
-                <label htmlFor="projectDesc">description</label>
+                <label htmlFor="projectDesc">Description :</label>
                 <textarea disabled={!updateFlag} placeholder="Project Description"className="loginInput form-control" id="projectDesc" value={projectData.description ? projectData.description : ""} onChange={handleInputChange}  autoFocus/>
                 <br/>
                 <div className="profileInputField"><span className="profileInputText" > Creator : </span> <span id="projectName">{projectData.creator}</span> </div>
                 <br/>
                 <label htmlFor='projectManagerEmail'>Manager : </label>
-                <select disabled={!updateFlag} value={projectData.manager ? projectData.manager : ""} className="projectinput" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
+                <select disabled={!updateFlag} value={projectData.manager ? projectData.manager : ""} className="loginInput form-control" id='projectManagerEmail' name="projectManagerEmail" onChange={handleInputChange}>
                   <option value="">Select Option</option>
                   {userData.map((user)=>{if(user.role.toUpperCase()==="MANAGER")return(<option key={user._id} value={user.email}>{user.email}</option>)})}
                 </select>
                 <br/>
+                <label>
+                    Watchers :
+                </label>
                 <div className="form-switch">
-                  <label>
-                    Watchers:
                       {userData.map((user)=>{
                         return(
                         <div key={user._id} className="form-check mb-2">
@@ -170,10 +171,9 @@ const ProjectDetail = (props) => {
                           </label>
                         </div>)
                       })}
-                  </label>
                 </div>
                 <br/>
-                {updateFlag &&<button type="submit" className="updateProfileButton">Update Project</button>}
+                {updateFlag &&<button type="submit" className='btn btn-primary'>Update Project</button>}
             </form>
             </div>}
     </div>

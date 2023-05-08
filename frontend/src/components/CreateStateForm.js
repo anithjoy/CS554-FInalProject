@@ -80,11 +80,11 @@ const CreateStateForm = () => {
   };
 
   return (
-    <>
+    <div className="CreateUserCard card p-4 shadow-sm">
       {hasError && <div className="error">{error}</div>}
       {allStates ? (
-        <form onSubmit={handleSubmit} className="p-3">
-          <div className="mb-3">
+        <form onSubmit={handleSubmit}>
+          <div>
             <label htmlFor="name" className="form-label">
               Name:
             </label>
@@ -98,7 +98,8 @@ const CreateStateForm = () => {
               className="form-control"
             />
           </div>
-          <div className="mb-3">
+          <br/>
+          <div>
             <label htmlFor="description" className="form-label">
               Description:
             </label>
@@ -112,10 +113,11 @@ const CreateStateForm = () => {
               className="form-control"
             />
           </div>
-
-          <div className="form-check form-switch">
-            <label className="form-label">
+          <br/>
+          <label className="form-label">
               Transitions:
+          </label>
+          <div className="form-check form-switch">
               {allStates.map((state) => (
                 <div key={state._id} className="form-check mb-2">
                   <input
@@ -132,17 +134,16 @@ const CreateStateForm = () => {
                   </label>
                 </div>
               ))}
-            </label>
           </div>
-
-          <button type="submit" className="btn btn-primary mt-3">
+          <br/>
+          <button type="submit" className="btn btn-primary">
             Submit
           </button>
         </form>
       ) : (
         <div>Loading....</div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -197,11 +197,10 @@ const CreateTicket = (props) => {
       }
   }
   return (
-    <div className='ticketPage'>
+    <div className="CreateUserCard card p-4 shadow-sm">
         {hasError && <div className="error">{error}</div>}
         {allTicket &&  stateData && stateData.length!=0 && projectData && projectData.length!=0 && userData  && userData.length!=0 ?    
         <div className="ticketCard" id="ticketFormWrap">    
-          <h1>Ticket</h1>
           <form onSubmit={validateTicket} id="ticketForm">
             <label htmlFor='ticketName'>Name : </label>
             <input value={ticketData.name ? ticketData.name : ""} className="loginInput form-control" id='ticketName' placeholder="Enter Ticket Name" name="ticketName" type="text" onChange={handleInputChange}/>
@@ -245,8 +244,8 @@ const CreateTicket = (props) => {
               {userData.map((user)=>{return(<option key={user._id} value={user.email}>{user.email} - {user.role}</option>)})}
             </select>
             <br/>
-              <label>
-                Watchers:
+              <label className="form-label">
+                Watchers :
               </label>
             <div className="form-switch">
                   {userData.map((user)=>{
@@ -271,9 +270,10 @@ const CreateTicket = (props) => {
             <label  htmlFor='ticketExpectedDate'>Expected Date : </label>
             <DatePicker selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" onChange={(date)=>setTicketData({...ticketData, expectedDate: date})}/>
             <br/>
-            { allTicket.length!=0 && <div>
-              <label>
-                Depended On Tickets: 
+            <br/>
+            { allTicket.length!=0 && <>
+              <label className="form-label">
+                Depended On Tickets : 
               </label><div className="form-switch">
                   {allTicket.map((ticket)=>{
                     return(
@@ -292,7 +292,7 @@ const CreateTicket = (props) => {
                       </label>
                     </div>)
                   })}
-            </div></div>}
+            </div><br/></>}
             <button type="submit" className="createTicketButton btn btn-primary">Create Ticket</button>
               
           </form>

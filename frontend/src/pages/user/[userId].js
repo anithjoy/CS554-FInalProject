@@ -91,9 +91,10 @@ const User = () => {
         {data && (
           <form onSubmit={validateUpdate}>
             <div className="form-group">
-              <label htmlFor="profileEmail">Email :</label>
-              <span id="profileEmail">{data.email}</span>
+              <label htmlFor="profileEmail">Email : </label>
+              <span id="profileEmail"> {data.email}</span>
             </div>
+            <br/>
             <div className="form-group">
               <label htmlFor="profileRole">Role :</label>
               <select
@@ -111,6 +112,7 @@ const User = () => {
                 })}
               </select>
             </div>
+            <br/>
             <div className="form-group">
               <label htmlFor="profileName">Name :</label>
               <input
@@ -123,6 +125,7 @@ const User = () => {
                 autoFocus
               />
             </div>
+            <br/>
             <button type="submit" className="btn btn-primary">
               Update User
             </button>
