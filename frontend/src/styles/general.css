@@ -60,6 +60,90 @@ body{
 .card {
     box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
 }
+
+select {
+    font-size: 16px;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  select option:first-child {
+    color: #aaa;
+  }
+  
+  select:hover {
+    border-color: #666;
+  }
+  
+  select:focus {
+    border-color: #555;
+    outline: none;
+  }
+  .selectRight{
+    float: right;
+    margin-left: 10px;
+    height: auto;
+  }
+  .selectLeft{
+    float: left;
+    margin-right: 10px;
+    height: auto;
+  }
+  .displayInput{
+    width: auto;
+    height: 38px;
+  }
+  button.btn-primary {
+    font-size: 16px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  
+  button.btn-primary:hover {
+    background-color: #0069d9;
+  }
+  
+  button.btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38,143,255,.5);
+  }
+  
+.commentContainer {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .commentText {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 5px;
+  }
+  .commentDetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #777;
+  }
+  .commentSender {
+    margin-right: 10px;
+  }
+  .commentTimestamp {
+    margin-left: 10px;
+  }
 .row{
     margin-left: 10px;
     margin-right: 10px;

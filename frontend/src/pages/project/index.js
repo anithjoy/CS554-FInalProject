@@ -44,7 +44,7 @@ const Projects = () => {
         <ul className="list-group">
           {
             projects.map((project) => {
-              return <li className="list-group-item" key={project._id} onClick={()=>redirect(project._id)}>
+              return <li className="list-group-item listHover" key={project._id} onClick={()=>redirect(project._id)}>
                 {project.name}
               </li>
             })

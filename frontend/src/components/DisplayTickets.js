@@ -70,13 +70,14 @@ const DisplayTickets = (props) => {
   }
   const getTicketRow = (ticket) =>{
     return(
-        <tr key={ticket._id} onClick={()=>redirect(ticket._id)}>
-          <td>{ticket.name}</td>
+        <tr key={ticket._id}>
+          <td><Link href={`/ticket/${ticket._id}`}>{ticket.name}</Link></td>
           <td>{ticket.type}</td>
           <td>{ticket.priority}</td>
           <td>{ticket.state.name}</td>
           <td>{ticket.assign}</td>
         </tr>
+      
     );
   }
 
@@ -127,23 +128,25 @@ const DisplayTickets = (props) => {
     <div>
       {hasError && <div className="error">{error}</div>}
       {ticketData && stateData && <div>
+      <div className="button-container"> 
       {!props.projectId ? <Link href={`/ticket/create-ticket`}>
-        <button className='btn btn-primary'>Create Ticket</button>
-      </Link> : <button onClick={()=>props.setTab("Create-Ticket")} className='btn btn-primary' >Create Ticket</button>}
-      <select onChange={(e)=>{setPriority(e.target.value)}}>
-        <option value="">All Priority</option>
-        {helper.constants.PRIORITY.map(p=>{return(<option value={p}>{p}</option>)})}
-      </select>
-      <select onChange={(e)=>{setType(e.target.value)}}>
-        <option value="">All Type</option>
-        {helper.constants.TICKET_TYPE.map(p=>{return(<option value={p}>{p}</option>)})}
-      </select>
-      <input type="text" onChange={(e)=>{setSearchTearm(e.target.value.trim())}}/>
+        <button className='btn btn-primary selectLeft'>Create Ticket</button>
+      </Link> : <button onClick={()=>props.setTab("Create-Ticket")} className='btn btn-primary selectLeft' >Create Ticket</button>}
+      <input className="displayInput selectLeft" type="text" onChange={(e)=>{setSearchTearm(e.target.value.trim())}}/>
       <select onChange={(e)=>{setState(e.target.value)}}>
         <option value="">All State</option>
         {stateData.map(p=>{return(<option value={p.name}>{p.name}</option>)})}
       </select>
       <button className="btn-right btn btn-primary"onClick={()=>{setAssignToMeFlag(!assignToMeFlag)}}>{assignToMeFlag ? "All Ticket":"Ticket Assigned To Me"}</button>
+      <select className="btn-right" onChange={(e)=>{setPriority(e.target.value)}}>
+        <option value="">All Priority</option>
+        {helper.constants.PRIORITY.map(p=>{return(<option value={p}>{p}</option>)})}
+      </select>
+      <select className="btn-right" onChange={(e)=>{setType(e.target.value)}}>
+        <option value="">All Type</option>
+        {helper.constants.TICKET_TYPE.map(p=>{return(<option value={p}>{p}</option>)})}
+      </select>
+      </div>
       </div>}
       {ticketData && createTicketTable()}
     </div>

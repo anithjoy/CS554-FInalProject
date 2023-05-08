@@ -33,7 +33,8 @@
   .loginPage a,
   .loginPage a:link,
   .loginPage a:visited,
-  .loginPage a:active {
+  .loginPage a:active ,
+  .listHover{
     color: #024163;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
@@ -44,7 +45,8 @@
   .loginPage a:visited:focus,
   .loginPage a:visited:hover,
   .loginPage a:active:focus,
-  a:active:hover {
+  a:active:hover ,
+  .listHover:hover{
     color: #329dd5;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;

@@ -41,7 +41,7 @@ const DisplaySprints = (props) => {
       <ul className="list-group">
         {
           sprintData.map((sprint) => {
-            return <li className="list-group-item" key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
+            return <li className="list-group-item listHover" key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
               props.setTab("Edit-Sprint")}}>
               {sprint.name}
             </li>
