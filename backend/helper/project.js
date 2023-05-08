@@ -5,8 +5,10 @@ const isValidProjectName = (name) => {
     name = common.isValidString(name, "Project Name");
 
     if(name.length<4)
-        throw {status:400, error : 'less than 4 character name'};
-
+    throw {status: '400', error : 'less than 4 character name'};
+  
+    if(name.length>15)
+        throw {status: '400', error : 'more than 15 character name'};
     return name;
 };
 
@@ -24,7 +26,7 @@ const isValidUpdateData = (data) =>{
                 data.watchers = common.isValidWatchers(data.watchers);
                 break;
             case "description":
-                data.description = common.isValidString(data.description);
+                data.description = common.isValidDescription(data.description);
                 break;
             default:
                 throw {status: '400', error : `Invalid key - ${key}`};
@@ -58,7 +60,7 @@ const isValidSprintUpdateData = (data) => {
                 data.endDate = common.isValidDate(data.endDate);
                 break;
             case "description":
-                data.description = common.isValidString(data.description);
+                data.description = common.isValidDescription(data.description);
                 break;
             default:
                 throw {status: '400', error : `Invalid key - ${key}`};

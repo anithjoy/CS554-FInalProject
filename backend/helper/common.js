@@ -68,6 +68,8 @@ const isValidPastDate = (time) => {
   let today = new Date();
   if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date > today.date))
     throw { status: "400", error: "Invalid date" };
+  if (time === "Invalid Date" || time.year < today.year - 2)
+    throw { status: "400", error: "Can not be older than two years" };
   return time;
 };
 
@@ -77,6 +79,8 @@ const isValidFutureDate = (time) => {
   let today = new Date();
   if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
     throw { status: "400", error: "Invalid date" };
+  if (time === "Invalid Date" || time.year > today.year + 2)
+    throw { status: "400", error: "Can not be more than two years newer" };
   return time;
 };
 
@@ -86,6 +90,8 @@ const isValidDate = (time) => {
 
   if (time == "Invalid Date")
     throw { status: "400", error: "Invalid date" };
+  if (time.year < today.year - 2 || time.year > today.year + 2)
+    throw { status: "400", error: `provide data in ${today.year-2} to ${today.year+2} year time frame` };
   return time;
 };
 
@@ -107,6 +113,20 @@ const isValidPassword = (password) => {
   return password;
 };
 
+const isValidDescription = (description) => {
+  
+  description = isValidString(description, "Description");
+
+  if (description.length < 10 || description.length > 1000) {
+    throw {
+      status: 400,
+      error: "Description must be between 10 and 1000 characters long",
+    };
+  }
+
+  return description;
+};
+
 module.exports = {
   isValidString,
   isValidId,
@@ -117,4 +137,5 @@ module.exports = {
   isValidDate,
   isValidWatchers,
   isValidPassword,
+  isValidDescription
 };

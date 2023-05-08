@@ -11,6 +11,9 @@ const isValidStateName = (name) => {
     };
   }
 
+  if(name.length<4)
+  throw {status: '400', error : 'less than 4 character name'};
+
   const nameRegex = /^[a-zA-Z\s]*$/;
   if (!nameRegex.test(name)) {
     throw { status: 400, error: "speical character not allowed" };

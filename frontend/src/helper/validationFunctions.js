@@ -5,7 +5,7 @@ export const isValidRole = (role) => {
   {
       if(role.toUpperCase()==validRole) return role.toUpperCase();
   }
-  throw {status:400,error:'Invalid role'}
+  throw new Error('Invalid role')
 }
 
 export const isValidString = (string, parameter) =>{
@@ -15,6 +15,18 @@ export const isValidString = (string, parameter) =>{
     if (string.length === 0)
       throw new Error(`${parameter} cannot be an empty string or just spaces`);
     return string;
+}
+
+export const isValidTicketName = (name) => {
+
+  name = isValidString(name, "Ticket Name");
+
+  if(name.length<4)
+    new Error('less than 4 character name');
+
+  if(name.length>15)
+    new Error('more than 15 character name');
+  return name;
 }
 
 export const isValidEmail = (email) => {
@@ -40,6 +52,12 @@ export const isValidPassword = (passowrd) => {
 
 export const isValidCompanyName = (inputName) => {
   inputName = isValidString(inputName,"Name");
+  if(name.length<4)
+  new Error('less than 4 character name');
+
+if(name.length>15)
+  new Error('more than 15 character name');
+return name;
   return inputName;
 }
 
@@ -68,6 +86,8 @@ export const isValidPastDate = (time) => {
   let today = new Date();
   if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date >today.date))
     throw new Error("Invalid date");
+  if (time === "Invalid Date" || time.year < today.year - 2)
+    throw new Error("Can not be older than two years" );
   return time;
 };
 
@@ -77,6 +97,8 @@ export const isValidFutureDate = (time) => {
   let today = new Date();
   if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
     throw new Error("Invalid date");
+  if (time === "Invalid Date" || time.year > today.year + 2)
+    throw new Error( "Can not be more than two years newer" );
   return time;
 };
 
@@ -85,6 +107,8 @@ export const isValidDate = (time) => {
   time = new Date(time);
   if (time === "Invalid Date")
     throw new Error("Invalid date");
+  if (time.year < today.year - 2 || time.year > today.year + 2)
+    throw new Error(`provide data in ${today.year-2} to ${today.year+2} year time frame` );
   return time;
 };
 
@@ -105,6 +129,11 @@ export const isValidProjectName = (name) => {
   if(name.length<4)
     new Error('less than 4 character name');
 
+  if(name.length>15)
+    new Error('more than 15 character name');
+    const nameRegex = /^[a-zA-Z\s]*$/;
+  if (!nameRegex.test(name)) 
+    throw new Error("speical character not allowed");
   return name;
 };
 
@@ -112,13 +141,16 @@ export const isValidStateName = (name) => {
   
   name = isValidString(name, "State Name");
 
-  if (name.length === 0 || name.length > 50) {
+  if(name.length<4)
+    new Error('less than 4 character name');
+
+  if (name.length > 20) {
     throw new Error("Name must not be empty and should be less than 50 characters");
   }
 
   const nameRegex = /^[a-zA-Z\s]*$/;
   if (!nameRegex.test(name)) {
-    throw { status: 400, error: "speical character not allowed" };
+    throw new Error("speical character not allowed");
   }
 
   return name;
@@ -186,7 +218,7 @@ export const isValidTicketData = (data) =>{
               data.priority = isValidTicketPriority(data.priority);
               break;
           case "name":
-              data.name = isValidString(data.name);
+              data.name = isValidTicketName(data.name);
               break;
           case "expectedDate":
               data.expectedDate = isValidFutureDate(data.expectedDate);
@@ -214,8 +246,16 @@ export const isValidSprintName = (name) => {
   name = isValidString(name, "Sprint Name");
 
   if(name.length<4)
-      throw {status:400, error : 'less than 4 character name'};
+    throw new Error( 'less than 4 character name');
 
+  if (name.length > 20) {
+    throw new Error("Name must not be empty and should be less than 50 characters");
+  }
+
+  const nameRegex = /^[a-zA-Z\s]*$/;
+  if (!nameRegex.test(name)) {
+    throw new Error("speical character not allowed");
+  }
   return name;
 };
 

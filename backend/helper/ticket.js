@@ -1,6 +1,18 @@
 const common = require("./common");
 const constant = require("../constant");
 
+const isValidTicketName = (name) => {
+
+    name = common.isValidString(name, "Ticket Name");
+  
+    if(name.length<4)
+    throw {status: '400', error : 'less than 4 character name'};
+  
+    if(name.length>15)
+        throw {status: '400', error : 'more than 15 character name'};
+    return name;
+}
+
 const isValidTicketPriority = (priority) => {
     priority = common.isValidString(priority, "ticketPriority");
 
@@ -68,7 +80,7 @@ const isValidTicketData = (data) =>{
                 data.sprintId = common.isValidId(data.sprintId);
                 break;
             case "name":
-                data.name = common.isValidString(data.name);
+                data.name = isValidTicketName(data.name);
                 break;
             case "stateId":
                 data.stateId = common.isValidId(data.stateId);
@@ -95,7 +107,7 @@ const isValidTicketData = (data) =>{
                 data.dependedOnTickets = isValidDependedOnTickets(data.dependedOnTickets);
                 break;
             case "description":
-                data.description = common.isValidString(data.description);
+                data.description = common.isValidDescription(data.description);
                 break;
             default:
                 throw {status: '400', error : `Invalid key - ${key}`};
