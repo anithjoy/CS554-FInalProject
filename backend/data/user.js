@@ -19,7 +19,7 @@ const getUserByEmail = async (email) =>{
   email = helper.common.isValidEmail(email);
   const userCollection = await users();
   const user = await userCollection.findOne({email : email});
-
+  if(!user) throw {status:404,error:'No user with that email'} 
   return user;
 }
 

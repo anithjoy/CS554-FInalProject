@@ -52,13 +52,12 @@ export const isValidPassword = (passowrd) => {
 
 export const isValidCompanyName = (inputName) => {
   inputName = isValidString(inputName,"Name");
-  if(name.length<4)
+  if(inputName.length<4)
   new Error('less than 4 character name');
 
-if(name.length>15)
+if(inputName.length>15)
   new Error('more than 15 character name');
-return name;
-  return inputName;
+return inputName;
 }
 
 export const isValidName = (inputName) => {

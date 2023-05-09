@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const redis = require('redis');
-const client = redis.createClient({});
+const client = redis.createClient({url: "redis://redis:6379/"});
 client.connect().then(() => {});
 const helper = require('../helper');
 const {ticket : ticketData, project : projectData} = require("../data");
