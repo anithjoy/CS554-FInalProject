@@ -33,11 +33,7 @@ const ticket = [{
     "developer5.company1@gmail.com",
     "manager1.company1@gmail.com"
   ],
-  "expectedDate": {
-    "$date": {
-      "$numberLong": "1684123200000"
-    }
-  },
+  "expectedDate": new Date("1684123200000"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager1.company1@gmail.com"
 },{
@@ -58,11 +54,7 @@ const ticket = [{
     "manager3.company1@gmail.com",
     "manager4.company1@gmail.com"
   ],
-  "expectedDate": {
-    "$date": {
-      "$numberLong": "1684814400000"
-    }
-  },
+  "expectedDate": new Date("1684814400000"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager4.company1@gmail.com",
   "dependedOnTickets": [
@@ -105,11 +97,7 @@ const ticket = [{
     "manager4.company1@gmail.com",
     "manager5.company1@gmail.com"
   ],
-  "expectedDate": {
-    "$date": {
-      "$numberLong": "1684728000000"
-    }
-  },
+  "expectedDate": new Date("1684728000000"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager5.company1@gmail.com"
 },{
@@ -128,11 +116,7 @@ const ticket = [{
     "developer1.company1@gmail.com",
     "developer4.company1@gmail.com"
   ],
-  "expectedDate": {
-    "$date": {
-      "$numberLong": "1684814400000"
-    }
-  },
+  "expectedDate": new Date("1684814400000"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "developer1.company1@gmail.com"
 },{
@@ -174,11 +158,7 @@ const ticket = [{
     "developer1.company1@gmail.com",
     "developer3.company1@gmail.com"
   ],
-  "expectedDate": {
-    "$date": {
-      "$numberLong": "1683604800000"
-    }
-  },
+  "expectedDate": new Date("1683604800000"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "developer3.company1@gmail.com"
 }];

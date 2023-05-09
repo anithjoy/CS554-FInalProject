@@ -18,21 +18,13 @@ const project = [{
     {
       "_id": new ObjectId("645a3ff391fe71be286857c1"),
       "name": "Sprint One",
-      "startDate": {
-        "$date": {
-          "$numberLong": "1683691200000"
-        }
-      },
+      "startDate": new Date("1683691200000"),
       "description": "This project is big I need to divide it in sprints..."
     },
     {
       "_id": new ObjectId("645a401391fe71be286857c2"),
       "name": "Sprint Two",
-      "startDate": {
-        "$date": {
-          "$numberLong": "1685419200000"
-        }
-      },
+      "startDate": new Date("1685419200000"),
       "description": "this is second sprint"
     }
   ],
@@ -116,11 +108,7 @@ const project = [{
     {
       "_id": new ObjectId("645a427091fe71be286857c6"),
       "name": "One and Only Sprint",
-      "startDate": {
-        "$date": {
-          "$numberLong": "1684123200000"
-        }
-      },
+      "startDate": new Date("1684123200000"),
       "description": "This is small project which does not need more sprint"
     }
   ],
