@@ -4,7 +4,7 @@
 
 # AWS Public DNS
 
-- ec2-44-204-157-231.compute-1.amazonaws.com
+- http://ec2-44-204-157-231.compute-1.amazonaws.com
 
 # WorkMate-Backend
 ## Features
