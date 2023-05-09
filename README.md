@@ -4,7 +4,7 @@
 
 # AWS Public DNS
 
-- http://ec2-44-204-157-231.compute-1.amazonaws.com
+- http://ec2-44-211-71-165.compute-1.amazonaws.com/
 
 ## Installation Using Docker
 
