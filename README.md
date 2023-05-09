@@ -2,6 +2,10 @@
 
 - https://github.com/anithjoy/CS554-FinalProject
 
+# AWS Public DNS
+
+- ec2-44-204-157-231.compute-1.amazonaws.com
+
 # WorkMate-Backend
 ## Features
 
