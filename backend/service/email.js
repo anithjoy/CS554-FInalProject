@@ -49,7 +49,7 @@ const sendProjectCreateEmail = async(data) =>{
     </div>
   </body>
 `;
-  await sendEmail(data.watchers, "Project Creation", html);
+  await sendEmail(data.watchers, "Project Creation", projectCreate);
 }
 
 const sendProjectUpdateEmail = async(data) =>{

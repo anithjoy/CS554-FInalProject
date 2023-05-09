@@ -40,7 +40,7 @@ const Users = () => {
       {hasError && <div className="error">{error}</div>}
       <Link href={"/user/create-user"} className="btn btn-primary">Create New User</Link>
       <h1 className="mb-3">Company Users</h1>
-      <ul className="list-group">
+      {users.length!=0 ? <ul className="list-group">
         {users.map((user) => {
           return (
             <li className="list-group-item" key={user._id}>
@@ -48,7 +48,7 @@ const Users = () => {
             </li>
           );
         })}
-      </ul>
+      </ul> : <div>No user found, Please create users</div>}
     </div>
   );
 };

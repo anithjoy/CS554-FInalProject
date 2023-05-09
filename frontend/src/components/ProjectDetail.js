@@ -130,8 +130,8 @@ const ProjectDetail = (props) => {
 
   return (
     <div>
-    {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
-    {hasError && <div className="error">{error}</div>}
+    {hasSuccessMessage && <><div className='successMessage'>Successfully updated</div><br/></>}
+    {hasError && <><div className="error">{error}</div><br/></>}
        {projectData && userData && <div>
             {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <><button type="button" className='btn btn-primary'onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Project" : "Cancel Edit"}</button><br/><br/></>}
             <form onSubmit={validateUpdate}>

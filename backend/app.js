@@ -175,6 +175,8 @@ app.use('/ticket/:ticketId', async (req, res, next) => {
     if((req.url === '/' || req.url === "/comment") && !await data.validation.isUserHaveAccessToTicket(req.user, req.params.ticketId)){
       return res.status(403).json("Forbidden");
     }else{
+      if(req.url === '/' && req.method === 'PATCH' && (req.user.role!="SUPER-ADMIN" && req.user.role!="ADMIN" && req.user.role!="MANAGER") && !await data.validation.isUserHaveAccessToTicket(req.user, req.params.ticketId, true))
+        return res.status(403).json("Forbidden");
       next();
     }
   }catch(e){

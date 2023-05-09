@@ -158,8 +158,9 @@ const EditStateForm = (props) => {
           </div>
 
           {allState.length != 1 && (
+            <>
+            <label className="form-label">Transitions:</label>
             <div className="form-check form-switch">
-              <label className="form-label">Transitions:</label>
               {allState.map((state) => {
                 if (state._id != props.stateId)
                   return (
@@ -180,6 +181,7 @@ const EditStateForm = (props) => {
                   );
               })}
             </div>
+            </>
           )}
 
           <button type="submit" className="btn btn-primary">

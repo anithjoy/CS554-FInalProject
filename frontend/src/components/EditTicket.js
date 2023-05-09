@@ -263,6 +263,7 @@ const EditTicket = (props) => {
                 Depended On Tickets : 
               </label><div className="form-switch">
               {allTicket.map((ticket)=>{
+                if(ticket._id!=ticketData._id)
                 return(
                 <div key={ticket._id} className="form-check mb-2">
                   <input

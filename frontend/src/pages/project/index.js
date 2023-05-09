@@ -41,7 +41,7 @@ const Projects = () => {
       {user && projects && <div>
         {(user.role.toUpperCase() == "MANAGER" || user.role.toUpperCase() == "ADMIN" || user.role.toUpperCase() == "SUPER-ADMIN") && <Link href={'/project/create-project'}><button className='btn btn-primary'>Create New Project</button></Link>}
         <h1>Current Projects</h1>
-        <ul className="list-group">
+        {projects!=0 ? <ul className="list-group">
           {
             projects.map((project) => {
               return <li className="list-group-item listHover" key={project._id} onClick={()=>redirect(project._id)}>
@@ -49,7 +49,7 @@ const Projects = () => {
               </li>
             })
           }
-        </ul>
+        </ul> : <div>No Project found, Please create project</div>}
       </div>}
     </div>
   )

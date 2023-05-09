@@ -1,87 +1,151 @@
 const {ObjectId} = require('mongodb');
 
 const project = [{
-    "_id": new ObjectId("644903971ed69af2c16ed405"),
-    "name": "project 1",
-    "companyId": "6448fbb3d6242a22961da169",
-    "creator": "pdarji@stevens.edu",
-    "manager": "pdarji99@gmail.com",
-    "watchers": [
-      "pdarji99@gmail.com",
-      "pdarji7777@gmail.com",
-      "pdarji@stevens.edu",
-      "pdarji998@gmail.com"
-    ],
-    "sprint": [
-      {
-        "_id": {
-          "$oid": "64510f98764ef067c6aff8f2"
-        },
-        "name": "New One nn",
-        "startDate": {
-          "$date": {
-            "$numberLong": "1683120404000"
-          }
-        },
-        "description": "hahahahavvfjdjkvdksv",
-        "endDate": {
-          "$date": {
-            "$numberLong": "1684209600000"
-          }
+  "_id": new ObjectId("645a3e2291fe71be286857bd"),
+  "name": "Project One",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "admin1.company1@gmail.com",
+  "manager": "manager1.company1@gmail.com",
+  "watchers": [
+    "admin2.company1@gmail.com",
+    "admin3.company1@gmail.com",
+    "manager1.company1@gmail.com",
+    "developer1.company1@gmail.com",
+    "developer3.company1@gmail.com",
+    "admin1.company1@gmail.com"
+  ],
+  "sprint": [
+    {
+      "_id": new ObjectId("645a3ff391fe71be286857c1"),
+      "name": "Sprint One",
+      "startDate": {
+        "$date": {
+          "$numberLong": "1683691200000"
         }
       },
-      {
-        "_id": {
-          "$oid": "64527a569ad888ce6273a8b1"
-        },
-        "name": "New One",
-        "startDate": {
-          "$date": {
-            "$numberLong": "1683126865000"
-          }
-        },
-        "description": "xxx"
+      "description": "This project is big I need to divide it in sprints..."
+    },
+    {
+      "_id": new ObjectId("645a401391fe71be286857c2"),
+      "name": "Sprint Two",
+      "startDate": {
+        "$date": {
+          "$numberLong": "1685419200000"
+        }
       },
-      {
-        "_id": {
-          "$oid": "64527ac29ad888ce6273a8b2"
-        },
-        "name": "New One",
-        "startDate": {
-          "$date": {
-            "$numberLong": "1683731773000"
-          }
-        },
-        "description": "aaafdfsd"
+      "description": "this is second sprint"
+    }
+  ],
+  "description": "This is my first project for seed file...."
+},{
+  "_id": new ObjectId("645a3ed391fe71be286857be"),
+  "name": "Project Two",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "manager2.company1@gmail.com",
+  "manager": "manager2.company1@gmail.com",
+  "watchers": [
+    "admin3.company1@gmail.com",
+    "developer5.company1@gmail.com",
+    "developer8.company1@gmail.com",
+    "manager3.company1@gmail.com",
+    "qa2.company1@gmail.com",
+    "support1.company1@gmail.com",
+    "manager2.company1@gmail.com"
+  ],
+  "sprint": [],
+  "description": "This is my second project for seed file"
+},{
+  "_id": new ObjectId("645a3f3591fe71be286857bf"),
+  "name": "Project Three",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "manager2.company1@gmail.com",
+  "manager": "manager3.company1@gmail.com",
+  "watchers": [
+    "admin3.company1@gmail.com",
+    "manager1.company1@gmail.com",
+    "manager4.company1@gmail.com",
+    "developer2.company1@gmail.com",
+    "developer4.company1@gmail.com",
+    "developer8.company1@gmail.com",
+    "qa1.company1@gmail.com",
+    "support2.company1@gmail.com",
+    "manager2.company1@gmail.com",
+    "manager3.company1@gmail.com"
+  ],
+  "sprint": [],
+  "description": "This is my third Project for seed file"
+},{
+  "_id": new ObjectId("645a3f8591fe71be286857c0"),
+  "name": "Project Four",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "manager2.company1@gmail.com",
+  "manager": "manager5.company1@gmail.com",
+  "watchers": [
+    "admin2.company1@gmail.com",
+    "manager3.company1@gmail.com",
+    "manager5.company1@gmail.com",
+    "developer10.company1@gmail.com",
+    "developer9.company1@gmail.com",
+    "developer8.company1@gmail.com",
+    "qa1.company1@gmail.com",
+    "qa2.company1@gmail.com",
+    "support1.company1@gmail.com",
+    "support2.company1@gmail.com",
+    "manager2.company1@gmail.com"
+  ],
+  "sprint": [],
+  "description": "This is my forth Project for seed file"
+},{
+  "_id": new ObjectId("645a423b91fe71be286857c5"),
+  "name": "Project Five",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "manager4.company1@gmail.com",
+  "manager": "manager3.company1@gmail.com",
+  "watchers": [
+    "admin3.company1@gmail.com",
+    "manager5.company1@gmail.com",
+    "developer4.company1@gmail.com",
+    "developer7.company1@gmail.com",
+    "developer6.company1@gmail.com",
+    "qa1.company1@gmail.com",
+    "support2.company1@gmail.com",
+    "manager4.company1@gmail.com",
+    "manager3.company1@gmail.com"
+  ],
+  "sprint": [
+    {
+      "_id": new ObjectId("645a427091fe71be286857c6"),
+      "name": "One and Only Sprint",
+      "startDate": {
+        "$date": {
+          "$numberLong": "1684123200000"
+        }
       },
-      {
-        "_id": {
-          "$oid": "64562e8c1d0cededde2c8329"
-        },
-        "name": "New Onec2",
-        "startDate": {
-          "$date": {
-            "$numberLong": "1684900800000"
-          }
-        },
-        "description": "yghgbjh"
-      }
-    ],
-    "description": "pddddrr"
-  },{
-    "_id": new ObjectId("644e66e8f2d62c1d3d6e9ab3"),
-    "name": "Project 2",
-    "companyId": "6448fbb3d6242a22961da169",
-    "creator": "pdarji@stevens.edu",
-    "manager": "pdarji99@gmail.com",
-    "watchers": [
-      "pdarji998@gmail.com",
-      "pdarji@gmail.com",
-      "pdarji@stevens.edu",
-      "pdarji99@gmail.com"
-    ],
-    "sprint": [],
-    "description": "Testing"
-  }]
+      "description": "This is small project which does not need more sprint"
+    }
+  ],
+  "description": "This is my fifth project"
+},{
+  "_id": new ObjectId("645a43a991fe71be286857c8"),
+  "name": "Project Six",
+  "companyId": "645a2e8c56a35445d8ad9b88",
+  "creator": "manager5.company1@gmail.com",
+  "manager": "manager2.company1@gmail.com",
+  "watchers": [
+    "admin3.company1@gmail.com",
+    "manager1.company1@gmail.com",
+    "manager4.company1@gmail.com",
+    "developer2.company1@gmail.com",
+    "developer4.company1@gmail.com",
+    "developer6.company1@gmail.com",
+    "qa1.company1@gmail.com",
+    "qa2.company1@gmail.com",
+    "support1.company1@gmail.com",
+    "manager5.company1@gmail.com",
+    "manager2.company1@gmail.com"
+  ],
+  "sprint": [],
+  "description": "This is my sixth project"
+}];
 
   module.exports = project

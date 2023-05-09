@@ -111,7 +111,7 @@ const DisplayTickets = (props) => {
         </tr>
       </thead>
       <tbody>
-        {ticketDataTemp.map((ticket)=>{
+        {ticketDataTemp.length!=0 ? ticketDataTemp.map((ticket)=>{
           if(assignToMeFlag)
           {
             if(ticket.assign === user.email)
@@ -119,7 +119,7 @@ const DisplayTickets = (props) => {
           }else{
             return (getTicketRow(ticket));
           }
-          })}
+          }) : <div>No Ticket found, Please create Ticket</div>}
       </tbody>
     </table>
     )

@@ -38,7 +38,7 @@ const DisplaySprints = (props) => {
       {(props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <><button className='btn btn-primary' onClick={()=>props.setTab("Create-Sprint")}>Create Sprint</button><br/><br/></>}
       {hasError && <div className="error">{error}</div>}
       {sprintData ? <>
-      <ul className="list-group">
+      {sprintData.length!=0 ? <ul className="list-group">
         {
           sprintData.map((sprint) => {
             return <li className="list-group-item listHover" key={sprint._id} id={sprint._id} onClick={(e)=>{props.setSprintId(e.target.id);
@@ -47,7 +47,7 @@ const DisplaySprints = (props) => {
             </li>
           })
         }
-      </ul>
+      </ul> : <div>No Sprint found, Please create Sprint</div>}
       </> :
       <div>Loading...</div>}
     </div>
