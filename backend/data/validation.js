@@ -29,8 +29,13 @@ const isUserHaveAccessToProject = async(email, projectId) =>{
     return false;
 }
 
-const isUserHaveAccessToTicket = async(user, ticketId) =>{
+const isUserHaveAccessToTicket = async(user, ticketId, flag=false) =>{
     const ticket = await ticketData.getTicketById(ticketId);
+    if(flag)
+        if(ticket.assign==user.email)
+            true;
+        else
+            false;
     if(ticket.assign==user.email || ticket.creator==user.email || ticket.watchers.includes(user.email))
         return true;
     if((user.role=="SUPER-ADMIN"||user.role=="ADMIN"||user.role=="MANAGER") && ticket.companyId==user.companyId)

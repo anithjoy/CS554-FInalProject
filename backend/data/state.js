@@ -88,15 +88,15 @@ const updateState = async (stateId, data) => {
   data = helper.state.isValidData(data);
 
   const state = await getStateById(stateId);
-  if(constant.DEFAULT_STATE.includes(state.name))
+  if(constant.DEFAULT_STATE.includes(state.name) && ((data.name && state.name!=data.name) || (data.description && state.description!=data.description)))
     throw {
       status: 403,
       error: "Forbidden",
     };
 
   if(data.transition.length){
-    let companyStates = await getAllState(companyId);
-    let companyStateIds = companyStates.map(s => s._id);
+    let companyStates = await getAllState(state.companyId);
+    let companyStateIds = companyStates.map(s => s._id.toString());
     for(let t of data.transition){
       if(!companyStateIds.includes(t)) throw {status:400,error:'Invalid transition Id'}
     }
