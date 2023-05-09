@@ -6,6 +6,17 @@
 
 - http://ec2-44-204-157-231.compute-1.amazonaws.com
 
+## Installation Using Docker
+
+Below command will start backend on 3000 port and frontend on 3003
+
+Docker Installation - https://docs.docker.com/engine/install/
+
+```sh
+docker-compose build
+docker-compose up
+```
+
 # WorkMate-Backend
 ## Features
 
@@ -64,14 +75,19 @@ npm start
 WorkMate-Frontend Admin Credentials
 
 admin1.company1@gmail.com
-Admin1@123
+Admin@123
 
 WorkMate-Frontend Manager Credentials
 
 manager1.company1@gmail.com
-Manager1@123
+Manager@123
 
 WorkMate-Frontend Developer Credentials
 
 developer1.company1@gmail.com
-Developer1@123
+Develop@123
+
+WorkMate-Frontend Admin Credentials for company 2 which is new company with 0 user and project.
+
+admin1.company2@gmail.com
+Admin@123
