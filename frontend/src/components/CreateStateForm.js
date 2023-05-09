@@ -85,10 +85,11 @@ const CreateStateForm = () => {
       {allStates ? (
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="name" className="form-label">
+            <label htmlFor="state-name" className="form-label">
               Name:
             </label>
             <input
+              id="state-name"
               type="text"
               name="name"
               value={name}
@@ -100,10 +101,11 @@ const CreateStateForm = () => {
           </div>
           <br/>
           <div>
-            <label htmlFor="description" className="form-label">
+            <label htmlFor="state-description" className="form-label">
               Description:
             </label>
             <input
+              id="state-description"
               type="text"
               name="description"
               placeholder="Enter Description"

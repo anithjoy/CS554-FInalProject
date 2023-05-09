@@ -192,8 +192,8 @@ const EditTicket = (props) => {
         {ticketData && allTicket &&  stateData && ticketData && userData   ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <h1>Ticket</h1>
-          {hasError && <div className="error">{error}</div>}
-          {hasSuccessMessage && <div className='successMessage'>Successfully updated</div>}
+          {hasError && <><div className="error">{error}</div> <br/></>}
+          {hasSuccessMessage && <><div className='successMessage'>Successfully updated</div><br/></>}
           {(ticketData.assign === props.user.email || props.user.role.toUpperCase() == "MANAGER" || props.user.role.toUpperCase() == "ADMIN" || props.user.role.toUpperCase() == "SUPER-ADMIN") && <button type="button" className="btn btn-primary" onClick={()=>setUpdateFlag(!updateFlag)}>{!updateFlag ? "Edit Ticket" : "Cancel Edit"}</button>}
           <form onSubmit={validateTicket} id="ticketForm">
             <br/>
@@ -248,15 +248,15 @@ const EditTicket = (props) => {
             </div>
             <br/>
             <label htmlFor='ticketExpectedDate'>Expected Date : </label>
-            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>setTicketData({...ticketData, expectedDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketExpectedDate' name="ticketExpectedDate" selected={ticketData.expectedDate && new Date(ticketData.expectedDate)} onChange={(date)=>{setHasSuccessMessage(false); setError(false); setTicketData({...ticketData, expectedDate: date})}} />
             <br/>
             <br/>
             <label htmlFor='ticketCloseDate'>Close Date : </label>
-            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate && new Date(ticketData.closeDate)} onChange={(date)=>setTicketData({...ticketData, closeDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketCloseDate' name="ticketCloseDate" selected={ticketData.closeDate && new Date(ticketData.closeDate)} onChange={(date)=>{setHasSuccessMessage(false); setError(false); setTicketData({...ticketData, closeDate: date})}} />
             <br/>
             <br/>
             <label htmlFor='ticketReopenDate'>Reopen Date : </label>
-            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>setTicketData({...ticketData, reopenDate: date})} />
+            <DatePicker disabled={!updateFlag} className="loginInput form-control" id='ticketReopenDate' name="ticketReopenDate" selected={ticketData.reopenDate && new Date(ticketData.reopenDate)} onChange={(date)=>{setHasSuccessMessage(false); setError(false); setTicketData({...ticketData, reopenDate: date})}} />
             <br/>
             <br/>
             { allTicket.length!=0 && allTicket.length!=1 && <><label className="form-label">

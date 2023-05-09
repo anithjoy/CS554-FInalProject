@@ -103,10 +103,11 @@ const EditStateForm = (props) => {
       {stateData && allState ? (
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label htmlFor="name" className="form-label">
+            <label htmlFor="state-name" className="form-label">
               Name:
             </label>
             <input
+            id="state-name"
             disabled={helper.constants.DEFAULT_STATE.includes(stateData.name)} 
               type="text"
               name="name"
@@ -129,10 +130,11 @@ const EditStateForm = (props) => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="description" className="form-label">
+            <label htmlFor="state-description" className="form-label">
               Description:
             </label>
             <input
+              id="state-description"
               disabled={helper.constants.DEFAULT_STATE.includes(stateData.name)} 
               type="text"
               name="description"

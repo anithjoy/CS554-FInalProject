@@ -60,7 +60,7 @@ const CreateUser = () => {
       <div className="CreateUserCard card p-4 shadow-sm">
         <form onSubmit={validateCreateUserData}>
           <div className="form-group">
-            <label htmlFor="signUpEmail" className="form-label">
+            <label htmlFor="signUpName" className="form-label">
               Enter Name : 
             </label>
             <input

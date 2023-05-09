@@ -266,3 +266,40 @@ a{
     padding: 0;
     background: transparent;
 }
+
+.rbc-button-link{
+    color:#767676 !important;
+    background: #ffffff !important;
+}
+
+.form-check-label{
+    color:#73777e !important;
+    background: #ffffff !important;
+    opacity: 1 !important;
+}
+
+.commentSender{
+    color:#6f6f6f !important;
+    background: #f2f2f2 !important;
+}
+
+.commentTimestamp{
+    color:#6f6f6f !important;
+    background: #f2f2f2 !important;
+}
+
+.dashboardHeading{
+    font-size: 1.3em;
+}
+
+.list-group-item{
+    cursor: pointer !important;
+}
+
+.ticketList{
+    cursor: pointer !important;
+}
+
+.link{
+    cursor: pointer !important;
+}

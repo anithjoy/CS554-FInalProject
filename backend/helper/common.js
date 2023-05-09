@@ -66,9 +66,9 @@ const isValidPastDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date > today.date))
+  if (time === "Invalid Date" || (time.getYear() > today.getYear() || time.getMonth() > today.getMonth() || time.getDate() >today.getDate()))
     throw { status: "400", error: "Invalid date" };
-  if (time === "Invalid Date" || time.year < today.year - 2)
+  if (time === "Invalid Date" || time.getYear() < today.getYear() - 2)
     throw { status: "400", error: "Can not be older than two years" };
   return time;
 };
@@ -77,9 +77,9 @@ const isValidFutureDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
+  if (time === "Invalid Date" || (time.getYear() < today.getYear() || time.getMonth() < today.getMonth() || time.getDate() < today.getDate()))
     throw { status: "400", error: "Invalid date" };
-  if (time === "Invalid Date" || time.year > today.year + 2)
+  if (time === "Invalid Date" || time.getYear() > today.getYear() + 2)
     throw { status: "400", error: "Can not be more than two years newer" };
   return time;
 };
@@ -87,11 +87,11 @@ const isValidFutureDate = (time) => {
 const isValidDate = (time) => {
   if (!time) throw { status: "400", error: "No date provided" };
   time = new Date(time);
-
+  let today = new Date();
   if (time == "Invalid Date")
     throw { status: "400", error: "Invalid date" };
-  if (time.year < today.year - 2 || time.year > today.year + 2)
-    throw { status: "400", error: `provide data in ${today.year-2} to ${today.year+2} year time frame` };
+  if (time.getYear() < today.getYear() - 2 || time.getYear() > today.getYear() + 2)
+    throw { status: "400", error: `provide data in ${today.getYear()-2} to ${today.getYear()+2} year time frame` };
   return time;
 };
 

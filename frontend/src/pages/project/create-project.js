@@ -72,7 +72,7 @@ const CreateProject = () => {
     e.preventDefault();
     const projectDataTemp ={}
     try{
-      projectDataTemp.description = helper.validationFunctions.isValidString(projectData.description);
+      projectDataTemp.description = helper.validationFunctions.isValidDescription(projectData.description);
       projectDataTemp.name  = helper.validationFunctions.isValidProjectName(projectData.name);
       projectDataTemp.manager = helper.validationFunctions.isValidEmail(projectData.manager);
       projectDataTemp.watchers = helper.validationFunctions.isValidWatchers(projectData.watchers);

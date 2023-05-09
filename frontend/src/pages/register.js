@@ -87,7 +87,7 @@ const Register = () => {
         <div className="col-md-6">
           <div className="card my-5">
             <div className="card-body">
-              <h3 className="card-title text-center mb-4">Company Register</h3>
+              <h1 className="card-title text-center mb-4">Company Register</h1>
               <div className="d-flex justify-content-end mb-3">
                 <Link href="/login" className="btn btn-link">
                   Login

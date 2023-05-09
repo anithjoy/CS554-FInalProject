@@ -45,13 +45,13 @@ const Project = () => {
       {user && <div>
         <div className="links-container">
           <ul className="links">
-            <li onClick={()=>setTab("Details")}>
+            <li className='link' onClick={()=>setTab("Details")}>
               Details
             </li>
-            <li onClick={()=>setTab("All-Sprints")}>
+            <li className='link' onClick={()=>setTab("All-Sprints")}>
               Sprints
             </li>
-            <li onClick={()=>setTab("Tickets")}>
+            <li className='link' onClick={()=>setTab("Tickets")}>
               Tickets
             </li>
           </ul>

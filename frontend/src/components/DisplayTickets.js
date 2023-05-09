@@ -70,8 +70,8 @@ const DisplayTickets = (props) => {
   }
   const getTicketRow = (ticket) =>{
     return(
-        <tr key={ticket._id}>
-          <td><Link href={`/ticket/${ticket._id}`}>{ticket.name}</Link></td>
+        <tr className="ticketList" key={ticket._id} onClick={()=>redirect(ticket._id)}>
+          <td>{ticket.name}</td>
           <td>{ticket.type}</td>
           <td>{ticket.priority}</td>
           <td>{ticket.state.name}</td>
@@ -132,7 +132,8 @@ const DisplayTickets = (props) => {
       {!props.projectId ? <Link href={`/ticket/create-ticket`}>
         <button className='btn btn-primary selectLeft'>Create Ticket</button>
       </Link> : <button onClick={()=>props.setTab("Create-Ticket")} className='btn btn-primary selectLeft' >Create Ticket</button>}
-      <input className="displayInput selectLeft" type="text" onChange={(e)=>{setSearchTearm(e.target.value.trim())}}/>
+      <label htmlFor="searchBar" hidden> Search Bar</label>
+      <input id="searchBar" className="displayInput selectLeft" type="text" onChange={(e)=>{setSearchTearm(e.target.value.trim())}}/>
       <select onChange={(e)=>{setState(e.target.value)}}>
         <option value="">All State</option>
         {stateData.map(p=>{return(<option value={p.name}>{p.name}</option>)})}

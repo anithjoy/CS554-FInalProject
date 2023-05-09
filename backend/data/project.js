@@ -160,6 +160,8 @@ const createSprint = async (projectId, name, startDate, description) => {
     
     const project = await getProjectById(projectId);
 
+    service.email.sendSprintCreateEmail({...newSprint, projectName:project.name, watchers:project.watchers});
+
     return project;
 }
 
@@ -204,7 +206,7 @@ const updateSprint = async(projectId, sprintId, data) => {
 
     let updatedInfo = {};
     
-    await getProjectById(projectId);
+    const project = await getProjectById(projectId);
 
     const sprint = await getSprintbyId(projectId, sprintId);
     let endDate=data.endDate||sprint.endDate;
@@ -237,6 +239,7 @@ const updateSprint = async(projectId, sprintId, data) => {
     }
   
     const newsprint = await getSprintbyId(projectId, sprintId);
+    service.email.sendSprintUpdateEmail({...newsprint, projectName:project.name, watchers:project.watchers});
     return newsprint;
 }
 

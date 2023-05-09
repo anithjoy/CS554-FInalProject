@@ -71,15 +71,15 @@ const Dashboard = () => {
       {ticketData && <Calendar onSelectEvent={(e)=>redirect(e)} localizer={momentLocalizer(moment)} events={ticketData} startAccessor="start" endAccessor="end" defaultDate={new Date()} /> }
       <div className="dashboard-ticket-list">
         {ticketWithNoExpectedDate && <div className="expectedDateColum">
-          <h2>Assign Expected Date</h2>
-          {ticketWithNoExpectedDate.length!=0 ?<ul>
-          {ticketWithNoExpectedDate.map((ticket, index)=><li key={index} id={ticket._id} onClick={(e)=>redirect({id:e.target.id})}>{ticket.name}</li>)}
+          <h1 className="dashboardHeading">Assign Expected Date</h1>
+          {ticketWithNoExpectedDate.length!=0 ?<ul className="list-group">
+          {ticketWithNoExpectedDate.map((ticket, index)=><li className="list-group-item" key={index} id={ticket._id} onClick={(e)=>redirect({id:e.target.id})}>{ticket.name}</li>)}
           </ul> : "All Tickets Have ExpectedDate"}
         </div>}
         {ticketWithExpireExpectedDate && ticketWithExpireExpectedDate.length!=0 && <div className="expectedDateColum">
-          <h2>Expired Expected Date</h2>
-          {ticketWithExpireExpectedDate.length!=0 ?<ul>
-          {ticketWithExpireExpectedDate.map((ticket, index)=><li key={index} id={ticket._id} onClick={(e)=>redirect({id:e.target.id})}>{ticket.name}</li>)}
+          <h1 className="dashboardHeading">Expired Expected Date</h1>
+          {ticketWithExpireExpectedDate.length!=0 ?<ul className="list-group">
+          {ticketWithExpireExpectedDate.map((ticket, index)=><li className="list-group-item" key={index} id={ticket._id} onClick={(e)=>redirect({id:e.target.id})}>{ticket.name}</li>)}
           </ul> : "All Tickets Have ExpectedDate"}
         </div>}
       </div>

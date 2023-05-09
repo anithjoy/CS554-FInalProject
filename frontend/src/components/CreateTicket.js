@@ -198,7 +198,7 @@ const CreateTicket = (props) => {
   }
   return (
     <div className="CreateUserCard card p-4 shadow-sm">
-        {hasError && <div className="error">{error}</div>}
+        {hasError && <><div className="error">{error}</div><br/></>}
         {allTicket &&  stateData && stateData.length!=0 && projectData && projectData.length!=0 && userData  && userData.length!=0 ?    
         <div className="ticketCard" id="ticketFormWrap">    
           <form onSubmit={validateTicket} id="ticketForm">

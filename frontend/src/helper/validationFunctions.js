@@ -84,9 +84,9 @@ export const isValidPastDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || (time.year > today.year && time.month > today.month && time.date >today.date))
+  if (time === "Invalid Date" || (time.getYear() > today.getYear() || time.getMonth() > today.getMonth() || time.getDate() >today.getDate()))
     throw new Error("Invalid date");
-  if (time === "Invalid Date" || time.year < today.year - 2)
+  if (time === "Invalid Date" || time.getYear() < today.getYear() - 2)
     throw new Error("Can not be older than two years" );
   return time;
 };
@@ -95,9 +95,9 @@ export const isValidFutureDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
   let today = new Date();
-  if (time === "Invalid Date" || (time.year < today.year && time.month < today.month && time.date < today.date))
+  if (time === "Invalid Date" || (time.getYear() < today.getYear() || time.getMonth() < today.getMonth() || time.getDate() < today.getDate()))
     throw new Error("Invalid date");
-  if (time === "Invalid Date" || time.year > today.year + 2)
+  if (time === "Invalid Date" || time.getYear() > today.getYear() + 2)
     throw new Error( "Can not be more than two years newer" );
   return time;
 };
@@ -105,10 +105,11 @@ export const isValidFutureDate = (time) => {
 export const isValidDate = (time) => {
   if (!time) throw new Error("No date provided");
   time = new Date(time);
+  let today = new Date();
   if (time === "Invalid Date")
     throw new Error("Invalid date");
-  if (time.year < today.year - 2 || time.year > today.year + 2)
-    throw new Error(`provide data in ${today.year-2} to ${today.year+2} year time frame` );
+  if (time.getYear() < today.getYear() - 2 || time.getYear() > today.getYear() + 2)
+    throw new Error(`provide data in ${today.getYear()-2} to ${today.getYear()+2} year time frame` );
   return time;
 };
 
@@ -158,7 +159,7 @@ export const isValidStateName = (name) => {
 
 export const isValidDescription = (description) => {
   
-  description = isValidString(description, "State Description");
+  description = isValidString(description, "Description");
 
   if (description.length < 10 || description.length > 1000) {
     throw new Error( "Description must be between 10 and 1000 characters long");
@@ -230,7 +231,7 @@ export const isValidTicketData = (data) =>{
               data.closeDate = isValidPastDate(data.closeDate);
               break;
           case "description":
-              data.description = isValidString(data.description);
+              data.description = isValidDescription(data.description);
               break;
           default:
               break;
