@@ -34,6 +34,8 @@ docker-compose up
 
 WorkMate-Backend requires [Node.js](https://nodejs.org/) v10+ to run.
 
+If you are not using docker, you need to change redis(app, route/user, route/project, route/state, route/ticket) and mongo url (config/setting).
+
 ```sh
 git clone git@github.com:anithjoy/CS554-FinalProject.git
 cd CS554-FinalProject
