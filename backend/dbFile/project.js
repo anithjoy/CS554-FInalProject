@@ -18,13 +18,13 @@ const project = [{
     {
       "_id": new ObjectId("645a3ff391fe71be286857c1"),
       "name": "Sprint One",
-      "startDate": new Date("1683648793236"),
+      "startDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
       "description": "This project is big I need to divide it in sprints..."
     },
     {
       "_id": new ObjectId("645a401391fe71be286857c2"),
       "name": "Sprint Two",
-      "startDate": new Date("1683648793236"),
+      "startDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
       "description": "this is second sprint"
     }
   ],
@@ -108,7 +108,7 @@ const project = [{
     {
       "_id": new ObjectId("645a427091fe71be286857c6"),
       "name": "One and Only Sprint",
-      "startDate": new Date("1683648793236"),
+      "startDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
       "description": "This is small project which does not need more sprint"
     }
   ],

@@ -33,7 +33,7 @@ const ticket = [{
     "developer5.company1@gmail.com",
     "manager1.company1@gmail.com"
   ],
-  "expectedDate": new Date("1683648793236"),
+  "expectedDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager1.company1@gmail.com"
 },{
@@ -54,7 +54,7 @@ const ticket = [{
     "manager3.company1@gmail.com",
     "manager4.company1@gmail.com"
   ],
-  "expectedDate": new Date("1683648793236"),
+  "expectedDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager4.company1@gmail.com",
   "dependedOnTickets": [
@@ -97,7 +97,7 @@ const ticket = [{
     "manager4.company1@gmail.com",
     "manager5.company1@gmail.com"
   ],
-  "expectedDate": new Date("1683648793236"),
+  "expectedDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "manager5.company1@gmail.com"
 },{
@@ -116,7 +116,7 @@ const ticket = [{
     "developer1.company1@gmail.com",
     "developer4.company1@gmail.com"
   ],
-  "expectedDate": new Date("1683648793236"),
+  "expectedDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "developer1.company1@gmail.com"
 },{
@@ -158,7 +158,7 @@ const ticket = [{
     "developer1.company1@gmail.com",
     "developer3.company1@gmail.com"
   ],
-  "expectedDate": new Date("1683648793236"),
+  "expectedDate": new Date("Tue May 09 2023 20:08:22 GMT-0400 (Eastern Daylight Time)"),
   "companyId": "645a2e8c56a35445d8ad9b88",
   "creator": "developer3.company1@gmail.com"
 }];
